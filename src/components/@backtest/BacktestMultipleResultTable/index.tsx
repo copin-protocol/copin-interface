@@ -292,7 +292,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     render: (item) => {
       return (
         <Type.Caption display="block" textAlign="right">
-          <SignedText value={item.balance} maxDigit={2} fontInherit suffix="$" />
+          <SignedText value={item.balance} maxDigit={2} fontInherit prefix="$" />
         </Type.Caption>
       )
     },
@@ -306,7 +306,7 @@ export const multipleBacktestResultColumns: ColumnData<TableResultData, RequestB
     render: (item) => {
       return (
         <Type.Caption display="block" textAlign="right">
-          <SignedText value={item.profit} maxDigit={2} suffix="$" fontInherit />
+          <SignedText value={item.profit} maxDigit={2} prefix="$" fontInherit />
         </Type.Caption>
       )
     },

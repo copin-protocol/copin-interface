@@ -61,6 +61,15 @@ export const formatLocalDate = (date: string | number | undefined, format?: stri
     .format(format ?? DATE_FORMAT)
 }
 
+export const formatLocalFullDate = (date: string | number | undefined, format?: string) => {
+  if (!date) return ''
+
+  return dayjs
+    .utc(date)
+    .local()
+    .format(format ?? DAYJS_FULL_DATE_FORMAT)
+}
+
 export const formatDate = (date: string | number | undefined, format?: string) => {
   if (!date) return ''
 
@@ -200,7 +209,7 @@ export function compactNumber(num: number | string | undefined, digits = 1, isIn
   const item = lookup.find(function (item) {
     return Math.abs(num as number) >= item.value
   })
-  return item ? (num / item.value).toFixed(digits) + item.symbol : '--'
+  return item ? (num / item.value).toFixed(digits) + '\u202F' + item.symbol : '--'
 }
 
 export function breakLineTextToArray({ text = '', maxLine = 2, lineMaxLength = 40 }) {

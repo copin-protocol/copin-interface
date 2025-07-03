@@ -458,10 +458,16 @@ export const RENDER_COLUMN_DATA_MAPPING: Partial<
     return renderChangeValue({ data, valueKey: 'volume1d', externalResource, valuePrefix: '$', changeValueSuffix: '%' })
   },
   volume7d: ({ data, externalResource }) => {
-    return renderChangeValue({ data, valueKey: 'volume7d', externalResource, changeValueSuffix: '%' })
+    return renderChangeValue({ data, valueKey: 'volume7d', externalResource, valuePrefix: '$', changeValueSuffix: '%' })
   },
   volume30d: ({ data, externalResource }) => {
-    return renderChangeValue({ data, valueKey: 'volume30d', externalResource, changeValueSuffix: '%' })
+    return renderChangeValue({
+      data,
+      valueKey: 'volume30d',
+      externalResource,
+      valuePrefix: '$',
+      changeValueSuffix: '%',
+    })
   },
   volume: ({ data, externalResource }) => {
     return renderNormalValue({

@@ -5,15 +5,18 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import { getPerpDexStatisticApi } from 'apis/perpDex'
+import ActiveDot from 'components/@ui/ActiveDot'
 import NoDataFound from 'components/@ui/NoDataFound'
 import PerpDexLogo from 'components/@ui/PerpDexLogo'
 import IconGroup from 'components/@widgets/IconGroup'
 import Icon from 'components/@widgets/IconGroup/Icon'
+import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
 import Dropdown from 'theme/Dropdown'
 import { InputSearch } from 'theme/Input'
 import { Box, Flex, Grid, Type } from 'theme/base'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { getSystemStatusTypeColor } from 'utils/helpers/format'
 import { generatePerpDEXDetailsRoute } from 'utils/helpers/generateRoute'
 import { parseChainImage, parsePlainProtocolImage } from 'utils/helpers/transform'
 
@@ -109,6 +112,7 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
     setSearchText(undefined)
     onClickSelection()
   }, [])
+  const { protocolDataStatusMapping, getProtocolMessage } = useGetProtocolStatus()
   return (
     <Box>
       <InputSearch
@@ -120,8 +124,11 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
       />
       {!_options.length && <NoDataFound message={<Trans>No Perp DEX matched!</Trans>} />}
       {!!_options.length && (
-        <Grid mt={3} sx={{ gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 1 }}>
+        <Grid mt={3} sx={{ gridTemplateColumns: 'repeat(auto-fill, minmax(172px, 1fr))', gap: 1 }}>
           {[..._options].map((option) => {
+            const protocolStatus = protocolDataStatusMapping[option.protocol as ProtocolEnum]
+            const shouldShowDot = protocolStatus && protocolStatus !== SystemStatusTypeEnum.STABLE
+
             return (
               <Flex
                 as={Link}
@@ -133,7 +140,7 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
                 onClick={handleClickPerpDEX}
                 sx={{
                   color: 'neutral1',
-                  px: 10,
+                  px: '5px',
                   width: '100%',
                   height: 40,
                   alignItems: 'center',
@@ -144,16 +151,29 @@ function PerpDEXSelection({ options, onClickSelection }: { options: Option[]; on
                 }}
               >
                 {option.protocol ? (
-                  <Icon
-                    hasBorder={false}
-                    iconName={option.protocol}
-                    iconUriFactory={parsePlainProtocolImage}
-                    size={32}
-                  />
+                  <Box sx={{ position: 'relative' }}>
+                    <Icon
+                      hasBorder={false}
+                      iconName={option.protocol}
+                      iconUriFactory={parsePlainProtocolImage}
+                      size={32}
+                    />
+                    <Box sx={{ position: 'absolute', top: 24, left: 24 }}>
+                      {shouldShowDot && (
+                        <ActiveDot
+                          color={getSystemStatusTypeColor(protocolStatus)}
+                          tooltipContent={getProtocolMessage(option.protocol as ProtocolEnum)}
+                          tooltipId={`status_indicator_${option.protocol as ProtocolEnum}`}
+                        />
+                      )}
+                    </Box>
+                  </Box>
                 ) : (
                   <PerpDexLogo perpDex={option.perpdex} size={32} />
                 )}
-                <Type.Caption mb={'2px'}>{option.name}</Type.Caption>
+                <Flex alignItems={'center'} sx={{ gap: 1 }}>
+                  <Type.Caption mb={'2px'}>{option.name}</Type.Caption>
+                </Flex>
                 {option.chain ? (
                   <Icon hasBorder={false} iconName={option.chain} iconUriFactory={parseChainImage} size={16} />
                 ) : (

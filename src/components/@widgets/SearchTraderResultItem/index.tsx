@@ -123,10 +123,10 @@ export function TotalVolume({ value, sx = {} }: { value: number | undefined; sx?
   return (
     <Type.Caption sx={{ display: 'flex', gap: [0, 2], lineHeight: '24px', ...sx }}>
       <Box as="span" color="neutral3">
-        Total Volume ($)
+        Total Volume
       </Box>
       <Box as="span" color="neutral1">
-        {value ? compactNumber(value, 2) : '--'}
+        ${value ? compactNumber(value, 2) : '--'}
       </Box>
     </Type.Caption>
   )

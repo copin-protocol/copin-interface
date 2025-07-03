@@ -145,8 +145,8 @@ msgid "90 days"
 msgstr "90 days"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
-msgid "<0/> ($)"
-msgstr "<0/> ($)"
+msgid "<0/>"
+msgstr "<0/>"
 
 #: src/pages/CopinLite/Trades/index.tsx
 msgid "<0/>Stuck Positions"
@@ -801,8 +801,8 @@ msgstr "CLOSED"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
-msgid "COLLATERAL ($)"
-msgstr "COLLATERAL ($)"
+msgid "COLLATERAL"
+msgstr "COLLATERAL"
 
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "COMMISSION & REBATE HISTORY"
@@ -1737,8 +1737,8 @@ msgid "FEATURE"
 msgstr "FEATURE"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
-msgid "FEE ($)"
-msgstr "FEE ($)"
+msgid "FEE"
+msgstr "FEE"
 
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "FIELD"
@@ -2423,8 +2423,8 @@ msgid "MARKET"
 msgstr "MARKET"
 
 #: src/pages/DailyTrades/Orders/config.tsx
-msgid "MARKET PRICE ($)"
-msgstr "MARKET PRICE ($)"
+msgid "MARKET PRICE"
+msgstr "MARKET PRICE"
 
 #: src/pages/CopinLite/Wallet/Withdraw.tsx
 msgid "MAX"
@@ -3131,8 +3131,8 @@ msgid "Overwrite"
 msgstr "Overwrite"
 
 #: src/pages/DailyTrades/Orders/config.tsx
-msgid "PAID FEE ($)"
-msgstr "PAID FEE ($)"
+msgid "PAID FEE"
+msgstr "PAID FEE"
 
 #: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 msgid "PAYMENT HISTORY"
@@ -3884,10 +3884,6 @@ msgstr "Sign Message Error"
 #: src/components/@position/CopyPositionsListView/index.tsx
 msgid "Size"
 msgstr "Size"
-
-#: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
-msgid "Size Delta:"
-msgstr "Size Delta:"
 
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "Size Lower Than"
@@ -5043,14 +5039,11 @@ msgstr "Use this code"
 msgid "Using {0} of {maxFilterFields} filters. Upgrade to add more"
 msgstr "Using {0} of {maxFilterFields} filters. Upgrade to add more"
 
+#: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/components/@widgets/ConditionFilterForm/index.tsx
+#: src/pages/DailyTrades/Orders/config.tsx
 msgid "VALUE"
 msgstr "VALUE"
-
-#: src/components/@position/configs/traderPositionRenderProps.tsx
-#: src/pages/DailyTrades/Orders/config.tsx
-msgid "VALUE ($)"
-msgstr "VALUE ($)"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "VAULT"
@@ -5079,6 +5072,10 @@ msgstr "VOLUME"
 #: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "Value"
 msgstr "Value"
+
+#: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
+msgid "Value Delta:"
+msgstr "Value Delta:"
 
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
 msgid "Value:"
@@ -5731,8 +5728,8 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/pages/Home/Traders.tsx
-msgid "{0} <0/> ($)"
-msgstr "{0} <0/> ($)"
+msgid "{0} <0/>"
+msgstr "{0} <0/>"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
 msgid "{0} API"
@@ -5743,8 +5740,8 @@ msgid "{0} API Key"
 msgstr "{0} API Key"
 
 #: src/pages/Home/Traders.tsx
-msgid "{0} Avg ROI (%)"
-msgstr "{0} Avg ROI (%)"
+msgid "{0} Avg ROI"
+msgstr "{0} Avg ROI"
 
 #: src/components/@wallet/CreateWalletModals/CreateCEXWalletModal.tsx
 msgid "{0} Pass Phrase"

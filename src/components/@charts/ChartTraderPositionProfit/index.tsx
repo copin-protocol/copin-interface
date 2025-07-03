@@ -49,20 +49,16 @@ export default function ChartProfit({
   const latestPnL = useMemo(() => {
     if (crossMove?.pnl === 0 || !data || !symbol) return 0
     if (crossMove?.pnl) return crossMove?.pnl
-    if (!pnlWithFeeEnabled) {
-      return data.realisedPnl
-    }
-    return isOpening ? (realisedPnl || 0) + calcOpeningPnL(data, prices[symbol]) : data.pnl
+    const pnl = !pnlWithFeeEnabled ? data.realisedPnl : data.pnl
+    return isOpening ? calcOpeningPnL(data, prices[symbol]) : pnl
   }, [crossMove?.pnl, data, symbol, prices, realisedPnl, isOpening, pnlWithFeeEnabled])
   const markPrice = !symbol && !prices ? prices[symbol] : null
 
   const latestROI = useMemo(() => {
     if (!data || !symbol) return 0
     if (crossMove?.roi) return crossMove?.roi
-    if (!pnlWithFeeEnabled) {
-      return data.realisedRoi
-    }
-    return isOpening ? calcOpeningROI(data, latestPnL) : data.roi
+    const roi = !pnlWithFeeEnabled ? data.realisedRoi : data.roi
+    return isOpening ? calcOpeningROI(data, latestPnL) : roi
   }, [crossMove?.roi, data, symbol, latestPnL, isOpening, pnlWithFeeEnabled])
 
   const isInvalidROI = protocol === ProtocolEnum.JUPITER && !!data?.roi && data.roi < -100
@@ -85,7 +81,7 @@ export default function ChartProfit({
                   <Flex flexDirection="column" sx={{ gap: 2 }}>
                     <Flex justifyContent="space-between" sx={{ gap: 1 }}>
                       <Type.Caption>PnL (w. Fees):</Type.Caption>
-                      <AmountText amount={data.pnl ?? 0} maxDigit={2} suffix="$" />
+                      <AmountText amount={data.pnl ?? 0} minDigit={2} maxDigit={2} prefix="$" />
                     </Flex>
                     <Flex justifyContent="space-between" sx={{ gap: 1 }}>
                       <Type.Caption>PnL:</Type.Caption>
@@ -93,7 +89,8 @@ export default function ChartProfit({
                         sx={{ whiteSpace: 'nowrap' }}
                         amount={data.realisedPnl ?? 0}
                         maxDigit={2}
-                        suffix="$"
+                        minDigit={2}
+                        prefix="$"
                       />
                     </Flex>
                   </Flex>
@@ -101,7 +98,7 @@ export default function ChartProfit({
               >
                 <Flex alignItems="center">
                   <Type.Head color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}>
-                    <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+                    <AmountText amount={latestPnL} maxDigit={0} prefix="$" />
                   </Type.Head>
                 </Flex>
               </LabelWithTooltip>
@@ -233,7 +230,7 @@ export default function ChartProfit({
                   <AmountText
                     amount={latestPnL - (realisedPnl || 0)}
                     maxDigit={0}
-                    suffix="$"
+                    prefix="$"
                     sx={{ color: latestPnL - (realisedPnl || 0) < 0 ? 'red2' : 'green1' }}
                   />
                 </Type.Caption>
@@ -245,7 +242,7 @@ export default function ChartProfit({
                   <AmountText
                     amount={realisedPnl}
                     maxDigit={0}
-                    suffix="$"
+                    prefix="$"
                     sx={{ color: realisedPnl < 0 ? 'red2' : 'green1' }}
                   />
                 </Type.Caption>

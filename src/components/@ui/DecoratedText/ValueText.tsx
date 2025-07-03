@@ -29,15 +29,10 @@ export const ValueText = ({
         </Box>
       ) : null}
       {value}
-      {suffix ? (
-        <Box as="span" sx={{ color: 'neutral3', ...(suffixSx ?? {}) }}>
-          {suffix}
-        </Box>
-      ) : null}
+      {suffix ? <Box as="span">{suffix}</Box> : null}
     </Box>
   )
 }
-
 export const AmountText = ({
   amount = 0,
   maxDigit,
@@ -57,11 +52,13 @@ export const AmountText = ({
   suffixSx?: any
   prefixSx?: any
 }) => {
+  const isNegative = amount < 0
+  const modifiedPrefix = isNegative ? <>-{prefix}</> : prefix
   return (
     <ValueText
-      value={formatNumber(amount, maxDigit, minDigit)}
+      value={formatNumber(Math.abs(amount), maxDigit, minDigit)}
       suffix={suffix}
-      prefix={prefix}
+      prefix={modifiedPrefix}
       sx={sx}
       suffixSx={suffixSx}
       prefixSx={prefixSx}

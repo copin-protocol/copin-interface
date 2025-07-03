@@ -100,6 +100,7 @@ export function ProfitLossChartComponent({
       colors={themeColors}
       syncId={syncId}
       stackOffset="sign"
+      tooltip={ProfitLossTooltip}
       externalLegend={
         <>
           <Li color="neutral2">
@@ -523,6 +524,35 @@ function tooltipFormatter(value: any, index: any, item: any) {
   return formatNumber(_value, _value < 1 && _value > -1 ? 1 : 0)
 }
 
+const ProfitLossTooltip = ({ payload }: any) => {
+  const lossCumulative = payload?.[0]
+  const lossCumulativeValue = lossCumulative?.value ?? 0
+  const profitCumulative = payload?.[1]
+  const profitCumulativeValue = profitCumulative?.value ?? 0
+  const totalProfit = payload?.[2]
+  const totalProfitValue = totalProfit?.value ?? 0
+  const totalLoss = payload?.[3]
+  const totalLossValue = totalLoss?.value ?? 0
+
+  return (
+    <Flex flexDirection="column" p={3} backgroundColor="neutral7" sx={{ gap: 2 }}>
+      <Type.Body>{lossCumulative?.payload?.date}</Type.Body>
+      <Flex alignItems="center" color={lossCumulative?.color} sx={{ gap: 2 }}>
+        <NumberWithSymbol name={lossCumulative?.name} value={lossCumulativeValue} unit={lossCumulative?.unit} />
+      </Flex>
+      <Flex alignItems="center" color={profitCumulative?.color} sx={{ gap: 2 }}>
+        <NumberWithSymbol name={profitCumulative?.name} value={profitCumulativeValue} unit={profitCumulative?.unit} />
+      </Flex>
+      <Flex alignItems="center" color={totalProfit?.color} sx={{ gap: 2 }}>
+        <NumberWithSymbol name={totalProfit?.name} value={totalProfitValue} unit={totalProfit?.unit} />
+      </Flex>
+      <Flex alignItems="center" color={totalLoss?.color} sx={{ gap: 2 }}>
+        <NumberWithSymbol name={totalLoss?.name} value={totalLossValue} unit={totalLoss?.unit} />
+      </Flex>
+    </Flex>
+  )
+}
+
 interface TooltipProps {
   active?: boolean
   payload?: any[]
@@ -545,36 +575,24 @@ const DailyNetPnlTooltip = ({ payload }: TooltipProps) => {
       {EXCHANGE_STATS.map((exchange) => {
         const pnl = pnlPayload?.exchanges[exchange]?.totalPnl
         return !!pnl ? (
-          <Flex
+          <NumberWithSymbol
             key={`${pnlPayload?.date}-${exchange}`}
-            alignItems="center"
+            name={PLATFORM_TEXT_TRANS[exchange]}
+            value={pnl}
+            unit={pnlCumulative?.unit}
             color={EXCHANGE_COLOR[exchange]}
-            sx={{ gap: 2 }}
-          >
-            <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
-            <Type.Body>
-              {formatNumber(pnl, pnl < 1 && pnl > -1 ? 1 : 0)}
-              {pnlCumulative?.unit ?? ''}
-            </Type.Body>
-          </Flex>
+          />
         ) : (
           <></>
         )
       })}
-      <Flex alignItems="center" color={pnl?.color} sx={{ gap: 2 }}>
-        <Type.Body>{pnl?.name} :</Type.Body>
-        <Type.Body>
-          {formatNumber(pnlValue, pnlValue < 1 && pnlValue > -1 ? 1 : 0)}
-          {pnlCumulative?.unit ?? ''}
-        </Type.Body>
-      </Flex>
-      <Flex alignItems="center" color={pnlCumulative?.color} sx={{ gap: 2 }}>
-        <Type.Body>{pnlCumulative?.name} :</Type.Body>
-        <Type.Body>
-          {formatNumber(pnlCumulativeValue, pnlCumulativeValue < 1 && pnlCumulativeValue > -1 ? 1 : 0)}
-          {pnlCumulative?.unit ?? ''}
-        </Type.Body>
-      </Flex>
+      <NumberWithSymbol name={pnl?.name} value={pnlValue} unit={pnlCumulative?.unit} color={pnl?.color} />
+      <NumberWithSymbol
+        name={pnlCumulative?.name}
+        value={pnlCumulativeValue}
+        unit={pnlCumulative?.unit}
+        color={pnlCumulative?.color}
+      />
     </Flex>
   )
 }
@@ -623,39 +641,32 @@ const DailyVolumeTooltip = ({ payload }: TooltipProps) => {
   return (
     <Flex flexDirection="column" p={3} backgroundColor="neutral7" sx={{ gap: 2 }}>
       <Type.Body>{volumePayload?.date}</Type.Body>
-      <Flex alignItems="center" color={themeColors.primary2} sx={{ gap: 2 }}>
-        <Type.Body>Total Volume:</Type.Body>
-        <Type.Body>
-          {formatNumber(totalDailyVolume, totalDailyVolume < 1 && totalDailyVolume > -1 ? 1 : 0)}
-          {volumeCumulative?.unit ?? ''}
-        </Type.Body>
-      </Flex>
+      <NumberWithSymbol
+        name="Total Volume"
+        value={totalDailyVolume}
+        unit={volumeCumulative?.unit}
+        color={themeColors.primary2}
+      />
       {EXCHANGE_STATS.map((exchange) => {
         const volume = volumePayload?.exchanges[exchange]?.totalVolume
         return !!volume ? (
-          <Flex
+          <NumberWithSymbol
             key={`${volumePayload?.date}-${exchange}-${volume}`}
-            alignItems="center"
+            name={PLATFORM_TEXT_TRANS[exchange]}
+            value={volume}
+            unit={volumeCumulative?.unit}
             color={EXCHANGE_COLOR[exchange]}
-            sx={{ gap: 2 }}
-          >
-            <Type.Body>{PLATFORM_TEXT_TRANS[exchange]} :</Type.Body>
-            <Type.Body>
-              {formatNumber(volume, volume < 1 && volume > -1 ? 1 : 0)}
-              {volumeCumulative?.unit ?? ''}
-            </Type.Body>
-          </Flex>
+          />
         ) : (
           <></>
         )
       })}
-      <Flex alignItems="center" color={volumeCumulative?.color} sx={{ gap: 2 }}>
-        <Type.Body>{volumeCumulative?.name} :</Type.Body>
-        <Type.Body>
-          {formatNumber(volumeCumulativeValue, volumeCumulativeValue < 1 && volumeCumulativeValue > -1 ? 1 : 0)}
-          {volumeCumulative?.unit ?? ''}
-        </Type.Body>
-      </Flex>
+      <NumberWithSymbol
+        name={volumeCumulative?.name}
+        value={volumeCumulativeValue}
+        unit={volumeCumulative?.unit}
+        color={volumeCumulative?.color}
+      />
     </Flex>
   )
 }
@@ -684,6 +695,29 @@ const DailyVolumeLegend = ({ payload }: any) => {
       sx={{ '.recharts-legend-wrapper': { position: 'relative !important' } }}
     >
       <Legend payload={customPayload} />
+    </Flex>
+  )
+}
+
+const NumberWithSymbol = ({
+  name,
+  value,
+  unit,
+  color,
+  key,
+}: {
+  name?: string
+  value: number
+  unit?: string
+  color?: string
+  key?: string | number
+}) => {
+  return (
+    <Flex key={key} alignItems="center" color={color} sx={{ gap: 2 }}>
+      {name && <Type.Body>{name} :</Type.Body>}
+      <Type.Body>
+        {`${value < 0 ? '-' : ''}${unit ?? ''}${formatNumber(Math.abs(value), value < 1 && value > -1 ? 1 : 0)}`}
+      </Type.Body>
     </Flex>
   )
 }

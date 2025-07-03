@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { HlOrderData } from 'entities/hyperliquid'
@@ -71,17 +72,17 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         render: (item) => renderOrderSize(item),
       },
       {
-        title: 'Value',
+        title: 'Size',
         dataIndex: 'sizeInTokenNumber',
         key: 'sizeInTokenNumber',
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '120px', textAlign: 'right' },
         render: (item) => renderOrderSizeInToken(item),
       },
       {
         title: 'Market Price',
         dataIndex: 'priceNumber',
         key: 'priceNumber',
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '130px', textAlign: 'right' },
         render: renderOrderPrice,
       },
     ]
@@ -119,7 +120,7 @@ export const renderOrderTriggerCondition = (item: HlOrderData) => (
   <Type.Caption color="neutral1">{item.triggerCondition ?? '--'}</Type.Caption>
 )
 export const renderOrderSize = (item: HlOrderData) => (
-  <Type.Caption color="neutral1">{item.sizeNumber ? formatNumber(item.sizeNumber, 0, 0) : '--'}</Type.Caption>
+  <SignedText value={item.sizeNumber} minDigit={2} maxDigit={2} prefix="$" fontInherit sx={{ fontSize: '12px' }} />
 )
 
 export const renderOrderSizeInToken = (item: HlOrderData) => (

@@ -24,7 +24,7 @@ import { SubscriptionPlanEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import ROUTES from 'utils/config/routes'
 import { IF_PLAN, PLANS, PlanConfig } from 'utils/config/subscription'
-import { formatDate, formatNumber } from 'utils/helpers/format'
+import { formatLocalFullDate, formatNumber } from 'utils/helpers/format'
 
 import PlanDowngradeModal from './PlanDowngradeModal'
 import UsageTable from './UsageTable'
@@ -184,7 +184,7 @@ const MySubscriptionPage = () => {
 
                         {profile?.subscription?.expiredTime && (
                           <Type.Caption display="block" mt={2}>
-                            <Trans>Expires: {formatDate(profile?.subscription?.expiredTime)}</Trans>
+                            <Trans>Expires: {formatLocalFullDate(profile?.subscription?.expiredTime)}</Trans>
                           </Type.Caption>
                         )}
                       </>

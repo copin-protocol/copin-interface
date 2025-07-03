@@ -239,7 +239,7 @@ function TraderDetailsComponent({
             }}
           >
             {lg && (
-              <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
+              <Flex height="100%" alignItems="center">
                 <Box width="380px">
                   <TraderRanking
                     data={currentTraderData}

@@ -23,7 +23,15 @@ const useUserPreferencesStore = create<UserPreferences>()(
     })),
     {
       name: STORAGE_KEYS.USER_PREFERENCES,
+      version: 1,
       getStorage: () => localStorage,
+      migrate: (persistedState, version) => {
+        if (version < 1) {
+          ;(persistedState as UserPreferences).setPnlWithFeeEnabled(false)
+          // if the stored value is in version lower, we set state to default
+        }
+        return persistedState as UserPreferences
+      },
     }
   )
 )

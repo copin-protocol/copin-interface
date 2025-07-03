@@ -12,6 +12,7 @@ export const tableStyles = {
     borderRightColor: 'neutral4',
     transition: 'none',
     zIndex: 1,
+    height: 52,
   },
   'tbody td:last-child': { pr: 3, position: 'sticky', right: 0 },
   'thead th': { py: '6px !important', alignItems: 'center', pr: 1 },

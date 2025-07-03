@@ -101,7 +101,7 @@ function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefin
       <VerticalDivider />
       <Type.Caption>{symbol}</Type.Caption>
       <VerticalDivider />
-      <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
+      <Type.Caption {...textSx}>{PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
     </Flex>
   )
 }
@@ -148,7 +148,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
                 hasPrefix={false}
               />
             ) : (
-              `${formatNumber(data.maxSizeNumber ?? data.size, 0)}`
+              `$${formatNumber(data.maxSizeNumber ?? data.size, 0)}`
             )}
           </Type.Caption>
         </Flex>
@@ -234,7 +234,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
               />
             ) : (
               // `${sizeNumber >= 100_000 ? compactNumber(sizeNumber, 2) : formatNumber(sizeNumber, 0)}`
-              `${compactNumber(sizeNumber, 2)}`
+              <Type.Caption>${compactNumber(sizeNumber, 2)}</Type.Caption>
             )}
           </Type.Caption>
         </Flex>
@@ -327,6 +327,7 @@ function OpeningPnLComponent({ data, prices, ignoreFee, sx }: OpeningPnLComponen
           value={pnl ?? pnlInToken}
           maxDigit={2}
           minDigit={2}
+          prefix="$"
           // isCompactNumber={Math.abs(pnl ?? pnlInToken ?? 0) >= 100_000}
           isCompactNumber
           sx={{ textAlign: 'right', width: '100%', ...sx }}

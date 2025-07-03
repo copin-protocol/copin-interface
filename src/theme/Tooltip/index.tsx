@@ -3,10 +3,8 @@ import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import { Box } from 'theme/base'
 
-// function Tooltip(props: any) {
 function Tooltip(props: ComponentProps<typeof ReactTooltip>) {
   return (
-    // <BodyPortal>
     <ReactTooltip
       variant="dark"
       place="top"
@@ -23,7 +21,6 @@ function Tooltip(props: ComponentProps<typeof ReactTooltip>) {
     >
       <Box sx={{ p: 2, maxHeight: 350, overflow: 'auto' }}>{props.children as any}</Box>
     </ReactTooltip>
-    // </BodyPortal>
   )
 }
 

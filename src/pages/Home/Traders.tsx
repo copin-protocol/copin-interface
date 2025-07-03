@@ -594,7 +594,7 @@ function TraderItem({
         <Box>
           <Type.Caption display="block">
             <Trans>
-              {TIME_TRANSLATION[type]} <PnlTitle type="lower" color="neutral1" /> ($)
+              {TIME_TRANSLATION[type]} <PnlTitle type="lower" color="neutral1" />
             </Trans>
           </Type.Caption>
           <Type.Caption sx={{ fontWeight: 600 }} className="trader-pnl">
@@ -603,7 +603,7 @@ function TraderItem({
         </Box>
         <Box>
           <Type.Caption display="block">
-            <Trans>{TIME_TRANSLATION[type]} Avg ROI (%)</Trans>
+            <Trans>{TIME_TRANSLATION[type]} Avg ROI</Trans>
           </Type.Caption>
           <Type.Caption sx={{ fontWeight: 600 }}>
             <SignedText value={avgRoi} minDigit={2} maxDigit={2} fontInherit suffix="%" />

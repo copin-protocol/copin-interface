@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react'
+import { PlacesType } from 'react-tooltip'
 
 import Tooltip from 'theme/Tooltip'
 import { Box, Type } from 'theme/base'
@@ -9,11 +10,13 @@ const ActiveDot = ({
   tooltipContent,
   size = 8,
   color = themeColors.green2,
+  placeTooltip = 'top',
 }: {
   tooltipId?: string
   tooltipContent?: ReactNode
   size?: number
   color?: string
+  placeTooltip?: PlacesType
 }) => {
   return (
     <>
@@ -28,7 +31,7 @@ const ActiveDot = ({
         data-tooltip-id={tooltipId}
       />
       {!!tooltipContent && (
-        <Tooltip id={tooltipId} clickable={false}>
+        <Tooltip id={tooltipId} clickable={false} place={placeTooltip}>
           <Type.Small sx={{ maxWidth: [300, 400] }}>{tooltipContent}</Type.Small>
         </Tooltip>
       )}

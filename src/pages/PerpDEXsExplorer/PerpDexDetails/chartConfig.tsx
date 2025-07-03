@@ -352,8 +352,10 @@ function TooltipFieldItem({
         <Type.Caption color={labelColor}>{label}</Type.Caption>
       </Flex>
       <Type.Caption color={valueColor} textAlign="right">
-        {formatNumber(value, value && value < 1 && value > -1 ? 1 : 0)}
-        {unit ?? ''}
+        {`${(value ?? 0) < 0 ? '-' : ''}${unit ?? ''}${formatNumber(
+          Math.abs(value ?? 0),
+          (value ?? 0) < 1 && (value ?? 0) > -1 ? 1 : 0
+        )}`}
       </Type.Caption>
     </Flex>
   )

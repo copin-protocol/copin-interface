@@ -18,6 +18,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
+import { addressShorten, shortenEnsName } from 'utils/helpers/format'
 import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import HLChartPositionComponent from './HLChartPositionComponent'
@@ -54,7 +55,9 @@ const HLTraderPositionDetails = memo(function HLPositionDetailsMemo({
                   <Button type="button" variant="ghost" sx={{ p: 0 }}>
                     <Flex flexDirection="column" textAlign="left">
                       <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                        <Type.BodyBold>{ensName || data.account}</Type.BodyBold>
+                        <Type.BodyBold>
+                          {ensName ? shortenEnsName(ensName) : addressShorten(data.account)}
+                        </Type.BodyBold>
                         <ProtocolLogo
                           protocol={data.protocol}
                           size={24}

@@ -50,7 +50,7 @@ export default function OrderTooltip({ data }: { data: OrderData }) {
         }
       />
       <ItemInfo
-        label={<Trans>Size Delta:</Trans>}
+        label={<Trans>Value Delta:</Trans>}
         value={
           data.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
             '--'
@@ -61,6 +61,7 @@ export default function OrderTooltip({ data }: { data: OrderData }) {
                 data.sizeDeltaNumber ??
                   (data.sizeDeltaInTokenNumber ? data.sizeDeltaInTokenNumber * data.priceNumber : undefined)
               )}
+              prefix="$"
             />
           )
         }

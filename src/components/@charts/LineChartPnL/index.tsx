@@ -137,7 +137,7 @@ export default function LineChartPnL({
                 color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}
                 sx={{ display: 'block', textAlign: 'center' }}
               >
-                <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
+                <AmountText amount={latestPnL} maxDigit={0} prefix="$" />
               </BalanceTextComponent>
             </Box>
           )}
@@ -145,11 +145,11 @@ export default function LineChartPnL({
             <Flex flexDirection="column" sx={{ gap: 2 }}>
               <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
                 <Type.Caption>Realized PnL:</Type.Caption>
-                {renderValueWithColor(realisedPnl)}
+                <Box>{renderValueWithColor(realisedPnl)}</Box>
               </Flex>
               <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
                 <Type.Caption>Unrealized PnL:</Type.Caption>
-                {renderValueWithColor(unrealisedPnl)}
+                <Box>{renderValueWithColor(unrealisedPnl)}</Box>
               </Flex>
             </Flex>
           </Tooltip>

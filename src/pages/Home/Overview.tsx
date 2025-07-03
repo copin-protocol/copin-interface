@@ -127,7 +127,7 @@ function Activities() {
               <Box sx={{ a: { color: 'neutral1', textDecoration: 'underline', '&:hover': { color: 'neutral2' } } }}>
                 <Type.Caption color="neutral3">
                   <RelativeTimeText date={data.createdAt} />
-                </Type.Caption>
+                </Type.Caption>{' '}
                 <Type.Caption color="neutral2">
                   <Box as="b" color="neutral1">
                     {addressShorten(data.username)}

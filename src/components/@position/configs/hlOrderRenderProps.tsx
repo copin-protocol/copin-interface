@@ -54,7 +54,7 @@ const sizeColumn: ColumnData<HlOrderData> = {
   sortBy: 'sizeNumber',
   style: { minWidth: '100px', textAlign: 'right' },
   render: (item) => (
-    <Type.Caption color="neutral1">{item.sizeNumber ? formatNumber(item.sizeNumber, 0, 0) : '--'}</Type.Caption>
+    <Type.Caption color="neutral1">{item.sizeNumber ? `$${formatNumber(item.sizeNumber, 0, 0)}` : '--'}</Type.Caption>
   ),
 }
 

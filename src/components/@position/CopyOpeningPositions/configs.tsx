@@ -115,7 +115,7 @@ export const liteOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCopy
     render: renderSLTP,
   },
   {
-    title: 'ROI (%)',
+    title: 'ROI',
     key: undefined,
     style: { minWidth: '60px', textAlign: 'right' },
     render: renderOpeningROI,

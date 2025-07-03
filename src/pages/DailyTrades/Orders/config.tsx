@@ -126,33 +126,37 @@ export const orderColumns: ColumnData<OrderData>[] = [
   },
   {
     filterComponent: <OrderRangeFilterIcon valueKey={ORDER_RANGE_KEYS.collateralDeltaNumber as any} />,
-    title: <Trans>COLLATERAL ($)</Trans>,
+    title: <Trans>COLLATERAL</Trans>,
     dataIndex: 'collateralDeltaNumber',
     key: 'collateralDeltaNumber',
     style: { textAlign: 'right', flex: 1.5, display: ['none', 'none', 'none', 'none', 'flex'], justifyContent: 'end' },
     render: (item) => {
-      return COLLATERAL_TOKEN_PROTOCOLS.includes(item.protocol)
-        ? renderOrderCollateral(item, 'USDT')
-        : formatNumber(item.collateralDeltaNumber, 2, 2)
+      return COLLATERAL_TOKEN_PROTOCOLS.includes(item.protocol) ? (
+        renderOrderCollateral(item, 'USDT')
+      ) : (
+        <Type.Caption>
+          {item.collateralDeltaNumber != null ? `$${formatNumber(item.collateralDeltaNumber, 2, 2)}` : `--`}
+        </Type.Caption>
+      )
     },
   },
   {
     filterComponent: <OrderRangeFilterIcon valueKey={ORDER_RANGE_KEYS.sizeDeltaNumber as any} />,
-    title: <Trans>VALUE ($)</Trans>,
+    title: <Trans>VALUE</Trans>,
     dataIndex: 'sizeDeltaNumber',
     key: 'sizeDeltaNumber',
     style: { textAlign: 'right', flex: 1, justifyContent: 'end', gap: 1 },
-    render: (item) => <Type.Caption>{formatNumber(item.sizeDeltaNumber, 2, 2)}</Type.Caption>,
+    render: (item) => <Type.Caption>${formatNumber(item.sizeDeltaNumber, 2, 2)}</Type.Caption>,
   },
   {
-    title: <Trans>MARKET PRICE ($)</Trans>,
+    title: <Trans>MARKET PRICE</Trans>,
     dataIndex: 'priceNumber',
     key: 'priceNumber',
     style: { textAlign: 'right', flex: 1.3, pr: 3 },
     render: renderOrderPrice,
   },
   {
-    title: <Trans>PAID FEE ($)</Trans>,
+    title: <Trans>PAID FEE</Trans>,
     dataIndex: 'feeNumber',
     key: 'feeNumber',
     style: { textAlign: 'right', flex: 1, pr: 3, display: ['none', 'none', 'none', 'none', 'flex'] },

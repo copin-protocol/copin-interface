@@ -78,7 +78,7 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
     style: { minWidth: '120px', textAlign: 'right', pr: 3 },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
-        {formatNumber(item.totalVolume, 0, 0)}
+        ${formatNumber(item.totalVolume, 0, 0)}
       </Type.Caption>
     ),
   },

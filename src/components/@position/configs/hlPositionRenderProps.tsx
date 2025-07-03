@@ -155,7 +155,7 @@ export const openingColumns: ColumnData<PositionData>[] = [
 ]
 
 export const drawerOpeningColumns: ColumnData<PositionData>[] = [
-  { ...entryColumn, style: { minWidth: 150 } },
+  { ...entryColumn, style: { minWidth: 170 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
   collateralColumn,
   fundingColumn,

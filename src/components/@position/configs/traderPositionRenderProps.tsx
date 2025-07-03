@@ -52,6 +52,7 @@ const renderPositionCollateral = (item: PositionData, defaultToken?: string) => 
       value={item.collateral}
       valueInToken={item.collateralInToken}
       defaultToken={defaultToken}
+      hasPrefix={true}
     />
   </Type.Caption>
 )
@@ -76,7 +77,7 @@ const renderPositionFee = (item: PositionData, prefix = '$') => (
           value={item.fee == null && item.feeInToken == null ? undefined : (item.fee ?? item.feeInToken) * -1}
           maxDigit={2}
           minDigit={2}
-          prefix={prefix}
+          prefix={'$'}
         />
       }
     />
@@ -559,10 +560,10 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   {
     ...sizeColumn,
     style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
-    title: <Trans>VALUE ($)</Trans>,
+    title: <Trans>VALUE</Trans>,
     filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.size} />,
     text: 'Size',
-    render: (item) => renderPositionSize({ item, hasPrefix: false }),
+    render: (item) => renderPositionSize({ item, hasPrefix: true }),
   },
   {
     ...leverageColumn,
@@ -586,7 +587,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
       '@media all and (min-width: 1400px)': { display: 'flex' },
       justifyContent: 'end',
     },
-    title: <Trans>COLLATERAL ($)</Trans>,
+    title: <Trans>COLLATERAL</Trans>,
     filterComponent: (
       <PositionRangeFilterIcon
         //@ts-ignore
@@ -626,7 +627,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
   },
   {
     ...feeColumn,
-    title: <Trans>FEE ($)</Trans>,
+    title: <Trans>FEE</Trans>,
     style: {
       flex: 1,
       textAlign: 'right',
@@ -660,7 +661,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
     style: { flex: 1.1, textAlign: 'right', justifyContent: 'end' },
     title: (
       <Trans>
-        <PnlTitle /> ($)
+        <PnlTitle />
       </Trans>
     ),
     filterComponent: (
@@ -669,7 +670,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
     ),
     text: 'PnL',
     render: (item) => {
-      return item.status === PositionStatusEnum.OPEN ? renderOpeningPnL(item) : renderPositionPnL({ item, prefix: '' })
+      return item.status === PositionStatusEnum.OPEN ? renderOpeningPnL(item) : renderPositionPnL({ item, prefix: '$' })
     },
   },
   // { ...mixPnLColumn, style: { flex: 1, display: ['block', 'block', 'none', 'none'] } },

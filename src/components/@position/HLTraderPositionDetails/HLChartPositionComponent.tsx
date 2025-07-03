@@ -34,7 +34,7 @@ export default function HLChartPositionComponent({
           >
             <Flex>
               <Type.Head color={data.pnl > 0 ? 'green1' : data.pnl < 0 ? 'red2' : 'inherit'}>
-                <AmountText amount={data.pnl} maxDigit={0} suffix="$" />
+                <AmountText amount={data.pnl} maxDigit={0} prefix="$" />
               </Type.Head>
             </Flex>
             {!!data.roi && (
