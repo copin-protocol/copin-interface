@@ -209,7 +209,7 @@ export function compactNumber(num: number | string | undefined, digits = 1, isIn
   const item = lookup.find(function (item) {
     return Math.abs(num as number) >= item.value
   })
-  return item ? (num / item.value).toFixed(digits) + '\u202F' + item.symbol : '--'
+  return item ? (num / item.value).toFixed(digits) + item.symbol : '--'
 }
 
 export function breakLineTextToArray({ text = '', maxLine = 2, lineMaxLength = 40 }) {
