@@ -152,7 +152,7 @@ export function parseHLOrderFillData({ account, data }: { account: string; data:
         timestamp: e.time,
       } as HlOrderFillData
     })
-    .filter((d) => !d.pair.startsWith('@'))
+    .filter((d) => !['Buy', 'Sell'].includes(d.direction))
 }
 
 export function convertPairHL(symbol: string) {

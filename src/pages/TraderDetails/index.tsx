@@ -19,6 +19,7 @@ import NotFound from 'components/@ui/NotFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { HyperliquidTraderProvider } from 'hooks/features/trader/useHyperliquidTraderContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
@@ -36,6 +37,7 @@ import { isAddress } from 'utils/web3/contracts'
 import ChartTrader from './ChartTrader'
 import TraderChartPositions from './ChartTrader/ChartPositions'
 import GeneralStats from './GeneralStats'
+import HyperliquidApiMode from './HyperliquidApiMode'
 import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
@@ -170,6 +172,8 @@ export function TraderDetailsComponent({
     handlePositionsExpand,
     chartFullExpanded,
     handleChartFullExpand,
+    apiMode,
+    handleApiMode,
   } = useHandleLayout()
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   if (!protocolOptionsMapping[protocol]) {
@@ -182,117 +186,131 @@ export function TraderDetailsComponent({
     <>
       <CustomPageTitle title={`Trader ${addressShorten(address)} on ${protocolOptionsMapping[protocol]?.text}`} />
 
-      <Layout
-        address={address}
-        protocol={protocol}
-        protocolStats={
-          <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
-        }
-        traderInfo={
-          <Box>
-            <Flex
-              sx={{
-                width: '100%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 3,
-              }}
-            >
-              <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
-              <TraderActionButtons
-                traderData={currentTraderData}
-                timeOption={timeOption}
-                onChangeTime={setTimeOption}
-                account={address}
-                protocol={protocol}
-                onCopyActionSuccess={onForceReload}
-              />
-            </Flex>
-            {!!traderData && !lg && (
-              <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
-                <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
-              </Box>
-            )}
-          </Box>
-        }
-        traderChartPnl={
-          <ChartTrader
-            protocol={protocol}
-            account={address}
-            timeOption={timeOption}
-            // onChangeTime={setTimeOption}
-          />
-        }
-        traderStatsSummary={<GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />}
-        traderStats={
-          isLoadingTraderData ? (
-            <Loading />
-          ) : (
-            <>
-              {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
-                <NoDataFound message="No statistic" />
-              ) : (
-                !!traderData && <TraderStats data={traderData} timeOption={timeOption} />
+      <HyperliquidTraderProvider address={address} protocol={protocol}>
+        <Layout
+          address={address}
+          protocol={protocol}
+          protocolStats={
+            <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
+          }
+          traderInfo={
+            <Box>
+              <Flex
+                sx={{
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: 3,
+                }}
+              >
+                <TraderInfo address={address} protocol={protocol} timeOption={timeOption} traderStats={traderData} />
+                <TraderActionButtons
+                  traderData={currentTraderData}
+                  timeOption={timeOption}
+                  onChangeTime={setTimeOption}
+                  account={address}
+                  protocol={protocol}
+                  onCopyActionSuccess={onForceReload}
+                />
+              </Flex>
+              {!!traderData && !lg && (
+                <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
+                  <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
+                </Box>
               )}
-            </>
-          )
-        }
-        traderRanking={<TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />}
-        traderChartPositions={
-          <TraderChartPositions
-            account={address}
-            protocol={protocol}
-            isExpanded={chartFullExpanded}
-            handleExpand={handleChartFullExpand}
-          />
-        }
-        heatmap={<div></div>}
-        openingPositions={
-          sm ? (
-            protocol === ProtocolEnum.HYPERLIQUID ? (
-              <HLTraderOpeningPositionsTableView
+            </Box>
+          }
+          traderChartPnl={
+            <ChartTrader
+              protocol={protocol}
+              account={address}
+              timeOption={timeOption}
+              // onChangeTime={setTimeOption}
+            />
+          }
+          traderStatsSummary={
+            <GeneralStats
+              traderData={currentTraderData}
+              account={address}
+              protocol={protocol}
+              apiMode={apiMode}
+              handleApiMode={handleApiMode}
+            />
+          }
+          traderStats={
+            isLoadingTraderData ? (
+              <Loading />
+            ) : (
+              <>
+                {!currentTraderData && (!traderData || traderData?.every((data) => !data)) ? (
+                  <NoDataFound message="No statistic" />
+                ) : (
+                  !!traderData && <TraderStats data={traderData} timeOption={timeOption} />
+                )}
+              </>
+            )
+          }
+          traderRanking={
+            <TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />
+          }
+          traderChartPositions={
+            <TraderChartPositions
+              account={address}
+              protocol={protocol}
+              isExpanded={chartFullExpanded}
+              handleExpand={handleChartFullExpand}
+            />
+          }
+          heatmap={<div></div>}
+          openingPositions={
+            sm ? (
+              protocol === ProtocolEnum.HYPERLIQUID ? (
+                <HLTraderOpeningPositionsTableView
+                  address={address}
+                  protocol={protocol}
+                  isExpanded={openingPositionFullExpanded}
+                  toggleExpand={handleOpeningPositionsExpand}
+                />
+              ) : (
+                <TraderOpeningPositionsTableView
+                  address={address}
+                  protocol={protocol}
+                  isExpanded={openingPositionFullExpanded}
+                  toggleExpand={handleOpeningPositionsExpand}
+                />
+              )
+            ) : protocol === ProtocolEnum.HYPERLIQUID ? (
+              <HLTraderOpeningPositionsListView address={address} protocol={protocol} />
+            ) : (
+              <TraderOpeningPositionsListView address={address} protocol={protocol} />
+            )
+          }
+          closedPositions={
+            sm ? (
+              <TraderHistoryPositionsTableView
                 address={address}
                 protocol={protocol}
-                isExpanded={openingPositionFullExpanded}
-                toggleExpand={handleOpeningPositionsExpand}
+                isExpanded={positionFullExpanded}
+                toggleExpand={handlePositionsExpand}
               />
             ) : (
-              <TraderOpeningPositionsTableView
+              <TraderHistoryPositionsListView
+                backgroundColor="neutral7"
                 address={address}
                 protocol={protocol}
-                isExpanded={openingPositionFullExpanded}
-                toggleExpand={handleOpeningPositionsExpand}
+                isExpanded={positionFullExpanded}
+                toggleExpand={handlePositionsExpand}
               />
             )
-          ) : protocol === ProtocolEnum.HYPERLIQUID ? (
-            <HLTraderOpeningPositionsListView address={address} protocol={protocol} />
-          ) : (
-            <TraderOpeningPositionsListView address={address} protocol={protocol} />
-          )
-        }
-        closedPositions={
-          sm ? (
-            <TraderHistoryPositionsTableView
-              address={address}
-              protocol={protocol}
-              isExpanded={positionFullExpanded}
-              toggleExpand={handlePositionsExpand}
-            />
-          ) : (
-            <TraderHistoryPositionsListView
-              backgroundColor="neutral7"
-              address={address}
-              protocol={protocol}
-              isExpanded={positionFullExpanded}
-              toggleExpand={handlePositionsExpand}
-            />
-          )
-        }
-        openingPositionFullExpanded={openingPositionFullExpanded}
-        positionFullExpanded={positionFullExpanded}
-        chartFullExpanded={chartFullExpanded}
-      ></Layout>
+          }
+          hyperliquidApiMode={<HyperliquidApiMode address={address} protocol={protocol} />}
+          openingPositionFullExpanded={openingPositionFullExpanded}
+          positionFullExpanded={positionFullExpanded}
+          chartFullExpanded={chartFullExpanded}
+          apiMode={apiMode}
+        ></Layout>
+      </HyperliquidTraderProvider>
     </>
   )
 }

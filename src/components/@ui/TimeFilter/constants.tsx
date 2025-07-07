@@ -186,3 +186,31 @@ export const PERP_DEX_CHART_FILTER_OPTIONS: TimeFilterProps[] = [
     value: 365 * 10, // 10 years
   },
 ]
+
+export const HYPERLIQUID_API_FILTER_OPTIONS: TimeFilterProps[] = [
+  {
+    id: TimeFilterByEnum.LAST_24H,
+    text: <Trans>24H</Trans>,
+    sort_by: TimeFilterByEnum.LAST_24H,
+    value: 1,
+    // premiumFilter: true,
+  },
+  {
+    id: TimeFilterByEnum.S7_DAY,
+    text: <Trans>1W</Trans>,
+    sort_by: TimeFilterByEnum.S7_DAY,
+    value: 7,
+  },
+  {
+    id: TimeFilterByEnum.S30_DAY,
+    text: <Trans>1M</Trans>,
+    sort_by: TimeFilterByEnum.S30_DAY,
+    value: 30,
+  },
+  {
+    id: TimeFilterByEnum.ALL_TIME,
+    text: <Trans>ALL</Trans>,
+    sort_by: TimeFilterByEnum.ALL_TIME,
+    value: 365 * 10,
+  },
+]

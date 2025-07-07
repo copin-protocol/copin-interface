@@ -5,12 +5,10 @@ import { GridProps } from 'styled-system'
 
 import BacktestSingleButton from 'components/@backtest/BacktestSingleButton'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
-import CopyVaultButton from 'components/@copyTrade/CopyVaultButton'
 import AnalyzeAction from 'components/@ui/AnalyzeButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, TraderData } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
-import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -51,7 +49,7 @@ export default function TraderActionButtons({
   eventCategory?: EventCategory
 }) {
   const { xl } = useResponsive()
-  const { isDA } = useCopyWalletContext()
+  // const { isDA } = useCopyWalletContext()
   const { isAllowedProtocol } = useTraderProfilePermission({ protocol })
   return (
     <>
@@ -72,26 +70,26 @@ export default function TraderActionButtons({
           }}
         >
           {/* <TradeProtocolAction protocol={protocol} /> */}
-          {isDA && (
-            <CopyVaultButton
-              protocol={protocol}
-              account={account}
-              onForceReload={onCopyActionSuccess}
-              buttonSx={{
-                px: 3,
-                width: 'auto',
-                bg: 'transparent !important',
-                color: `${themeColors.primary1} !important`,
-                '&:hover:not(:disabled)': { color: `${themeColors.primary2} !important` },
-              }}
-              buttonText={
-                <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                  <UniteSquare size={20} />
-                  <Type.CaptionBold>Copy Vault</Type.CaptionBold>
-                </Flex>
-              }
-            />
-          )}
+          {/*{isDA && (*/}
+          {/*  <CopyVaultButton*/}
+          {/*    protocol={protocol}*/}
+          {/*    account={account}*/}
+          {/*    onForceReload={onCopyActionSuccess}*/}
+          {/*    buttonSx={{*/}
+          {/*      px: 3,*/}
+          {/*      width: 'auto',*/}
+          {/*      bg: 'transparent !important',*/}
+          {/*      color: `${themeColors.primary1} !important`,*/}
+          {/*      '&:hover:not(:disabled)': { color: `${themeColors.primary2} !important` },*/}
+          {/*    }}*/}
+          {/*    buttonText={*/}
+          {/*      <Flex sx={{ alignItems: 'center', gap: 2 }}>*/}
+          {/*        <UniteSquare size={20} />*/}
+          {/*        <Type.CaptionBold>Copy Vault</Type.CaptionBold>*/}
+          {/*      </Flex>*/}
+          {/*    }*/}
+          {/*  />*/}
+          {/*)}*/}
           <AnalyzeAction forceDisabled={!isAllowedProtocol} />
           {!disabledActions?.includes('alert') && <AlertAction protocol={protocol} account={account} />}
           {!isDrawer && (

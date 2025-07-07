@@ -69,6 +69,15 @@ msgstr "14D"
 msgid "1D"
 msgstr "1D"
 
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "1M"
+msgstr "1M"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "1W"
+msgstr "1W"
+
+#: src/components/@ui/TimeFilter/constants.tsx
 #: src/utils/config/translations.tsx
 msgid "24H"
 msgstr "24H"
@@ -265,6 +274,10 @@ msgstr "ALERT SIGNAL"
 #: src/pages/Settings/AlertSettingDetails/SettingTrigger.tsx
 msgid "ALERT TRIGGER"
 msgstr "ALERT TRIGGER"
+
+#: src/components/@ui/TimeFilter/constants.tsx
+msgid "ALL"
+msgstr "ALL"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/Info.tsx
 msgid "ALL-TIME"
@@ -1406,6 +1419,11 @@ msgstr "DELIVERY ALERT CHANNEL"
 #: src/pages/VaultDetails/VaultFundMangement/index.tsx
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+msgid "DEPOSIT & WITHDRAW"
+msgstr "DEPOSIT & WITHDRAW"
 
 #: src/pages/Settings/AlertLogs/configs.tsx
 msgid "DETAILS"
@@ -3292,6 +3310,10 @@ msgstr "PERFORMANCE (ALL)"
 msgid "PERP EXPLORER"
 msgstr "PERP EXPLORER"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+msgid "PERP PERFORMANCE"
+msgstr "PERP PERFORMANCE"
+
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
 #: src/utils/config/translations.tsx
 msgid "PNL"
@@ -3562,6 +3584,7 @@ msgstr "Position average duration more than 7 days."
 msgid "Position not yet synced"
 msgstr "Position not yet synced"
 
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 #: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Positions"
 msgstr "Positions"
@@ -3877,6 +3900,11 @@ msgstr "SOURCE"
 msgid "SOURCE:"
 msgstr "SOURCE:"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+msgid "SPOT HOLDINGS"
+msgstr "SPOT HOLDINGS"
+
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/index.tsx
 #: src/pages/PerpDEXsExplorer/index.tsx
 #: src/pages/ReferralManagement/index.tsx
@@ -4177,6 +4205,7 @@ msgstr "Starter"
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 
+#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 #: src/pages/TraderDetails/Layouts/MobileLayout.tsx
 msgid "Stats"
 msgstr "Stats"

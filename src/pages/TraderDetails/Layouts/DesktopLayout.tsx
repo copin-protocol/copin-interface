@@ -7,7 +7,7 @@ import DirectionButton from 'components/@ui/DirectionButton'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, Grid } from 'theme/base'
-import { Z_INDEX } from 'utils/config/zIndex'
+import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
@@ -57,98 +57,124 @@ const DesktopLayout = (props: LayoutProps) => {
               position: 'relative',
               overflow: 'hidden',
               gridTemplate: `
-              "CHARTS STATS POSITIONS" minmax(0px, 1fr) / ${
-                openingPositionFullExpanded || positionFullExpanded ? '0px 0px 1fr' : '400px 1fr 550px'
+              "MAIN POSITIONS" minmax(0px, 1fr) / ${
+                openingPositionFullExpanded || positionFullExpanded ? '0px 1fr' : '1fr 550px'
               }
             `,
             }}
           >
             <Box
-              id="STATS"
+              id="MAIN"
               sx={{
-                gridArea: 'STATS / STATS',
+                width: '100%',
+                height: '100%',
                 overflow: 'hidden',
+                gridArea: 'MAIN / MAIN',
               }}
             >
-              {
-                <Box height="100%" sx={{ flexDirection: 'column', display: 'flex' }}>
-                  <Flex
+              <Box width="100%">{props.traderStatsSummary}</Box>
+              {props.protocol === ProtocolEnum.HYPERLIQUID && props.apiMode ? (
+                <Box sx={{ width: '100%', height: '100%' }}>{props.hyperliquidApiMode}</Box>
+              ) : (
+                <Flex
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    gridArea: 'STATS / CHARTS',
+                  }}
+                >
+                  <Box
+                    id="CHARTS"
                     sx={{
-                      width: '100%',
-                      height: 'max(33%, 300px)',
-                      flexDirection: 'column',
+                      minWidth: 400,
+                      maxWidth: 400,
+                      gridArea: 'CHARTS / CHARTS',
                       overflow: 'hidden',
-                      bg: 'neutral5',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {props.traderStatsSummary}
-                    <Box flex="1 0 0">{props.traderChartPnl}</Box>
-                  </Flex>
-                  <Box overflow="auto" flex="1 0 0" mr={'-1px'} sx={{ position: 'relative' }}>
-                    <Box height="100%">{props.traderStats}</Box>
-                  </Box>
-                </Box>
-              }
-            </Box>
-
-            <Box
-              id="CHARTS"
-              sx={{
-                gridArea: 'CHARTS / CHARTS',
-                overflow: 'hidden',
-                display: 'grid',
-                gridTemplate: `
+                      display: 'grid',
+                      gridTemplate: `
             "RADAR" minmax(1fr, ${rowOneHeight})
             "CANDLESTICK" minmax(1fr, 1fr)
           `,
-              }}
-            >
-              <Flex flexDirection="column" height="100%">
-                <Box
-                  height={rowOneHeight}
-                  sx={{
-                    gridArea: 'RADAR',
-                    overflow: 'hidden',
-                    position: 'relative',
-                  }}
-                >
-                  {props.traderRanking}
-                  <Box
-                    sx={{
-                      height: 'calc(100% - 72px)',
-                      width: '1px',
-                      bg: 'neutral4',
-                      position: 'absolute',
-                      right: 0,
-                      top: 56,
                     }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    gridArea: 'CANDLESTICK',
-                    borderRight: 'small',
-                    borderTop: chartFullExpanded ? 'none' : 'small',
-                    borderColor: 'neutral4',
-                    height: `max(calc(100% - ${rowOneHeight}),200px)`,
-                    ...(chartFullExpanded
-                      ? {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          bottom: 0,
-                          right: 0,
-                          bg: 'neutral8',
-                          height: 'auto',
-                          zIndex: 10,
-                        }
-                      : {}),
-                  }}
-                >
-                  {props.traderChartPositions}
-                </Box>
-              </Flex>
+                  >
+                    <Flex flexDirection="column" height="100%">
+                      <Box
+                        height={rowOneHeight}
+                        sx={{
+                          gridArea: 'RADAR',
+                          overflow: 'hidden',
+                          position: 'relative',
+                        }}
+                      >
+                        {props.traderRanking}
+                        <Box
+                          sx={{
+                            height: 'calc(100% - 72px)',
+                            width: '1px',
+                            bg: 'neutral4',
+                            position: 'absolute',
+                            right: 0,
+                            top: 56,
+                          }}
+                        />
+                      </Box>
+                      <Box
+                        sx={{
+                          gridArea: 'CANDLESTICK',
+                          borderRight: 'small',
+                          borderTop: chartFullExpanded ? 'none' : 'small',
+                          borderColor: 'neutral4',
+                          height: `max(calc(100% - ${rowOneHeight}),200px)`,
+                          ...(chartFullExpanded
+                            ? {
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                bottom: 0,
+                                right: 0,
+                                bg: 'neutral8',
+                                height: 'auto',
+                                zIndex: 10,
+                              }
+                            : {}),
+                        }}
+                      >
+                        {props.traderChartPositions}
+                      </Box>
+                    </Flex>
+                  </Box>
+
+                  <Box
+                    width="100%"
+                    id="STATS"
+                    sx={{
+                      gridArea: 'STATS / STATS',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {
+                      <Box height="100%" sx={{ flexDirection: 'column', display: 'flex' }}>
+                        <Flex
+                          sx={{
+                            width: '100%',
+                            height: 'max(33%, 300px)',
+                            flexDirection: 'column',
+                            overflow: 'hidden',
+                            bg: 'neutral5',
+                            flexShrink: 0,
+                          }}
+                        >
+                          <Box flex="1 0 0">{props.traderChartPnl}</Box>
+                        </Flex>
+                        <Box overflow="auto" flex="1 0 0" mr={'-1px'} sx={{ position: 'relative' }}>
+                          <Box height="100%">{props.traderStats}</Box>
+                        </Box>
+                      </Box>
+                    }
+                  </Box>
+                </Flex>
+              )}
             </Box>
             <Box
               id="POSITIONS"

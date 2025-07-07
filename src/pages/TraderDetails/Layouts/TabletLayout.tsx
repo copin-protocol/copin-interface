@@ -4,6 +4,7 @@ import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import BlurMask from 'components/@ui/BlurMask'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { Box, Flex } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
 
 import ProtocolPermissionContainer from './ProtocolPermissionContainer'
 import { LayoutProps } from './types'
@@ -53,7 +54,12 @@ const TabletLayout = (props: LayoutProps) => {
             }}
           >
             <Box>
-              {
+              {props.apiMode && props.protocol === ProtocolEnum.HYPERLIQUID ? (
+                <Box height="100%">
+                  {props.traderStatsSummary}
+                  {props.hyperliquidApiMode}
+                </Box>
+              ) : (
                 <Box height="100%">
                   <Flex
                     sx={{
@@ -72,7 +78,7 @@ const TabletLayout = (props: LayoutProps) => {
                     <Box height="100%">{props.traderStats}</Box>
                   </Box>
                 </Box>
-              }
+              )}
             </Box>
           </Box>
           <Box flex="1" minHeight={700} sx={{ position: 'relative' }}>
@@ -102,20 +108,22 @@ const TabletLayout = (props: LayoutProps) => {
             </Flex>
           </Box>
         </Flex>
-        <Flex width="100%" height="300px">
-          <Flex
-            width="400px"
-            alignItems="center"
-            sx={{
-              borderRight: 'small',
-              borderColor: 'neutral4',
-              flexShrink: 0,
-            }}
-          >
-            {props.traderRanking}
+        {!props.apiMode && (
+          <Flex width="100%" height="300px">
+            <Flex
+              width="400px"
+              alignItems="center"
+              sx={{
+                borderRight: 'small',
+                borderColor: 'neutral4',
+                flexShrink: 0,
+              }}
+            >
+              {props.traderRanking}
+            </Flex>
+            <Box width="calc(100% - 350px)">{props.traderChartPositions}</Box>
           </Flex>
-          <Box width="calc(100% - 350px)">{props.traderChartPositions}</Box>
-        </Flex>
+        )}
       </ProtocolPermissionContainer>
     </>
   )
