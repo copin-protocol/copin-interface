@@ -18,6 +18,7 @@ type Props = {
   hasAccountAddress?: boolean
   isOpening?: boolean
   sx?: any
+  totalPositionValue?: number
 }
 
 export default function HLTraderPositionListView({
@@ -27,6 +28,7 @@ export default function HLTraderPositionListView({
   onClickItem,
   hasAccountAddress = true,
   isOpening = true,
+  totalPositionValue,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -65,22 +67,37 @@ export default function HLTraderPositionListView({
         </Flex>
       )}
       {data?.map((position) => {
+        const weightPercent = totalPositionValue ? (position.size / totalPositionValue) * 100 : 0
+
         return (
-          <Box role="button" sx={{ p: 3 }} key={position.id} onClick={() => onClickItem?.(position)}>
-            <Flex sx={{ alignItems: 'center', gap: '1ch', justifyContent: 'space-between' }}>
-              <Box flex="1">{renderEntry(position)}</Box>
-              <Flex sx={{ alignItems: 'center', gap: '1ch' }}>
+          <Box role="button" sx={{ p: 2 }} key={position.id} onClick={() => onClickItem?.(position)}>
+            <Flex sx={{ alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
+              <Box flex="37%">{renderEntry(position)}</Box>
+              <Flex flex="30%" sx={{ alignItems: 'center', gap: 1 }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Weight:
+                </Type.Caption>
+                <Type.Caption>{!!weightPercent ? `${formatNumber(weightPercent, 2, 2)}%` : '--'}</Type.Caption>
+              </Flex>
+              <Flex flex="33%" sx={{ alignItems: 'center', gap: 1 }}>
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Funding:
                 </Type.Caption>
                 <Type.Caption>
-                  <SignedText value={position.funding * -1} minDigit={2} maxDigit={2} prefix="$" fontInherit />
+                  <SignedText
+                    value={position.funding * -1}
+                    minDigit={2}
+                    maxDigit={2}
+                    prefix="$"
+                    fontInherit
+                    isCompactNumber
+                  />
                 </Type.Caption>
               </Flex>
             </Flex>
             <Flex mt={1} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
               <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} alignItems="center">
+                <Flex flex="66%" alignItems="center">
                   {isOpening ? (
                     <>
                       <Box sx={{ width: 200, flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
@@ -94,19 +111,19 @@ export default function HLTraderPositionListView({
                         Size:
                       </Box>
                       ${formatNumber(position.size, 0, 0)}
-                      <Box as="span" color="neutral3" sx={{ mx: '1ch' }}>
+                      <Box as="span" color="neutral3" sx={{ mx: 1 }}>
                         |
                       </Box>
                       {formatLeverage(position.marginMode, position.leverage)}
                     </Type.Caption>
                   )}
                 </Flex>
-                <Flex sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Flex flex="34%" sx={{ alignItems: 'center', gap: 1 }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     PnL:
                   </Type.Caption>
                   <Type.Caption>
-                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit />
+                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
                   </Type.Caption>
                 </Flex>
               </Flex>

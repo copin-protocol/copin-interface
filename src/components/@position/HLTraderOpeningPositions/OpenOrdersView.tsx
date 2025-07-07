@@ -10,8 +10,10 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
+import { TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { SortTypeEnum } from 'utils/config/enums'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
 
 import HLOpenOrderListView from './HLOpenOrderListView'
@@ -57,15 +59,44 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
 
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)
-  const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: filteredData })
-  const dataRef = useRef(filteredData)
+  const [currentSort, setCurrentSort] = useState<TableSortProps<HlOrderData> | undefined>({
+    sortBy: 'timestamp',
+    sortType: SortTypeEnum.DESC,
+  })
+
+  const changeCurrentSort = (sort: TableSortProps<HlOrderData> | undefined) => {
+    setCurrentSort(sort)
+    setCurrentPage(1)
+  }
+
+  const sortedData: HlOrderData[] | undefined = useMemo(() => {
+    if (filteredData?.length) {
+      const _sortedData = [...filteredData]
+      if (_sortedData && _sortedData.length > 0 && !!currentSort) {
+        _sortedData.sort((a, b) => {
+          const x = a?.[currentSort.sortBy] as any
+          const y = b?.[currentSort.sortBy] as any
+          if (currentSort.sortType === SortTypeEnum.ASC) {
+            return x < y ? -1 : x > y ? 1 : 0
+          } else {
+            return x < y ? 1 : x > y ? -1 : 0
+          }
+        })
+        return _sortedData
+      }
+    }
+    return filteredData
+  }, [currentSort, filteredData])
+
+  const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: sortedData })
+  const dataRef = useRef(sortedData)
   useEffect(() => {
-    if (dataRef.current !== filteredData) {
+    if (dataRef.current !== sortedData) {
       setCurrentPage(1)
       onPageChange(1)
-      dataRef.current = filteredData
+      dataRef.current = sortedData
     }
-  }, [filteredData, onPageChange])
+  }, [sortedData, onPageChange])
 
   const handleChangePage = useCallback(
     (page: number) => {
@@ -121,6 +152,8 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
                       </NoOrderWrapper>
                     ) : undefined
                   }
+                  currentSort={currentSort}
+                  changeCurrentSort={changeCurrentSort}
                 />
               </Box>
               {!isDrawer && (

@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import {
+  ExternalSourceHlPosition,
   drawerOpeningColumns,
   fullOpeningColumns,
   openingColumns,
@@ -64,9 +65,17 @@ export default function OpeningPositionsView({
       data: openingPositions,
       meta: { limit: openingPositions.length, offset: 0, total: openingPositions.length, totalPages: 1 },
     }
-  }, [currentSort, data])
+  }, [address, currentSort?.sortBy, currentSort?.sortType, data?.assetPositions])
 
   useGetTraderPnL({ protocol: ProtocolEnum.HYPERLIQUID, positions: tableData?.data })
+
+  const totalPositionValue = useMemo(
+    () => data?.assetPositions?.reduce((sum, current) => sum + Number(current.position.positionValue), 0) ?? 0,
+    [data]
+  )
+  const externalSource: ExternalSourceHlPosition = {
+    totalPositionValue,
+  }
 
   // Group the filled orders
   const handleSelectItem = (data: PositionData) => {
@@ -122,6 +131,7 @@ export default function OpeningPositionsView({
               onClickRow={handleSelectItem}
               renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
               scrollToTopDependencies={scrollTopDeps}
+              externalSource={externalSource}
             />
           ) : (
             <HLTraderPositionListView
@@ -130,6 +140,7 @@ export default function OpeningPositionsView({
               scrollDep={tableData?.meta?.offset}
               onClickItem={handleSelectItem}
               hasAccountAddress={false}
+              totalPositionValue={totalPositionValue}
             />
           )}
         </Box>

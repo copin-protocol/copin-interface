@@ -266,6 +266,7 @@ function TraderDetailsComponent({
                 account={address}
                 protocol={protocol}
                 sx={{ height: [60, 40], border: 'none' }}
+                isDrawer
               />
             </Box>
 

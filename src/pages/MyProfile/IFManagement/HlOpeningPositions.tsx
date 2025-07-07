@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ReactNode } from 'react'
 
+import { ExternalSourceHlPosition } from 'components/@position/configs/hlPositionRenderProps'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { renderEntry, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
@@ -10,7 +11,6 @@ import Table from 'theme/Table'
 import { Box, Flex, Type } from 'theme/base'
 
 import { hlOpeningColumns, renderAction } from './configs'
-import { ExternalSourceHlPosition } from './types'
 
 export default function HlOpeningPositions({
   data,

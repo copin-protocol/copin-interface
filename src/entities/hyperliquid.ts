@@ -196,3 +196,100 @@ export interface HlTwapOrderData {
   protocol: ProtocolEnum
   timestamp: number
 }
+
+export interface HlPortfolioHistoryPoint {
+  timestamp: number
+  value: string
+}
+
+export interface HlPortfolioRawDataItem {
+  accountValueHistory: HlPortfolioHistoryPoint[]
+  pnlHistory: HlPortfolioHistoryPoint[]
+  vlm: string
+}
+
+export type HlPortfolioRawData = Array<[period: string, data: HlPortfolioRawDataItem]>
+
+export interface HlNonFundingLedgerData {
+  time: number
+  hash: string
+  delta: DeltaRawData
+}
+
+export interface DeltaRawData {
+  type: string
+  token: string
+  amount: string
+  usdc: string
+  user: string
+  destination: string
+  fee: string
+  nativeTokenFee: string
+  nonce: number
+}
+
+export interface HlAccountSpotRawData {
+  balances: HlSpotBalanceData[]
+}
+
+export interface HlSpotBalanceData {
+  coin: string
+  token: number
+  total: string
+  hold: string
+  entryNtl: string
+}
+
+export interface HlAccountSpotData {
+  coin: string
+  token: number
+  total: number
+  price: number
+  entryValue: number
+  currentValue: number
+  unrealizedPnl: number
+  roe: number
+}
+
+export interface HlSpotMetaData {
+  universe: HlUniverseData[]
+  tokens: HlTokenData[]
+}
+
+export interface HlUniverseData {
+  tokens: number[]
+  name: string
+  index: number
+  isCanonical: boolean
+}
+
+export interface HlTokenData {
+  tokenId: string
+  name: string
+  index: number
+  szDecimals: number
+  weiDecimals: number
+  deployerTradingFeeShare: string
+  fullName: string
+  isCanonical: boolean
+  evmContract?: HlEvmContractData
+}
+
+export interface HlTokenMappingData {
+  pairName: string
+  displayName: string
+  baseToken: HlTokenData
+  quoteToken: HlTokenData
+  price: number
+  index: number
+  isCanonical: boolean
+}
+
+export interface HlEvmContractData {
+  address: string
+  evm_extra_wei_decimals: number
+}
+
+export interface HlPriceData {
+  [token: string]: number
+}

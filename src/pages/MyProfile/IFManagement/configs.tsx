@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {
+  ExternalSourceHlPosition,
   collateralColumn,
   entryColumn,
   fundingColumn,
@@ -13,8 +14,6 @@ import { Button } from 'theme/Buttons'
 import Popconfirm from 'theme/Popconfirm'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
-
-import { ExternalSourceHlPosition } from './types'
 
 export function renderAction(data: PositionData | undefined, externalSource?: any) {
   return (

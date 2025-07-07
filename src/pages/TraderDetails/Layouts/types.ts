@@ -11,9 +11,11 @@ export type LayoutProps = {
   heatmap?: JSX.Element
   openingPositions?: JSX.Element
   closedPositions?: JSX.Element
+  hyperliquidApiMode?: JSX.Element
   openingPositionFullExpanded?: boolean
   positionFullExpanded?: boolean
   chartFullExpanded?: boolean
+  apiMode?: boolean
   protocol?: ProtocolEnum
   address?: string
 }

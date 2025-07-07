@@ -25,6 +25,7 @@ const openTimeShortColumn: ColumnData<HlOrderData> = {
   title: 'Time',
   dataIndex: 'timestamp',
   key: 'timestamp',
+  sortBy: 'timestamp',
   style: { width: '60px' },
   render: (item) => (
     <Type.Caption color="neutral3">
@@ -37,7 +38,8 @@ const priceColumn: ColumnData<HlOrderData> = {
   title: 'Limit Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
-  style: { minWidth: '100px', textAlign: 'right', pr: '12px' },
+  sortBy: 'priceNumber',
+  style: { minWidth: '110px', textAlign: 'right', pr: '12px' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.priceNumber && !item.isPositionTpsl
@@ -75,7 +77,7 @@ const symbolColumn: ColumnData<HlOrderData> = {
   title: 'Pair',
   dataIndex: 'pair',
   key: 'pair',
-  sortBy: 'pair',
+  // sortBy: 'pair',
   style: { width: '100px' },
   render: (item) => {
     const symbol = getSymbolFromPair(item.pair)
@@ -87,7 +89,7 @@ const orderTypeColumn: ColumnData<HlOrderData> = {
   title: 'Type',
   dataIndex: 'orderType',
   key: 'orderType',
-  sortBy: 'orderType',
+  // sortBy: 'orderType',
   style: { width: '150px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>
@@ -113,7 +115,7 @@ const triggerConditionColumn: ColumnData<HlOrderData> = {
   title: 'Trigger Condition',
   dataIndex: 'triggerCondition',
   key: 'triggerCondition',
-  sortBy: 'triggerCondition',
+  // sortBy: 'triggerCondition',
   style: { width: '150px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.triggerCondition ?? '--'}</Type.Caption>
@@ -124,7 +126,7 @@ const reduceOnlyColumn: ColumnData<HlOrderData> = {
   title: 'Reduce Only',
   dataIndex: 'reduceOnly',
   key: 'reduceOnly',
-  sortBy: 'reduceOnly',
+  // sortBy: 'reduceOnly',
   style: { width: '90px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.reduceOnly ? 'Yes' : 'No'}</Type.Caption>

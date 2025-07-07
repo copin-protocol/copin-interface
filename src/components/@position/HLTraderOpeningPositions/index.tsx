@@ -1,15 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { Alarm, ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
 
-import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled, getHlTwapOrderFilled } from 'apis/hyperliquid'
+import { getHlAccountInfo, getHlOpenOrders } from 'apis/hyperliquid'
 import emptyBg from 'assets/images/opening_empty_bg.png'
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import Divider from 'components/@ui/Divider'
 import { PositionData } from 'entities/trader'
+import { useHyperliquidTraderContext } from 'hooks/features/trader/useHyperliquidTraderContext'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
 import Loading from 'theme/Loading'
@@ -24,13 +25,7 @@ import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import HLPositionDetailsDrawer from '../HLTraderPositionDetails/HLPositionDetailsDrawer'
-import {
-  groupHLOrderFillsByOid,
-  parseHLOrderData,
-  parseHLOrderFillData,
-  parseHLPositionData,
-  parseHLTwapOrderFillData,
-} from '../helpers/hyperliquid'
+import { parseHLOrderData, parseHLPositionData } from '../helpers/hyperliquid'
 import OpenOrdersView from './OpenOrdersView'
 import OpeningPositionsView from './OpeningPositionsView'
 import OrderFiledView from './OrderFilledView'
@@ -73,6 +68,23 @@ export default function HLTraderOpeningPositionsTableView({
   isDrawer?: boolean
   isShowIcon?: boolean
 }) {
+  const {
+    hlAccountData,
+    openOrders,
+    groupedFilledOrders,
+    twapOrders,
+    totalOpenOrders,
+    totalOpening,
+    totalOrderFilled,
+    totalTwapFilled,
+    isLoading,
+    isLoadingOpenOders,
+    isLoadingFilledOrders,
+    isLoadingTwapOders,
+    onOpenOrderPageChange,
+    onOrderFilledPageChange,
+    onTwapOrderPageChange,
+  } = useHyperliquidTraderContext()
   const [tab, setTab] = useState<string>(HLPositionTab.OPEN_POSITIONS)
 
   //
@@ -92,109 +104,6 @@ export default function HLTraderOpeningPositionsTableView({
     resetSortOpening()
     toggleExpand?.()
   }
-
-  const { data: hlAccountData, isLoading } = useQuery(
-    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_DETAIL, address],
-    () =>
-      getHlAccountInfo({
-        user: address,
-      }),
-    {
-      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
-      retry: 0,
-      refetchInterval: 15_000,
-      keepPreviousData: true,
-    }
-  )
-
-  const [enabledRefetchOpenOrder, setEnabledRefetchOpenOrder] = useState(true)
-  const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
-    [QUERY_KEYS.GET_HYPERLIQUID_OPEN_ORDERS, address],
-    () =>
-      getHlOpenOrders({
-        user: address,
-      }),
-    {
-      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
-      retry: 0,
-      refetchInterval: enabledRefetchOpenOrder ? 15_000 : undefined,
-      keepPreviousData: true,
-      select: (data) => {
-        return parseHLOrderData({ account: address, data })
-      },
-    }
-  )
-  const onOpenOrderPageChange = useCallback((page: number) => {
-    if (page === 1) {
-      setEnabledRefetchOpenOrder(true)
-    } else setEnabledRefetchOpenOrder(false)
-  }, [])
-  openOrders?.sort((a, b) => {
-    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
-  })
-
-  const [enabledRefetchOrderFilled, setEnabledRefetchOrderFilled] = useState(true)
-  const { data: filledOrders, isLoading: isLoadingFilledOrders } = useQuery(
-    [QUERY_KEYS.GET_HYPERLIQUID_FILLED_ORDERS, address],
-    () =>
-      getHlOrderFilled({
-        user: address,
-      }),
-    {
-      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
-      retry: 0,
-      refetchInterval: enabledRefetchOrderFilled ? 15_000 : undefined,
-      keepPreviousData: true,
-      select: (data) => {
-        return parseHLOrderFillData({ account: address, data })
-      },
-    }
-  )
-  const onOrderFilledPageChange = useCallback((page: number) => {
-    if (page === 1) {
-      setEnabledRefetchOrderFilled(true)
-    } else setEnabledRefetchOrderFilled(false)
-  }, [])
-
-  // Sort filled orders by timestamp
-  filledOrders?.sort((a, b) => b.timestamp - a.timestamp)
-
-  // Group the filled orders
-  const groupedFilledOrders = useMemo(() => {
-    if (!filledOrders) return []
-    return groupHLOrderFillsByOid(filledOrders)
-  }, [filledOrders])
-
-  const [enabledRefetchTwapOrder, setEnabledRefetchTwapOrder] = useState(true)
-  const { data: twapOrders, isLoading: isLoadingTwapOders } = useQuery(
-    [QUERY_KEYS.GET_HYPERLIQUID_TWAP_ORDERS, address],
-    () =>
-      getHlTwapOrderFilled({
-        user: address,
-      }),
-    {
-      enabled: !!address && protocol === ProtocolEnum.HYPERLIQUID,
-      retry: 0,
-      refetchInterval: enabledRefetchTwapOrder ? 15_000 : undefined,
-      keepPreviousData: true,
-      select: (data) => {
-        return parseHLTwapOrderFillData({ account: address, data })
-      },
-    }
-  )
-  const onTwapOrderPageChange = useCallback((page: number) => {
-    if (page === 1) {
-      setEnabledRefetchTwapOrder(true)
-    } else setEnabledRefetchTwapOrder(false)
-  }, [])
-  twapOrders?.sort((a, b) => {
-    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
-  })
-
-  const totalOpening = hlAccountData?.assetPositions?.length ?? 0
-  const totalOpenOrders = openOrders?.length ?? 0
-  const totalOrderFilled = groupedFilledOrders?.length ?? 0
-  const totalTwapFilled = twapOrders?.length ?? 0
 
   return (
     <Box
@@ -428,6 +337,11 @@ export function HLTraderOpeningPositionsListView({
 
   const totalOpening = listData?.data?.length ?? 0
 
+  const totalPositionValue = useMemo(
+    () => data?.assetPositions?.reduce((sum, current) => sum + Number(current.position.positionValue), 0) ?? 0,
+    [data]
+  )
+
   return (
     <Flex
       flexDirection="column"
@@ -456,6 +370,7 @@ export function HLTraderOpeningPositionsListView({
             scrollDep={scrollToTopDependencies}
             onClickItem={handleSelectItem}
             hasAccountAddress={false}
+            totalPositionValue={totalPositionValue}
           />
         </Box>
       )}

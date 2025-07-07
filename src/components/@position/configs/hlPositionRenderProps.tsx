@@ -8,8 +8,17 @@ import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
+import { formatNumber } from 'utils/helpers/format'
 
-export const collateralColumn: ColumnData<PositionData> = {
+export type ExternalSourceHlPosition = {
+  totalPositionValue?: number
+  submitting?: boolean
+  currentId?: string
+  handleClosePosition?: (data: PositionData) => void
+  handleSelectPosition?: (data: PositionData) => void
+}
+
+export const collateralColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'Collateral',
   dataIndex: 'collateral',
   key: 'collateral',
@@ -28,7 +37,7 @@ const renderPositionCollateral = (item: PositionData, defaultToken?: string) => 
     />
   </Type.Caption>
 )
-export const fundingColumn: ColumnData<PositionData> = {
+export const fundingColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'Funding',
   dataIndex: 'funding',
   key: 'funding',
@@ -64,7 +73,7 @@ const renderPositionRoi = (item: PositionData) => (
   </Type.Caption>
 )
 
-export const roiColumn: ColumnData<PositionData> = {
+export const roiColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'ROI',
   dataIndex: 'roi',
   key: 'roi',
@@ -73,7 +82,7 @@ export const roiColumn: ColumnData<PositionData> = {
   render: renderPositionRoi,
 }
 
-export const entryColumn: ColumnData<PositionData> = {
+export const entryColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'Entry',
   dataIndex: 'averagePrice',
   key: 'averagePrice',
@@ -82,7 +91,7 @@ export const entryColumn: ColumnData<PositionData> = {
   render: (item) => renderEntry(item),
 }
 
-export const sizeOpeningColumn: ColumnData<PositionData> = {
+export const sizeOpeningColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'Value',
   dataIndex: 'size',
   key: 'size',
@@ -91,7 +100,7 @@ export const sizeOpeningColumn: ColumnData<PositionData> = {
   render: (item) => renderSizeOpening(item),
 }
 
-export const pnlColumn: ColumnData<PositionData> = {
+export const pnlColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
@@ -122,7 +131,19 @@ const renderPositionPnL = ({
   )
 }
 
-const actionColumn: ColumnData<PositionData> = {
+export const weightColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
+  title: 'Weight',
+  key: undefined,
+  sortBy: 'size',
+  style: { minWidth: '100px', textAlign: 'right' },
+  render: (item, _, externalSource) => renderPositionWeight(item, externalSource?.totalPositionValue),
+}
+const renderPositionWeight = (item: PositionData, totalPositionValue?: number) => {
+  const weightPercent = totalPositionValue ? (item.size / totalPositionValue) * 100 : 0
+  return <Type.Caption color="neutral1">{formatNumber(weightPercent, 2, 2)}%</Type.Caption>
+}
+
+const actionColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: ' ',
   dataIndex: 'id',
   key: 'id',
@@ -134,9 +155,10 @@ const actionColumn: ColumnData<PositionData> = {
   ),
 }
 
-export const fullOpeningColumns: ColumnData<PositionData>[] = [
+export const fullOpeningColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
   { ...entryColumn, style: { minWidth: 150 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
+  weightColumn,
   collateralColumn,
   fundingColumn,
   roiColumn,
@@ -144,7 +166,7 @@ export const fullOpeningColumns: ColumnData<PositionData>[] = [
   actionColumn,
 ]
 
-export const openingColumns: ColumnData<PositionData>[] = [
+export const openingColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
   { ...entryColumn, style: { minWidth: 185 } },
   sizeOpeningColumn,
   {
@@ -154,9 +176,10 @@ export const openingColumns: ColumnData<PositionData>[] = [
   actionColumn,
 ]
 
-export const drawerOpeningColumns: ColumnData<PositionData>[] = [
+export const drawerOpeningColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
   { ...entryColumn, style: { minWidth: 170 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
+  weightColumn,
   collateralColumn,
   fundingColumn,
   roiColumn,

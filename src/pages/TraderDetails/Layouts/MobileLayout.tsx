@@ -41,6 +41,21 @@ const tabConfigs = [
   },
 ]
 
+const tabConfigsApiMode = [
+  {
+    key: TabEnum.STATS,
+    name: <Trans>Stats</Trans>,
+    icon: <BookOpenText size={20} />,
+    activeIcon: <BookOpenText size={20} weight="fill" />,
+  },
+  {
+    key: TabEnum.POSITIONS,
+    name: <Trans>Positions</Trans>,
+    icon: <Notebook size={20} />,
+    activeIcon: <Notebook size={20} weight="fill" />,
+  },
+]
+
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler({ defaultTab: TabEnum.POSITIONS })
   const { isEnablePosition, requiredPlanToViewPosition } = useTraderProfilePermission({ protocol: props.protocol })
@@ -80,22 +95,29 @@ const MobileLayout = (props: LayoutProps) => {
         {props.traderInfo}
       </Box>
       <ProtocolPermissionContainer protocol={props.protocol}>
-        {tab === TabEnum.STATS && (
-          <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
-            <Box
-              sx={{
-                height: 350,
-                overflow: 'hidden',
-                bg: 'neutral5',
-              }}
-            >
-              {props.traderChartPnl}
+        {tab === TabEnum.STATS &&
+          (props.apiMode ? (
+            <Flex flexDirection="column" flex="1 0 0" sx={{ overflow: 'auto' }}>
+              {props.traderStatsSummary}
+              <Box flex={1}>{props.hyperliquidApiMode}</Box>
+            </Flex>
+          ) : (
+            <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
+              {props.traderStatsSummary}
+              <Box
+                sx={{
+                  height: 300,
+                  overflow: 'hidden',
+                  bg: 'neutral5',
+                }}
+              >
+                {props.traderChartPnl}
+              </Box>
+              <Box sx={{ position: 'relative' }}>
+                <Box>{props.traderStats}</Box>
+              </Box>
             </Box>
-            <Box sx={{ position: 'relative' }}>
-              <Box>{props.traderStats}</Box>
-            </Box>
-          </Box>
-        )}
+          ))}
         {tab === TabEnum.CHARTS && (
           <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
             <Box
@@ -136,7 +158,7 @@ const MobileLayout = (props: LayoutProps) => {
           sx={{ position: 'fixed', bottom: FOOTER_HEIGHT, zIndex: 9, display: ['flex', 'flex', 'flex', 'none'] }}
         >
           <TabHeader
-            configs={tabConfigs}
+            configs={props.apiMode ? tabConfigsApiMode : tabConfigs}
             isActiveFn={(config) => config.key === tab}
             onClickItem={(key) => setTab({ tab: key })}
           />

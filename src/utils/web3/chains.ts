@@ -31,6 +31,7 @@ export const CRONOS_MAINNET = 25
 export const BERA_MAINNET = 80094
 
 export const HYPERLIQUID_TESTNET = 998
+export const HYPERLIQUID_MAINNET = 999
 
 export const DYDX_MAINNET = 'dydx-mainnet-1'
 
@@ -433,7 +434,15 @@ const CHAINS: { [key: number | string]: Chain } = {
     label: 'Hyperliquid',
     icon: 'HYPERLIQUID',
     token: '',
-    rpcUrl: '',
+    rpcUrl: 'https://rpc.hyperliquid-testnet.xyz/evm',
+    blockExplorerUrl: 'https://app.hyperliquid.xyz/explorer',
+  },
+  [HYPERLIQUID_MAINNET]: {
+    id: `0x${HYPERLIQUID_MAINNET.toString(16)}`,
+    label: 'Hyperliquid',
+    icon: 'HYPERLIQUID',
+    token: '',
+    rpcUrl: 'https://rpc.hyperliquid.xyz/evm',
     blockExplorerUrl: 'https://app.hyperliquid.xyz/explorer',
   },
   [DYDX_MAINNET]: {
