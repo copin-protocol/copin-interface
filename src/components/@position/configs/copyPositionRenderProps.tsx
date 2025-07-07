@@ -18,7 +18,7 @@ import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Loading from 'theme/Loading'
 import ProgressBar from 'theme/ProgressBar'
-import Tag from 'theme/Tag'
+import StatusTag from 'theme/Tag/StatusTag'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, GAINS_TRADE_PROTOCOLS } from 'utils/config/constants'
 import {
@@ -323,7 +323,7 @@ export const renderSizeMobile = (data: CopyPositionData) => (
 )
 export const renderStatus = (data: CopyPositionData) => (
   <Flex width="100%" alignItems="center" justifyContent="left">
-    <Tag width={70} status={data.status} />
+    <StatusTag width={70} status={data.status} />
   </Flex>
 )
 

@@ -441,23 +441,6 @@ export const parseChainFromNetwork = (network: string) => {
   }
 }
 
-// TODO: Delete comment after at least 1 month
-// export function convertUniqueMarkets(protocol: ProtocolEnum, indexTokens?: string[]) {
-//   if (!indexTokens) return []
-//   const tokenTradeSupport = getTokenTradeSupport(protocol)
-//   const markets: { indexToken: string; symbol: string }[] = indexTokens
-//     .map((e) => {
-//       return { indexToken: e, symbol: tokenTradeSupport[e]?.symbol ?? e }
-//     })
-//     .reduce((acc: any, market) => {
-//       if (!acc[market.symbol]) {
-//         acc[market.symbol] = market
-//       }
-//       return acc
-//     }, {})
-//   return Object.values(markets).map((market) => market.indexToken)
-// }
-
 export function getUniqueTokenTrade(tokenSupport: { [key: string]: TokenTrade | undefined }): TokenTrade[] {
   if (!tokenSupport) return []
   return Object.values(

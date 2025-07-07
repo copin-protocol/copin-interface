@@ -85,7 +85,7 @@ const useInitTraderFavorites = () => {
       setTraderFavorites(data.map((trader) => `${trader.account}-${trader.protocol}`))
       setNotes(
         data.reduce((prev, cur) => {
-          prev[cur.account] = cur.note || ''
+          prev[`${cur.account}-${cur.protocol}`] = cur.note || ''
           return prev
         }, {} as { [key: string]: string })
       )

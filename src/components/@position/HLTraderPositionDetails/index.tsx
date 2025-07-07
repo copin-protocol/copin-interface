@@ -12,7 +12,7 @@ import useTraderCopying from 'hooks/store/useTraderCopying'
 import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
-import Tag from 'theme/Tag'
+import StatusTag from 'theme/Tag/StatusTag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
@@ -84,7 +84,7 @@ const HLTraderPositionDetails = memo(function HLPositionDetailsMemo({
                 </Link>
               )}
 
-              {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+              {isCopying && <StatusTag width={70} status={TraderStatusEnum.COPYING} />}
             </Flex>
             {!isDrawer && <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />}
           </Flex>

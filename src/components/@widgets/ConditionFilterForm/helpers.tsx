@@ -4,6 +4,8 @@ import { getPairFromSymbol } from 'utils/helpers/transform'
 
 import { ConditionFormValues, FieldOption, FilterValues, RowValues } from './types'
 
+export const IGNORED_FITLER_FORM_FIELDS = ['labels', 'indexTokens']
+
 export function getDefaultFormValues<T>(
   defaultFields: (keyof T)[],
   fieldOptions: FieldOption<T>[]

@@ -7,6 +7,7 @@ import { mobileTableSettings } from 'components/@trader/TraderExplorerTableView/
 import { ExternalTraderListSource } from 'components/@trader/TraderExplorerTableView/types'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
+import TraderLabels from 'components/@ui/TraderLabels'
 import { TraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import useUserNextPlan from 'hooks/features/subscription/useUserNextPlan'
@@ -15,6 +16,8 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { BASE_LINE_HEIGHT } from 'utils/config/constants'
+import { LABEL_TOOLTIP_TRANSLATION } from 'utils/config/translations'
+import { LABEL_TRANSLATION } from 'utils/config/translations'
 
 import { getColumnRequiredPlan, getPermissionTooltipId } from '../helpers'
 
@@ -42,8 +45,8 @@ export default function TraderExplorerListView({
   //   getValue: (data) => data.id,
   // }).map((v) => ({ ...v, sortBy: fieldsAllowed.includes(v.id as string) || isEliteUser ? v.sortBy : undefined }))
 
-  const headerColumns = _tableSettings.slice(1, 4)
-  const bodyColumns = _tableSettings.slice(4)
+  const headerColumns = _tableSettings.filter((v) => v.id !== 'labels').slice(1, 4)
+  const bodyColumns = _tableSettings.filter((v) => v.id !== 'labels').slice(4)
 
   const mobileScrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -82,30 +85,50 @@ export default function TraderExplorerListView({
           (noDataMessage ?? (isFavoritePage ? <NoFavoriteFound sx={{ pt: 5 }} /> : <NoDataFound />))}
 
         {data?.map((_data) => {
+          const labels = _data.labels
+            ?.sort((a, b) => {
+              if (a.includes('TIER')) return -1
+              if (b.includes('TIER')) return 1
+              return 0
+            })
+            .map((label) => {
+              return {
+                key: label,
+                title: LABEL_TRANSLATION[label as keyof typeof LABEL_TRANSLATION],
+                tooltip: LABEL_TOOLTIP_TRANSLATION[label as keyof typeof LABEL_TOOLTIP_TRANSLATION],
+              }
+            })
           return (
             <Accordion
               key={_data.account + _data.protocol}
               header={_tableSettings[0].render?.(_data)}
               subHeader={
-                <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
-                  {headerColumns.map((setting) => {
-                    const isAvailable = fieldsAllowed.includes(setting.id)
-                    const requiredPlan = getColumnRequiredPlan({
-                      columnData: setting,
-                      explorerPermission: pagePermission,
-                    })
-                    const tooltipId = getPermissionTooltipId({ requiredPlan })
-                    return (
-                      <Fragment key={setting.id}>
-                        <StatsItem
-                          label={setting.text}
-                          value={setting.render?.(_data)}
-                          isAvailable={isAvailable}
-                          tooltipId={tooltipId}
-                        />
-                      </Fragment>
-                    )
-                  })}
+                <Box>
+                  {labels != null && !!_tableSettings.find((v) => v.id === 'labels') && (
+                    <Flex sx={{ gap: 1, flexWrap: 'wrap', pb: 2 }}>
+                      <TraderLabels labels={labels} showedItems={4} />
+                    </Flex>
+                  )}
+                  <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
+                    {headerColumns.map((setting) => {
+                      const isAvailable = fieldsAllowed.includes(setting.id)
+                      const requiredPlan = getColumnRequiredPlan({
+                        columnData: setting,
+                        explorerPermission: pagePermission,
+                      })
+                      const tooltipId = getPermissionTooltipId({ requiredPlan })
+                      return (
+                        <Fragment key={setting.id}>
+                          <StatsItem
+                            label={setting.text}
+                            value={setting.render?.(_data)}
+                            isAvailable={isAvailable}
+                            tooltipId={tooltipId}
+                          />
+                        </Fragment>
+                      )
+                    })}
+                  </Box>
                 </Box>
               }
               body={

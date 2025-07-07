@@ -17,7 +17,7 @@ import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
-import Tag from 'theme/Tag'
+import StatusTag from 'theme/Tag/StatusTag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
@@ -127,7 +127,7 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
                 </Button>
               </Link>
 
-              {isCopying && <Tag width={70} status={TraderStatusEnum.COPYING} />}
+              {isCopying && <StatusTag width={70} status={TraderStatusEnum.COPYING} />}
               {/*{isVaultCopying && <Tag width={100} status={TraderStatusEnum.VAULT_COPYING} />}*/}
               {/*{isVaultCopying && <VaultCopyActions data={data} />}*/}
             </Flex>

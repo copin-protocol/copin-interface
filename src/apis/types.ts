@@ -27,11 +27,17 @@ export type GetApiParams = {
 }
 
 export interface RangeFilter<T = string> {
-  fieldName: T
+  fieldName?: T
   in?: string[]
   nin?: string[]
   gte?: number
   lte?: number
+  and?: {
+    field?: string
+    gte?: number
+    lte?: number
+    in?: string[]
+  }[]
 }
 
 export interface QueryFilter {

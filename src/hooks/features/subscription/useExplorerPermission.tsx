@@ -20,8 +20,12 @@ export default function useExplorerPermission() {
   const enableExport = (userPermission?.exportExcelQuota ?? 0) > 0
   const planToExport = getRequiredPlan({ conditionFn: (plan) => (pagePermission?.[plan]?.exportExcelQuota ?? 0) > 0 })
   const isEnableRankingFilter = userPermission?.isEnableRankingFilter
+  const isEnableLabelsFilter = userPermission?.isEnableLabelsFilter
   const planToFilterRanking = getRequiredPlan({
     conditionFn: (plan) => !!pagePermission?.[plan]?.isEnableRankingFilter,
+  })
+  const planToFilterLabels = getRequiredPlan({
+    conditionFn: (plan) => !!pagePermission?.[plan]?.isEnableLabelsFilter,
   })
 
   return {
@@ -34,6 +38,8 @@ export default function useExplorerPermission() {
     enableExport,
     planToExport,
     isEnableRankingFilter,
+    isEnableLabelsFilter,
     planToFilterRanking,
+    planToFilterLabels,
   }
 }

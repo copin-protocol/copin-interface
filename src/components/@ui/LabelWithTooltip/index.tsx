@@ -1,5 +1,6 @@
 import { SystemStyleObject } from '@styled-system/css'
 import { ReactNode, useMemo } from 'react'
+import { PlacesType } from 'react-tooltip'
 import { GridProps } from 'styled-system'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -14,6 +15,7 @@ const LabelWithTooltip = ({
   dashed = false,
   tooltipSx = {},
   tooltipClickable = false,
+  tooltipPlacement,
 }: {
   id: string
   sx?: SystemStyleObject & GridProps
@@ -22,6 +24,7 @@ const LabelWithTooltip = ({
   dashed?: boolean
   tooltipSx?: any
   tooltipClickable?: boolean
+  tooltipPlacement?: string
 }) => {
   const uuid = useMemo(() => id + uuidv4(), [])
   return (
@@ -48,7 +51,7 @@ const LabelWithTooltip = ({
       >
         {children}
       </Type.Caption>
-      <Tooltip id={uuid} clickable={tooltipClickable}>
+      <Tooltip id={uuid} clickable={tooltipClickable} place={tooltipPlacement as PlacesType}>
         <Type.Caption
           maxWidth={300}
           textAlign="center"

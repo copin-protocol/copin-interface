@@ -19,7 +19,7 @@ import { ApiListResponse } from './api'
 export const normalizeTraderData = (t: ResponseTraderData, pnlWithFeeEnabled?: boolean) => {
   const base = {
     ...t,
-    ranking: t.ranking ? decodeRealisedData(t.ranking) : {},
+    labels: [...(t.statisticLabels || []), ...(t.aggregatedLabels || [])],
   }
 
   if (pnlWithFeeEnabled) {
@@ -28,17 +28,23 @@ export const normalizeTraderData = (t: ResponseTraderData, pnlWithFeeEnabled?: b
 
   return {
     ...base,
+    labels: [...(t.realisedStatisticLabels || []), ...(t.realisedAggregatedLabels || [])],
+    ranking: t.ranking ? decodeRealisedData(t.ranking) : {},
     totalGain: t.realisedTotalGain,
     totalLoss: t.realisedTotalLoss,
     avgRoi: t.realisedAvgRoi,
     maxRoi: t.realisedMaxRoi,
     pnl: t.realisedPnl,
     maxPnl: t.realisedMaxPnl,
+    longPnl: t.realisedLongPnl,
+    shortPnl: t.realisedShortPnl,
     maxDrawdown: t.realisedMaxDrawdown,
     maxDrawdownPnl: t.realisedMaxDrawdownPnl,
     profitRate: t.realisedProfitRate,
     gainLossRatio: t.realisedGainLossRatio,
     profitLossRatio: t.realisedProfitLossRatio,
+    sharpeRatio: t.realisedSharpeRatio,
+    sortinoRatio: t.realisedSortinoRatio,
   }
 }
 

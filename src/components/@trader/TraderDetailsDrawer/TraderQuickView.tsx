@@ -29,6 +29,7 @@ import useTraderLastViewed from 'hooks/store/useTraderLastViewed'
 import ChartTrader from 'pages/TraderDetails/ChartTrader'
 import GeneralStats from 'pages/TraderDetails/GeneralStats'
 import PositionMobileView from 'pages/TraderDetails/Layouts/PositionMobileView'
+import TradeLabelsFrame from 'pages/TraderDetails/TradeLabelsFrame'
 import TraderActionButtons, { DisabledActionType } from 'pages/TraderDetails/TraderActionButtons'
 import TraderInfo from 'pages/TraderDetails/TraderInfo'
 import TraderRanking from 'pages/TraderDetails/TraderRanking'
@@ -119,7 +120,7 @@ function TraderDetailsComponent({
   disabledLinkAccount?: boolean
   eventCategory?: EventCategory
 }) {
-  const { sm, lg } = useResponsive()
+  const { sm, md, lg } = useResponsive()
   const { timeFilterOptions } = useGetTimeFilterOptions()
   const { timeFramesAllowed, isEnablePosition, requiredPlanToViewPosition, isAllowedProtocol } =
     useTraderProfilePermission({ protocol })
@@ -210,6 +211,7 @@ function TraderDetailsComponent({
             timeOption={timeOption}
             traderStats={traderData}
             isLink={!disabledLinkAccount}
+            hasLabels={false}
           />
           <TraderActionButtons
             traderData={currentTraderData}
@@ -226,8 +228,8 @@ function TraderDetailsComponent({
       </Box>
       <ProtocolPermissionContainer protocol={protocol}>
         <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
-          <Flex
-            height={250}
+          <Box
+            height={[330, 310, 270]}
             alignItems="center"
             sx={{
               m: [0, 2],
@@ -238,49 +240,78 @@ function TraderDetailsComponent({
               borderColor: 'neutral4',
             }}
           >
-            {lg && (
-              <Flex height="100%" alignItems="center">
-                <Box width="380px">
-                  <TraderRanking
-                    data={currentTraderData}
-                    timeOption={timeOption}
-                    onChangeTime={setTimeOption}
-                    isDrawer
-                  />
-                </Box>
-                <Box height="90%" width="1px" backgroundColor="neutral4" />
-              </Flex>
-            )}
-            <Box flex={1}>
-              <Flex alignItems="center" justifyContent="space-between">
-                <Flex
+            <Box
+              alignItems="center"
+              sx={{
+                borderBottom: 'small',
+                display: ['block', 'block', 'flex'],
+                borderBottomColor: 'neutral4',
+              }}
+            >
+              <Box sx={{ overflow: ['auto', 'auto', 'unset'], width: '100%' }}>
+                <TradeLabelsFrame
+                  traderStats={traderData}
+                  showedItems={md ? 3 : undefined}
                   sx={{
-                    flexShrink: 0,
-                    pl: [2, 3],
-                    alignItems: 'center',
-                    height: [60, 60, 60, 40],
-                    borderBottom: 'small',
-                    borderBottomColor: 'neutral4',
+                    width: ['max-content', 'max-content', '100%'],
+                    px: 2,
+                    py: [2, 2, 0],
+                    justifyContent: ['center', 'start'],
                   }}
-                >
-                  <TimeDropdown
-                    timeOption={timeOption}
-                    onChangeTime={setTimeOption}
-                    menuSx={{ transform: 'translateX(12px)' }}
-                  />
-                </Flex>
-                <GeneralStats traderData={currentTraderData} account={address} protocol={protocol} />
-              </Flex>
-              <Box height={190}>
-                <ChartTrader
-                  protocol={protocol}
-                  account={address}
-                  timeOption={timeOption}
-                  // onChangeTime={setTimeOption}
                 />
               </Box>
+
+              <GeneralStats
+                traderData={currentTraderData}
+                account={address}
+                protocol={protocol}
+                sx={{ height: [60, 40], border: 'none' }}
+              />
             </Box>
-          </Flex>
+
+            <Flex alignItems="center">
+              {lg && (
+                <Flex height="100%" alignItems="center" sx={{ gap: 2 }}>
+                  <Box width="380px">
+                    <TraderRanking
+                      data={currentTraderData}
+                      timeOption={timeOption}
+                      onChangeTime={setTimeOption}
+                      isDrawer
+                    />
+                  </Box>
+                  <Box height="90%" width="1px" backgroundColor="neutral4" />
+                </Flex>
+              )}
+              <Box flex={1}>
+                <Flex alignItems="center" justifyContent={['start', 'start', 'start', 'end']}>
+                  <Flex
+                    sx={{
+                      flexShrink: 0,
+                      pr: [0, 0, 0, 2],
+                      pl: [2, 2, 2, 0],
+                      alignItems: 'center',
+                      height: 40,
+                    }}
+                  >
+                    <TimeDropdown
+                      timeOption={timeOption}
+                      onChangeTime={setTimeOption}
+                      menuSx={{ transform: 'translateX(12px)' }}
+                    />
+                  </Flex>
+                </Flex>
+                <Box height={190}>
+                  <ChartTrader
+                    protocol={protocol}
+                    account={address}
+                    timeOption={timeOption}
+                    // onChangeTime={setTimeOption}
+                  />
+                </Box>
+              </Box>
+            </Flex>
+          </Box>
 
           <Flex flex={1} flexDirection="column" sx={{ position: 'relative' }}>
             <BlurMask isBlur={!isEnablePosition}>

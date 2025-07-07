@@ -41,6 +41,7 @@ import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
 import ProtocolStats from './ProtocolStats'
+import TradeLabelsFrame from './TradeLabelsFrame'
 import TraderActionButtons from './TraderActionButtons'
 import TraderInfo from './TraderInfo'
 import TraderRanking from './TraderRanking'
@@ -208,6 +209,11 @@ export function TraderDetailsComponent({
                 onCopyActionSuccess={onForceReload}
               />
             </Flex>
+            {!!traderData && !lg && (
+              <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
+                <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
+              </Box>
+            )}
           </Box>
         }
         traderChartPnl={

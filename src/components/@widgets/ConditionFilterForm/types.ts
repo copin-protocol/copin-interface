@@ -7,16 +7,28 @@ export interface RowValues<T> {
   gte?: number | null
   lte?: number | null
   in?: string[]
+  and?: {
+    field?: string
+    gte?: number
+    lte?: number
+    in?: string[]
+  }[]
   conditionType: ConditionType
 }
 
 export type ConditionFormValues<T> = RowValues<T>[]
 
 export interface FilterValues {
-  fieldName: string
+  fieldName?: string
   gte?: number
   lte?: number
   in?: string[]
+  and?: {
+    field?: string
+    gte?: number
+    lte?: number
+    in?: string[]
+  }[]
 }
 export interface FieldOption<T> {
   value: keyof T

@@ -58,6 +58,7 @@ const ListTradersSection = function ListTradersSectionMemo({
     changeCurrentLimit,
     filterTab,
     rankingFilters,
+    labelsFilters,
     filters,
     resetFilter,
   } = contextValues
@@ -139,6 +140,7 @@ const ListTradersSection = function ListTradersSectionMemo({
     selectedProtocols,
     rankingFilters,
     filters,
+    labelsFilters,
     enabled: !noDataMessage,
   })
 

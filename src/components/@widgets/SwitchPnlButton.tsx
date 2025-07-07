@@ -37,45 +37,68 @@ type PnlTitleProps = {
   type?: 'upper' | 'lower'
   color?: string
   character?: string
+  direction?: 'all' | 'long' | 'short'
 }
 
-export const PnlTitle = ({ type = 'upper', color = 'neutral1', character }: PnlTitleProps) => {
+export const PnlTitle = ({ type = 'upper', color = 'neutral1', character, direction = 'all' }: PnlTitleProps) => {
   // const pnlWithFeeEnabled = useGlobalStore((s) => s.pnlSettings.pnlWithFeeEnabled)
 
   // const text = pnlWithFeeEnabled ? 'PnL*' : 'PnL'
+
+  const textWithDirection = direction === 'long' ? 'Long PnL' : direction === 'short' ? 'Short PnL' : 'PnL'
 
   if (type === 'lower') {
     return (
       <Type.Caption color={color} sx={{ flexShrink: 0 }}>
         {/* {text} */}
         {/* PnL{pnlWithFeeEnabled && <Superscript>wf</Superscript>} */}
-        PnL
+        {textWithDirection}
         {character}
       </Type.Caption>
     )
   }
 
-  return <Trans>PNL</Trans>
+  return (
+    <Type.Caption sx={{ textTransform: 'uppercase' }}>
+      <Trans>{textWithDirection}</Trans>
+    </Type.Caption>
+  )
 
   // return <>{pnlWithFeeEnabled ? <Trans>PNL*</Trans> : <Trans>PNL</Trans>}</>
 }
 
-export const PnlTitleWithTooltip = () => {
+export const PnlTitleWithTooltip = ({ direction = 'all' }: { direction?: 'all' | 'long' | 'short' }) => {
   const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  let tooltipId = ''
+  let text = ''
+  switch (direction) {
+    case 'long':
+      tooltipId = 'tt_long_pnl_label'
+      text = 'long trades'
+      break
+    case 'short':
+      tooltipId = 'tt_short_pnl_label'
+      text = 'short trades'
+      break
+    case 'all':
+      tooltipId = 'tt_pnl_label'
+      text = 'trades'
+      break
+  }
 
   const tooltipText = pnlWithFeeEnabled ? (
     <Trans>
-      The overall profit or loss <Type.Caption color="primary1">including fees</Type.Caption> generated from the trades
+      The overall profit or loss <Type.Caption color="primary1">including fees</Type.Caption> generated from the {text}
     </Trans>
   ) : (
     <Trans>
-      The overall profit or loss <Type.Caption color="primary1">excluding fees</Type.Caption> generated from the trades
+      The overall profit or loss <Type.Caption color="primary1">excluding fees</Type.Caption> generated from the {text}
     </Trans>
   )
 
   return (
-    <LabelWithTooltip id="tt_pnl_label" tooltip={tooltipText}>
-      <PnlTitle />
+    <LabelWithTooltip id={tooltipId} tooltip={tooltipText}>
+      <PnlTitle direction={direction} />
     </LabelWithTooltip>
   )
 }

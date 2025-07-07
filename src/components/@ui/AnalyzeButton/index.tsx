@@ -28,7 +28,7 @@ export default function AnalyzeAction({ forceDisabled }: { forceDisabled?: boole
         disabled={forceDisabled}
       >
         <GradientText bg={linearGradient1}>
-          <Trans>Analyze With AI</Trans>
+          <Trans>AI Analyze</Trans>
         </GradientText>
       </ButtonWithIcon>
       {openModal && <ModalContactAI isOpen={openModal} onDismiss={() => setOpenModal(false)} />}

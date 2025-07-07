@@ -124,7 +124,7 @@ export default function TraderListTable<T>({
         )}px`
         overlayRef.current.style.top = `${bodyRect?.y ?? 0}px`
         overlayRef.current.style.right = `${window.innerWidth - (bodyRect?.x ?? 0) - (bodyRect?.width ?? 0)}px`
-        overlayRef.current.style.height = `${bodyRect?.height ?? 0}px`
+        overlayRef.current.style.height = `${bodyRef.current?.clientHeight ?? 0}px`
         if (overlayRef.current.clientWidth > 1) {
           overlayRef.current.style.borderLeft = `1px solid ${themeColors.neutral4}`
         } else {

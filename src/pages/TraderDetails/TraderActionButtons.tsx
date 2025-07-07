@@ -50,12 +50,12 @@ export default function TraderActionButtons({
   disabledActions?: DisabledActionType[]
   eventCategory?: EventCategory
 }) {
-  const { lg } = useResponsive()
+  const { xl } = useResponsive()
   const { isDA } = useCopyWalletContext()
   const { isAllowedProtocol } = useTraderProfilePermission({ protocol })
   return (
     <>
-      {lg ? (
+      {xl ? (
         <Box
           sx={{
             alignItems: 'center',

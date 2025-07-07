@@ -11,7 +11,7 @@ import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { Color } from 'theme/types'
 
-import { parseNumber } from './helpers'
+import { IGNORED_FITLER_FORM_FIELDS, parseNumber } from './helpers'
 import { ConditionFilterFormProps, ConditionOption, FieldOption, RowValues } from './types'
 
 export default function ConditionFilterForm<T>({
@@ -96,7 +96,7 @@ export default function ConditionFilterForm<T>({
       </RowWrapper>
       <Box>
         {formValues
-          .filter((e) => e.key !== 'indexTokens' || invalidKeys?.includes(e.key))
+          .filter((e) => !IGNORED_FITLER_FORM_FIELDS.includes(e.key as string) || invalidKeys?.includes(e.key))
           .map((values, index) => {
             if (!values) return <></>
             return (
@@ -115,7 +115,7 @@ export default function ConditionFilterForm<T>({
 
         {hasInvalidValues
           ? invalidFormValues
-              .filter((e) => e.key !== 'indexTokens')
+              .filter((e) => !IGNORED_FITLER_FORM_FIELDS.includes(e.key as string))
               .map((values, index) => {
                 if (!values) return <></>
                 return (

@@ -57,6 +57,7 @@ export interface DataPermissionConfig extends BasePermissionConfig {
   timeFramesAllowed: string[]
   isEnableLatestActivities: boolean
   isEnableRankingFilter: boolean
+  isEnableLabelsFilter: boolean
   isEnableCexDepth: boolean
   maxFilterFields: number
   exportExcelQuota: number

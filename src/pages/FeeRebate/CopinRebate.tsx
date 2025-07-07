@@ -14,7 +14,7 @@ import { GradientText } from 'pages/@layouts/Navbar/EventButton'
 import useFeeRebateContext from 'pages/FeeRebate/useFeeRebateProvider'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
-import Tag from 'theme/Tag'
+import StatusTag from 'theme/Tag/StatusTag'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -73,7 +73,7 @@ export function EpochStatus({ epochId, status }: { epochId?: number; status?: Ep
   return (
     <Flex alignItems="center" sx={{ gap: 2 }}>
       <Type.Caption color="neutral1">#{formatNumber(epochId, 0)}</Type.Caption>
-      <Tag status={status} sx={{ borderRadius: '2px' }} />
+      <StatusTag status={status} sx={{ borderRadius: '2px' }} />
     </Flex>
   )
 }

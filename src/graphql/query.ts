@@ -47,9 +47,19 @@ function getTraderStatisticQuery(functionName: string) {
         avgRoi
         maxRoi
         maxPnl
+        longPnl
+        shortPnl
         avgLeverage
         maxLeverage
         minLeverage
+        totalLongVolume
+        totalShortVolume
+        sharpeRatio
+        sortinoRatio
+        winStreak
+        loseStreak
+        maxWinStreak
+        maxLoseStreak
         runTimeDays
         indexTokens
         lastTradeAt
@@ -63,15 +73,23 @@ function getTraderStatisticQuery(functionName: string) {
         realisedAvgRoi
         realisedMaxRoi
         realisedMaxPnl
+        realisedLongPnl
+        realisedShortPnl
         realisedMaxDrawdown
         realisedMaxDrawdownPnl
         realisedProfitRate
         realisedGainLossRatio
         realisedProfitLossRatio
+        realisedSharpeRatio
+        realisedSortinoRatio
         totalGain
         pairs
         maxDrawdown
         maxDrawdownPnl
+        statisticLabels
+        aggregatedLabels
+        realisedStatisticLabels
+        realisedAggregatedLabels
       }
       meta {
         total

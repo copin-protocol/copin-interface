@@ -9,6 +9,7 @@ export default function useMapPermissionData() {
     if (sourcePair == null) {
       result.pairs = ['ETH-USDT', 'BTC-USDT', 'SOL-USDT']
     }
+
     const sourceLastTradeAt = result.lastTradeAt
     if (sourceLastTradeAt == null) {
       result.lastTradeAt = new Date().toUTCString()
@@ -16,15 +17,17 @@ export default function useMapPermissionData() {
     TRADER_STATISTIC_NUMBER_FIELD.forEach((field) => {
       const source = result[field]
       if (source == null) {
-        result[field] === 'unrealisedPnl' ? ('' as any) : (Math.round(Math.random() * 10000) as any) ////prevent random unRealisedPnl when switch Pnl button
+        result[field] = field === 'unrealisedPnl' ? ('' as any) : (Math.round(Math.random() * 10000) as any) ////prevent random unRealisedPnl when switch Pnl button
       }
     })
+
     return result as ResponseTraderData
   }
   return { getData }
 }
 
 const TRADER_STATISTIC_NUMBER_FIELD: (keyof ResponseTraderData)[] = [
+  'lastTradeAtTs',
   'avgRoi',
   'pnl',
   'realisedAvgRoi',
@@ -54,6 +57,20 @@ const TRADER_STATISTIC_NUMBER_FIELD: (keyof ResponseTraderData)[] = [
   'profitRate',
   'totalGain',
   'totalLoss',
+  'totalLongVolume',
+  'totalShortVolume',
+  'sharpeRatio',
+  'sortinoRatio',
+  'winStreak',
+  'loseStreak',
+  'maxWinStreak',
+  'maxLoseStreak',
+  'longPnl',
+  'shortPnl',
+  'realisedLongPnl',
+  'realisedShortPnl',
+  'realisedSharpeRatio',
+  'realisedSortinoRatio',
   'realisedGainLossRatio',
   'realisedMaxDrawdown',
   'realisedMaxDrawdownPnl',

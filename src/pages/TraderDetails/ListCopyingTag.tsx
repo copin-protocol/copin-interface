@@ -5,8 +5,8 @@ import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import useVaultCopying from 'hooks/store/useVaultCopying'
 import { Button } from 'theme/Buttons'
-import Tag from 'theme/Tag'
-import { Box, Flex, Image, Type } from 'theme/base'
+import StatusTag from 'theme/Tag/StatusTag'
+import { Flex, Image, Type } from 'theme/base'
 import { ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
@@ -83,7 +83,7 @@ function CopyingTag({
   onClickWallet?: (walletData: CopyWalletData) => void
 }) {
   return (
-    <Tag
+    <StatusTag
       width={70}
       status={copyType}
       clickableTooltip

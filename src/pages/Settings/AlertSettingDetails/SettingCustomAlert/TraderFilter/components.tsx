@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 
 import ConditionFilterForm from 'components/@widgets/ConditionFilterForm'
+import { IGNORED_FITLER_FORM_FIELDS } from 'components/@widgets/ConditionFilterForm/helpers'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import ResultEstimated from 'pages/Explorer/ConditionFilter/ResultEstimated'
 import { FilterTabEnum, defaultFieldOptions } from 'pages/Explorer/ConditionFilter/configs'
@@ -162,7 +163,7 @@ export const TraderFilterForm: React.FC<TraderFilterFormProps> = ({
             type="default"
             formValues={conditionFormValues}
             setFormValues={setConditionFormValues}
-            fieldOptions={defaultFieldOptions.filter((e) => e.value !== 'indexTokens')}
+            fieldOptions={defaultFieldOptions.filter((e) => !IGNORED_FITLER_FORM_FIELDS.includes(e.value))}
             onValuesChange={setConditionFormValues}
             wrapperSx={{ px: 0 }}
             labelColor="neutral2"
