@@ -13,17 +13,24 @@ import {
   CopyTradePlatformEnum,
   CopyTradeSideEnum,
   CopyTradeStatusEnum,
+  DIRECTIONAL_BIAS_LABEL_KEY,
+  DURATION_LABEL_KEY,
   DataTypeEnum,
   EpochStatusEnum,
   MarginModeEnum,
   OrderTypeEnum,
+  PERFORMANCE_LABEL_KEY,
+  PNL_TIER_KEY,
   PositionStatusEnum,
   ProtocolCopyTradeStatusEnum,
+  RISK_LABEL_KEY,
   SLTPTypeEnum,
   SubscriptionPlanEnum,
   SystemStatusTypeEnum,
+  TRADER_LABEL_KEY,
   TimeFilterByEnum,
   UserActionEnum,
+  VOLUME_TIER_KEY,
 } from './enums'
 
 type ObjectTrans = {
@@ -269,4 +276,117 @@ export const SUBSCRIPTION_PLAN_TRANSLATION: Record<string, ReactNode> = {
   [SubscriptionPlanEnum.STARTER]: <Trans>Starter</Trans>,
   [SubscriptionPlanEnum.PRO]: <Trans>Pro</Trans>,
   [SubscriptionPlanEnum.ELITE]: <Trans>Elite</Trans>,
+}
+
+export const LABEL_TRANSLATION: Record<string, string> = {
+  [VOLUME_TIER_KEY.VOLUME_TIER1]: 'Shrimp', // Shrimp: < $1K
+  [VOLUME_TIER_KEY.VOLUME_TIER2]: 'Fish', // Fish: $1K - $10K
+  [VOLUME_TIER_KEY.VOLUME_TIER3]: 'Dolphin', // Dolphin: $10K - $100K
+  [VOLUME_TIER_KEY.VOLUME_TIER4]: 'Shark', // Shark: $100K - $1M
+  [VOLUME_TIER_KEY.VOLUME_TIER5]: 'Whale', // Whale: $1M - $10M
+  [VOLUME_TIER_KEY.VOLUME_TIER6]: 'Super Whale', // Super Whale: $10M - $100M
+  [VOLUME_TIER_KEY.VOLUME_TIER7]: 'Mega Whale', // Mega Whale: $100M+
+  [PNL_TIER_KEY.PNL_TIER1]: 'Giga Rekt', // Giga-Rekt: -$1M+
+  [PNL_TIER_KEY.PNL_TIER2]: 'Big Rekt', // Big Rekt: -$100K - $1M
+  [PNL_TIER_KEY.PNL_TIER3]: 'Semi Rekt', // Semi-Rekt: -$10K - $100K
+  [PNL_TIER_KEY.PNL_TIER4]: 'Small Rekt', // Small Rekt: $0 -> -$10K
+  [PNL_TIER_KEY.PNL_TIER5]: 'Small Gainer', // Small Gainer: $0 -> $10K
+  [PNL_TIER_KEY.PNL_TIER6]: 'Semi Gainer', // Semi Gainer: $10K -> $100K
+  [PNL_TIER_KEY.PNL_TIER7]: 'Big Gainer', // Big Gainer: $100K -> $1M
+  [PNL_TIER_KEY.PNL_TIER8]: 'Giga Gainer', // Giga Gainer: $1M+
+  [DURATION_LABEL_KEY.SCALPER]: '⌁ Scalper',
+  [DURATION_LABEL_KEY.DAY_TRADER]: '⛭ Day Trader',
+  [DURATION_LABEL_KEY.SWING_TRADER]: '⎈ Swing Trader',
+  [DURATION_LABEL_KEY.POSITION_TRADER]: '∞ Position Trader',
+  [RISK_LABEL_KEY.LOW_RISK]: '▿ Low Risk',
+  [RISK_LABEL_KEY.HIGH_RISK]: '▵ High Risk',
+  [DIRECTIONAL_BIAS_LABEL_KEY.BULLISH]: '℧ Bullish',
+  [DIRECTIONAL_BIAS_LABEL_KEY.BEARISH]: 'Ω Bearish',
+  [PERFORMANCE_LABEL_KEY.CONSISTENT_WINNER]: '⁂ Consistent Winner',
+  [PERFORMANCE_LABEL_KEY.ONE_HIT_WONDER]: '✷ One Hit Wonder',
+  [PERFORMANCE_LABEL_KEY.HEAVY_LOSER]: '⛒ Loss-Heavy Past',
+  [PERFORMANCE_LABEL_KEY.RISING_STAR]: '✧ Rising Star',
+  [PERFORMANCE_LABEL_KEY.WINNING_STREAK]: '❀ Winning Streak',
+  [PERFORMANCE_LABEL_KEY.LOSING_STREAK]: '⌀ Losing Streak',
+}
+
+export const LABEL_CATEGORY_TRANSLATION: Record<string, ReactNode> = {
+  [TRADER_LABEL_KEY.VOLUME]: <Trans>VOLUME</Trans>,
+  [TRADER_LABEL_KEY.PNL]: <Trans>PNL</Trans>,
+  [TRADER_LABEL_KEY.DURATION]: <Trans>DURATION</Trans>,
+  [TRADER_LABEL_KEY.RISK]: <Trans>RISK</Trans>,
+  [TRADER_LABEL_KEY.DIRECTIONAL_BIAS]: <Trans>DIRECTIONAL BIAS</Trans>,
+  [TRADER_LABEL_KEY.PERFORMANCE]: <Trans>PERFORMANCE (ALL)</Trans>,
+}
+
+export const LABEL_TOOLTIP_TRANSLATION: Record<string, ReactNode> = {
+  [DURATION_LABEL_KEY.SCALPER]: <Trans>Average duration less than 1 hour</Trans>,
+  [DURATION_LABEL_KEY.DAY_TRADER]: <Trans>Average duration between 1 hour and 1 day</Trans>,
+  [DURATION_LABEL_KEY.SWING_TRADER]: <Trans>Average duration between 1 day and 1 week</Trans>,
+  [DURATION_LABEL_KEY.POSITION_TRADER]: <Trans>Average duration greater than 1 week</Trans>,
+  [RISK_LABEL_KEY.LOW_RISK]: <Trans>Low leverage and low draw down</Trans>,
+  [RISK_LABEL_KEY.HIGH_RISK]: <Trans>High leverage and high draw down</Trans>,
+  [DIRECTIONAL_BIAS_LABEL_KEY.BULLISH]: <Trans>Mostly position is long</Trans>,
+  [DIRECTIONAL_BIAS_LABEL_KEY.BEARISH]: <Trans>Mostly position is short</Trans>,
+  [PERFORMANCE_LABEL_KEY.CONSISTENT_WINNER]: <Trans>Winner in multiple periods of the market</Trans>,
+  [PERFORMANCE_LABEL_KEY.ONE_HIT_WONDER]: <Trans>Big profit in a few positions but low win rate</Trans>,
+  [PERFORMANCE_LABEL_KEY.HEAVY_LOSER]: <Trans>Mostly loses and has many liquidated positions in the past</Trans>,
+  [PERFORMANCE_LABEL_KEY.RISING_STAR]: <Trans>New trader with good performance</Trans>,
+  [PERFORMANCE_LABEL_KEY.WINNING_STREAK]: <Trans>On a streak of winning trades</Trans>,
+  [PERFORMANCE_LABEL_KEY.LOSING_STREAK]: <Trans>On a streak of losing trades</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER1]: <Trans>Average volume less than $1K</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER2]: <Trans>Average volume between $1K and $10K</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER3]: <Trans>Average volume between $10K and $100K</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER4]: <Trans>Average volume between $100K and $1M</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER5]: <Trans>Average volume between $1M and $10M</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER6]: <Trans>Average volume between $10M and $100M</Trans>,
+  [VOLUME_TIER_KEY.VOLUME_TIER7]: <Trans>Average volume over $100M</Trans>,
+  [PNL_TIER_KEY.PNL_TIER1]: <Trans>PnL less than -$1M</Trans>,
+  [PNL_TIER_KEY.PNL_TIER2]: <Trans>PnL between -$1M and -$100K</Trans>,
+  [PNL_TIER_KEY.PNL_TIER3]: <Trans>PnL between -$100K and -$10K</Trans>,
+  [PNL_TIER_KEY.PNL_TIER4]: <Trans>PnL between -$10K and $0</Trans>,
+  [PNL_TIER_KEY.PNL_TIER5]: <Trans>PnL between $0 and $10K</Trans>,
+  [PNL_TIER_KEY.PNL_TIER6]: <Trans>PnL between $10K and $100K</Trans>,
+  [PNL_TIER_KEY.PNL_TIER7]: <Trans>PnL between $100K and $1M</Trans>,
+  [PNL_TIER_KEY.PNL_TIER8]: <Trans>PnL over $1M</Trans>,
+}
+
+export const STATISTIC_TYPE_TRANSLATIONS: {
+  [key in TimeFilterByEnum]?: { index: number; key: string; text: ReactNode }
+} = {
+  [TimeFilterByEnum.ALL_TIME]: {
+    index: 0,
+    key: 'ALL',
+    text: <Trans>All time</Trans>,
+  },
+  [TimeFilterByEnum.S60_DAY]: {
+    index: 1,
+    key: '60D',
+    text: <Trans>60 days</Trans>,
+  },
+  [TimeFilterByEnum.S30_DAY]: {
+    index: 2,
+    key: '30D',
+    text: <Trans>30 days</Trans>,
+  },
+  [TimeFilterByEnum.S14_DAY]: {
+    index: 3,
+    key: '14D',
+    text: <Trans>14 days</Trans>,
+  },
+  [TimeFilterByEnum.S7_DAY]: {
+    index: 4,
+    key: '7D',
+    text: <Trans>7 days</Trans>,
+  },
+  [TimeFilterByEnum.S1_DAY]: {
+    index: 5,
+    key: '1D',
+    text: <Trans>Yesterday</Trans>,
+  },
+  [TimeFilterByEnum.LAST_24H]: {
+    index: 6,
+    key: 'L24H',
+    text: <Trans>Last 24H</Trans>,
+  },
 }

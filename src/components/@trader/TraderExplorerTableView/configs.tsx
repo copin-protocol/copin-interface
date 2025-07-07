@@ -3,13 +3,14 @@ import { Trans } from '@lingui/macro'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
+import TraderLabels from 'components/@ui/TraderLabels'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { PnlTitle, PnlTitleWithTooltip } from 'components/@widgets/SwitchPnlButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
 import CopyButton from 'theme/Buttons/CopyButton'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
-import { PLATFORM_TRANS } from 'utils/config/translations'
+import { LABEL_TOOLTIP_TRANSLATION, LABEL_TRANSLATION, PLATFORM_TRANS } from 'utils/config/translations'
 import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 import { AccountCell, AccountCellMobile, MyCopyAccountCell } from './AccountCell'
@@ -93,6 +94,49 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       </div>
     ),
   },
+  labels: {
+    style: { minWidth: '200px', width: '200px' },
+    text: <Trans>Labels</Trans>,
+    searchText: 'Labels',
+    label: (
+      <LabelWithTooltip id="tt_labels_label" tooltip="Auto tags based on trading behavior and performance.">
+        Labels
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    filter: {
+      conditionType: 'in',
+      in: [],
+    },
+    id: 'labels',
+    render: (item) => {
+      if (!item.labels || item.labels.length === 0)
+        return (
+          <Flex height={56} alignItems="center" justifyContent="end">
+            <Type.Caption color="neutral3">--</Type.Caption>
+          </Flex>
+        )
+      // sort, item have TIER in name go first
+      const labels = item.labels
+        .sort((a, b) => {
+          if (a.includes('TIER')) return -1
+          if (b.includes('TIER')) return 1
+          return 0
+        })
+        .map((label) => {
+          return {
+            key: label,
+            title: LABEL_TRANSLATION[label as keyof typeof LABEL_TRANSLATION],
+            tooltip: LABEL_TOOLTIP_TRANSLATION[label as keyof typeof LABEL_TOOLTIP_TRANSLATION],
+          }
+        })
+      return (
+        <Flex sx={{ gap: 1, flexWrap: 'wrap', py: 2, justifyContent: 'end', height: 56, alignItems: 'center' }}>
+          <TraderLabels labels={labels} showedItems={3} />
+        </Flex>
+      )
+    },
+  },
   pnlStatistics: {
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     text: <Trans>Pnl Overtime</Trans>,
@@ -162,7 +206,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
   },
   pnl: {
     style: { minWidth: ['100px', '120px'] },
-    text: <PnlTitle type="lower" />,
+    text: <PnlTitle type="lower" color="inherit" />,
     searchText: 'PnL',
     label: <PnlTitleWithTooltip />,
     unit: '$',
@@ -700,6 +744,202 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     id: 'maxDrawdownPnl',
     render: (item) => <SignedText value={item.maxDrawdownPnl} maxDigit={0} neg prefix="$" />,
   },
+  sharpeRatio: {
+    style: { minWidth: '120px' },
+    text: <Trans>Sharpe Ratio</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_sharpe_ratio_label"
+        tooltip="The risk-adjusted return of a trader's performance, indicating how much return they generate for each unit of risk taken"
+      >
+        Sharpe Ratio
+      </LabelWithTooltip>
+    ),
+    sortBy: 'sharpeRatio',
+    searchText: 'Sharpe Ratio',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 1,
+    },
+    id: 'sharpeRatio',
+    render: (item) => <Text text={formatNumber(item.sharpeRatio, 2, 2)} />,
+  },
+  sortinoRatio: {
+    style: { minWidth: '130px' },
+    text: <Trans>Sortino Ratio</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_sortino_ratio_label"
+        tooltip="The risk-adjusted return of a trader's performance, indicating how much return they generate for each unit of downside risk taken"
+      >
+        Sortino Ratio
+      </LabelWithTooltip>
+    ),
+    sortBy: 'sortinoRatio',
+    searchText: 'Sortino Ratio',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 1,
+    },
+    id: 'sortinoRatio',
+    render: (item) => <Text text={formatNumber(item.sortinoRatio, 2, 2)} />,
+  },
+  winStreak: {
+    style: { minWidth: '120px' },
+    text: <Trans>Win Streak</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_win_streak_label"
+        tooltip="The number of consecutive winning trades currently in progress"
+      >
+        Win Streak
+      </LabelWithTooltip>
+    ),
+    sortBy: 'winStreak',
+    searchText: 'Win Streak',
+    visible: false,
+    filter: {
+      conditionType: 'gte',
+      gte: 3,
+    },
+    id: 'winStreak',
+    render: (item) => <Text text={formatNumber(item.winStreak)} />,
+  },
+  loseStreak: {
+    style: { minWidth: '120px' },
+    text: <Trans>Lose Streak</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_lose_streak_label"
+        tooltip="The number of consecutive losing trades currently in progress"
+      >
+        Lose Streak
+      </LabelWithTooltip>
+    ),
+    sortBy: 'loseStreak',
+    searchText: 'Lose Streak',
+    visible: false,
+    filter: {
+      conditionType: 'gte',
+      gte: 3,
+    },
+    id: 'loseStreak',
+    render: (item) => <Text text={formatNumber(item.loseStreak)} />,
+  },
+  maxWinStreak: {
+    style: { minWidth: '140px' },
+    text: <Trans>Max Win Streak</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_max_win_streak_label"
+        tooltip="The longest consecutive winning streak ever achieved by the trader in the past"
+      >
+        Max Win Streak
+      </LabelWithTooltip>
+    ),
+    sortBy: 'maxWinStreak',
+    searchText: 'Max Win Streak',
+    visible: false,
+    filter: {
+      conditionType: 'gte',
+      gte: 3,
+    },
+    id: 'maxWinStreak',
+    render: (item) => <Text text={formatNumber(item.maxWinStreak)} />,
+  },
+  maxLoseStreak: {
+    style: { minWidth: '140px' },
+    text: <Trans>Max Lose Streak</Trans>,
+    label: (
+      <LabelWithTooltip
+        id="tt_max_lose_streak_label"
+        tooltip="The longest consecutive losing streak ever achieved by the trader in the past"
+      >
+        Max Lose Streak
+      </LabelWithTooltip>
+    ),
+    sortBy: 'maxLoseStreak',
+    searchText: 'Max Lose Streak',
+    visible: false,
+    filter: {
+      conditionType: 'gte',
+      gte: 3,
+    },
+    id: 'maxLoseStreak',
+    render: (item) => <Text text={formatNumber(item.maxLoseStreak)} />,
+  },
+  totalLongVolume: {
+    style: { minWidth: '150px' },
+    text: <Trans>Total Long Volume</Trans>,
+    searchText: 'Total Long Volume',
+    label: (
+      <LabelWithTooltip id="tt_total_long_volume_label" tooltip="The cumulative trading volume from long trades">
+        Total Long Volume
+      </LabelWithTooltip>
+    ),
+    unit: '$',
+    sortBy: 'totalLongVolume',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100000,
+    },
+    id: 'totalLongVolume',
+    render: (item) => <Text text={item.totalLongVolume ? `$${formatNumber(item.totalLongVolume, 0, 0)}` : undefined} />,
+  },
+  totalShortVolume: {
+    style: { minWidth: '160px' },
+    text: <Trans>Total Short Volume</Trans>,
+    searchText: 'Total Short Volume',
+    label: (
+      <LabelWithTooltip id="tt_total_short_volume_label" tooltip="The cumulative trading volume from short trades">
+        Total Short Volume
+      </LabelWithTooltip>
+    ),
+    unit: '$',
+    sortBy: 'totalShortVolume',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100000,
+    },
+    id: 'totalShortVolume',
+    render: (item) => (
+      <Text text={item.totalShortVolume ? `$${formatNumber(item.totalShortVolume, 0, 0)}` : undefined} />
+    ),
+  },
+  longPnl: {
+    style: { minWidth: ['130px', '150px'] },
+    text: <PnlTitle type="lower" direction="long" color="inherit" />,
+    searchText: 'Long PnL',
+    label: <PnlTitleWithTooltip direction="long" />,
+    unit: '$',
+    sortBy: 'longPnl',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100,
+    },
+    id: 'longPnl',
+    render: (item) => <SignedText value={item.longPnl} maxDigit={0} prefix="$" />,
+  },
+  shortPnl: {
+    style: { minWidth: ['130px', '150px'] },
+    text: <PnlTitle type="lower" direction="short" color="inherit" />,
+    searchText: 'Short PnL',
+    label: <PnlTitleWithTooltip direction="short" />,
+    unit: '$',
+    sortBy: 'shortPnl',
+    visible: true,
+    filter: {
+      conditionType: 'gte',
+      gte: 100,
+    },
+    id: 'shortPnl',
+    render: (item) => <SignedText value={item.shortPnl} maxDigit={0} prefix="$" />,
+  },
 }
 
 const tableColumnKeys: (keyof TraderData)[] = [
@@ -707,23 +947,34 @@ const tableColumnKeys: (keyof TraderData)[] = [
   'runTimeDays',
   'pnlStatistics',
   'lastTradeAtTs',
+  'labels',
   'indexTokens',
   'pnl',
   'unrealisedPnl',
+  'longPnl',
+  'shortPnl',
   'totalGain',
   'totalLoss',
   'totalFee',
   'totalVolume',
+  'totalLongVolume',
+  'totalShortVolume',
   'avgVolume',
   'totalTrade',
   'totalWin',
   'totalLose',
   'totalLiquidation',
+  'winStreak',
+  'loseStreak',
+  'maxWinStreak',
+  'maxLoseStreak',
   'winRate',
   'profitRate',
   'avgRoi',
   'maxRoi',
   'longRate',
+  'sharpeRatio',
+  'sortinoRatio',
   'orderPositionRatio',
   'profitLossRatio',
   'gainLossRatio',
@@ -746,9 +997,10 @@ export const tableSettingsWithoutPnlStatistics: TableSettingsProps<TraderData> =
 
 const mobileTableColumnKeys: (keyof TraderData)[] = [
   'account',
+  'labels',
   'pnl',
-  'unrealisedPnl',
   'winRate',
+  'unrealisedPnl',
   'avgRoi',
   'runTimeDays',
   'lastTradeAtTs',

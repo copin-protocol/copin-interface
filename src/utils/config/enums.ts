@@ -621,3 +621,82 @@ export enum SubscriptionFeatureEnum {
   CEX_DEPTH = 'CEX_DEPTH',
   PERP_EXPLORER = 'PERP_EXPLORER',
 }
+
+export enum TRADER_LABEL_KEY {
+  VOLUME = 'VOLUME',
+  PNL = 'PNL',
+  DURATION = 'DURATION',
+  RISK = 'RISK',
+  DIRECTIONAL_BIAS = 'DIRECTIONAL_BIAS',
+  PERFORMANCE = 'PERFORMANCE',
+}
+
+export enum VOLUME_TIER_KEY {
+  VOLUME_TIER1 = 'VOLUME_TIER1', // Shrimp: < $1K
+  VOLUME_TIER2 = 'VOLUME_TIER2', // Fish: $1K - $10K
+  VOLUME_TIER3 = 'VOLUME_TIER3', // Dolphin: $10K - $100K
+  VOLUME_TIER4 = 'VOLUME_TIER4', // Shark: $100K - $1M
+  VOLUME_TIER5 = 'VOLUME_TIER5', // Small Whale: $1M - $10M
+  VOLUME_TIER6 = 'VOLUME_TIER6', // Whale: $10M - $100M
+  VOLUME_TIER7 = 'VOLUME_TIER7', // Super Whale: $100M+
+}
+export enum PNL_TIER_KEY {
+  PNL_TIER1 = 'PNL_TIER1', // Giga-Rekt: -$1M+
+  PNL_TIER2 = 'PNL_TIER2', // Full Rekt: -$100K - $1M
+  PNL_TIER3 = 'PNL_TIER3', // Semi-Rekt: -$10K - $100K
+  PNL_TIER4 = 'PNL_TIER4', // Exit Liquidity: -$1K - $10K
+  PNL_TIER5 = 'PNL_TIER5', // Humble Earner: -$100 - $1K
+  PNL_TIER6 = 'PNL_TIER6', // Grinder: -$10 - $100
+  PNL_TIER7 = 'PNL_TIER7', // Smart Money: $100K -> $1M
+  PNL_TIER8 = 'PNL_TIER8', // Money Printer: $1M+
+}
+
+export enum DURATION_LABEL_KEY {
+  SCALPER = 'SCALPER',
+  DAY_TRADER = 'DAY_TRADER',
+  SWING_TRADER = 'SWING_TRADER',
+  POSITION_TRADER = 'POSITION_TRADER',
+}
+export enum RISK_LABEL_KEY {
+  LOW_RISK = 'LOW_RISK',
+  HIGH_RISK = 'HIGH_RISK',
+}
+export enum DIRECTIONAL_BIAS_LABEL_KEY {
+  BULLISH = 'BULLISH',
+  BEARISH = 'BEARISH',
+}
+export enum PERFORMANCE_LABEL_KEY {
+  CONSISTENT_WINNER = 'CONSISTENT_WINNER',
+  ONE_HIT_WONDER = 'ONE_HIT_WONDER',
+  HEAVY_LOSER = 'HEAVY_LOSER',
+  RISING_STAR = 'RISING_STAR',
+  WINNING_STREAK = 'WINNING_STREAK',
+  LOSING_STREAK = 'LOSING_STREAK',
+}
+
+export const TRADER_LABELS: { key: TRADER_LABEL_KEY; labels: string[] }[] = [
+  {
+    key: TRADER_LABEL_KEY.VOLUME,
+    labels: Object.values(VOLUME_TIER_KEY),
+  },
+  {
+    key: TRADER_LABEL_KEY.PNL,
+    labels: Object.values(PNL_TIER_KEY),
+  },
+  {
+    key: TRADER_LABEL_KEY.DURATION,
+    labels: Object.values(DURATION_LABEL_KEY),
+  },
+  {
+    key: TRADER_LABEL_KEY.RISK,
+    labels: Object.values(RISK_LABEL_KEY),
+  },
+  {
+    key: TRADER_LABEL_KEY.DIRECTIONAL_BIAS,
+    labels: Object.values(DIRECTIONAL_BIAS_LABEL_KEY),
+  },
+  {
+    key: TRADER_LABEL_KEY.PERFORMANCE,
+    labels: Object.values(PERFORMANCE_LABEL_KEY),
+  },
+]

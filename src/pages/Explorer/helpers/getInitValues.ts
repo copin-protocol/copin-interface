@@ -45,6 +45,25 @@ export const getInitFilters = ({
   return defaultFilters
 }
 
+export const getInitLabelsFilters = ({
+  searchParams,
+}: {
+  searchParams: ParsedQs
+  accounts: string[] | undefined
+}): string[] => {
+  const paramsStr = searchParams[URL_PARAM_KEYS.LABELS_FILTERS] as string
+  const filtersFromParams = paramsStr?.split('__')
+  if (filtersFromParams?.length > 0) {
+    return filtersFromParams
+  }
+
+  const labelsFilters = localStorage.getItem(STORAGE_KEYS.LABELS_FILTERS)
+  if (labelsFilters) {
+    return JSON.parse(labelsFilters) as string[]
+  }
+  return []
+}
+
 export const getInitFilterTab = ({ searchParams }: { searchParams: ParsedQs }) => {
   const tab = (searchParams[URL_PARAM_KEYS.FILTER_TAB] as FilterTabEnum) || FilterTabEnum.DEFAULT
   return tab

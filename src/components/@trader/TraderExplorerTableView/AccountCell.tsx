@@ -4,10 +4,13 @@ import { ReactElement } from 'react'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
+import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { Box, Flex } from 'theme/base'
 
 export function AccountCell({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
   const { sm } = useResponsive()
+  const { notes } = useTraderFavorites()
+  const note = notes?.[`${data.account}-${data.protocol}`]
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 0, position: 'relative' }}>
       <AccountInfo
@@ -15,7 +18,7 @@ export function AccountCell({ data, additionalComponent }: { data: TraderData; a
         address={data.account}
         protocol={data.protocol}
         type={data.type}
-        note={data.note}
+        note={note}
         size={sm ? 32 : 28}
         wrapperSx={{ width: 'fit-content' }}
       />
@@ -30,6 +33,8 @@ export function AccountCellMobile({
   data: TraderData
   additionalComponent?: ReactElement
 }) {
+  const { notes } = useTraderFavorites()
+  const note = notes?.[`${data.account}-${data.protocol}`]
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
       <AccountInfo
@@ -37,7 +42,7 @@ export function AccountCellMobile({
         address={data.account}
         protocol={data.protocol}
         type={data.type}
-        note={data.note}
+        note={note}
         size={40}
         wrapperSx={{ py: 0, gap: 2 }}
       />

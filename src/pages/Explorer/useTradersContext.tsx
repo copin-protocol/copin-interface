@@ -21,7 +21,13 @@ import { TimeRange } from 'utils/types'
 
 import { FilterTabEnum } from './ConditionFilter/configs'
 import { TabKeyEnum } from './Layouts/layoutConfigs'
-import { DEFAULT_SORT_BY, getInitFilterTab, getInitFilters, getInitSort } from './helpers/getInitValues'
+import {
+  DEFAULT_SORT_BY,
+  getInitFilterTab,
+  getInitFilters,
+  getInitLabelsFilters,
+  getInitSort,
+} from './helpers/getInitValues'
 import { stringifyParams } from './helpers/handleParams'
 
 export interface TradersContextData {
@@ -42,7 +48,9 @@ export interface TradersContextData {
   setCurrentSuggestion: (data?: string) => void
   filters: ConditionFormValues<TraderData>
   changeFilters: (props: { filters: ConditionFormValues<TraderData>; filterTab: FilterTabEnum }) => void
+  changeLabels: (labels: string[]) => void
   rankingFilters: ConditionFormValues<TraderData>
+  labelsFilters: string[]
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
   filterTab: FilterTabEnum
@@ -168,6 +176,20 @@ export function FilterTradersProvider({
     filterTab: FilterTabEnum.RANKING,
   }).filter((option) => !!RANKING_FIELD_NAMES.includes(option.key))
 
+  const labelsFilters = getInitLabelsFilters({ searchParams, accounts })
+
+  const changeLabels = (labels: string[]) => {
+    setSearchParams({
+      [URL_PARAM_KEYS.LABELS_FILTERS]: labels.join('__'),
+      [URL_PARAM_KEYS.PAGE]: '1',
+      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.LABELS,
+      [URL_PARAM_KEYS.RANKING_FILTERS]: null,
+      [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
+    })
+    // localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
+    localStorage.setItem(STORAGE_KEYS.LABELS_FILTERS, JSON.stringify(labels))
+  }
+
   const changeFilters = ({
     filters,
     filterTab,
@@ -179,6 +201,9 @@ export function FilterTradersProvider({
     const payload = {
       [URL_PARAM_KEYS.FILTER_TAB]: filterTab,
       [URL_PARAM_KEYS.PAGE]: '1',
+      [URL_PARAM_KEYS.RANKING_FILTERS]: null,
+      [URL_PARAM_KEYS.LABELS_FILTERS]: null,
+      [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
     }
     if (filterTab === FilterTabEnum.RANKING) {
       payload[URL_PARAM_KEYS.RANKING_FILTERS] = stringParams
@@ -198,7 +223,7 @@ export function FilterTradersProvider({
     }, [] as ConditionFormValues<TraderData>)
 
     localStorage.setItem(
-      filterTab === FilterTabEnum.DEFAULT ? STORAGE_KEYS.DEFAULT_FILTERS : STORAGE_KEYS.RANKING_FILTERS,
+      filterTab === FilterTabEnum.RANKING ? STORAGE_KEYS.RANKING_FILTERS : STORAGE_KEYS.DEFAULT_FILTERS,
       JSON.stringify(uniqueFilters)
     )
   }
@@ -240,7 +265,9 @@ export function FilterTradersProvider({
     changeCurrentLimit,
     filters,
     changeFilters,
+    changeLabels,
     rankingFilters,
+    labelsFilters,
     currentSort,
     changeCurrentSort,
     filterTab,

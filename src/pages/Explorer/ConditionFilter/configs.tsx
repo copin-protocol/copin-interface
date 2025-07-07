@@ -1,7 +1,11 @@
 import { Lock } from '@phosphor-icons/react'
 
 import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
-import { getFieldOptionLabels, getFieldOptions } from 'components/@widgets/ConditionFilterForm/helpers'
+import {
+  IGNORED_FITLER_FORM_FIELDS,
+  getFieldOptionLabels,
+  getFieldOptions,
+} from 'components/@widgets/ConditionFilterForm/helpers'
 import { DataPermissionConfig, ExplorerPermission } from 'entities/permission'
 import { TraderData } from 'entities/trader'
 import { Flex } from 'theme/base'
@@ -21,7 +25,7 @@ export const getFilterOptions = ({
   const fieldsAllowedByPlan = getItemsAndRequiredPlan(key, pagePermission)
   const shortedFields = Object.keys(fieldsAllowedByPlan)
   return getFieldOptions<TraderData>(tableSettings)
-    .filter((e) => e.value !== 'indexTokens')
+    .filter((e) => !IGNORED_FITLER_FORM_FIELDS.includes(e.value as string))
     .sort((a, b) => {
       const aIndex = shortedFields.indexOf(a.value)
       const bIndex = shortedFields.indexOf(b.value)
@@ -50,4 +54,5 @@ export const rankingFieldOptionLabels = getFieldOptionLabels(rankingFieldOptions
 export enum FilterTabEnum {
   DEFAULT = 'default',
   RANKING = 'ranking',
+  LABELS = 'labels',
 }

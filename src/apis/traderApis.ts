@@ -52,6 +52,10 @@ export function transformRealisedField(fieldName: string) {
     case 'profitRate':
     case 'gainLossRatio':
     case 'profitLossRatio':
+    case 'sharpeRatio':
+    case 'sortinoRatio':
+    case 'longPnl':
+    case 'shortPnl':
       return 'realised' + capitalizeFirstLetter(fieldName)
     default:
       return fieldName
@@ -73,6 +77,7 @@ export const normalizeTraderPayload = (body: RequestBodyApiData) => {
     .filter((range) => range.fieldName !== 'indexTokens' || !!range.in?.length)
   if (ranges?.[0]?.fieldName?.match('ranking')) {
     ranges.forEach((range) => {
+      if (!range.fieldName) return
       const [_prefix, _fieldName] = range.fieldName.split('.')
       if (_fieldName === 'pnl') {
         if (pnlWithFeeEnabled) {
@@ -84,6 +89,7 @@ export const normalizeTraderPayload = (body: RequestBodyApiData) => {
     })
   } else {
     ranges.forEach((range) => {
+      if (!range.fieldName) return
       range.fieldName = pnlWithFeeEnabled ? range.fieldName : transformRealisedField(range.fieldName)
 
       switch (range.fieldName) {
@@ -221,6 +227,16 @@ export async function getTradersCounter(
 
   return requester
     .post(`public/${SERVICE}/statistic/counter/level?type=${timeframe}`, params)
+    .then((res: any) => res.data as TraderCounter[])
+}
+
+export async function getTradersCounterGraphql(query: any) {
+  return requester
+    .post(`public/${SERVICE}/statistic/counter/graphql`, {
+      filter: {
+        and: query,
+      },
+    })
     .then((res: any) => res.data as TraderCounter[])
 }
 

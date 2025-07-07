@@ -2,6 +2,7 @@ import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import { TraderData } from 'entities/trader'
 import { Box, Flex, Type } from 'theme/base'
+import { SxProps } from 'theme/types'
 import { ProtocolEnum } from 'utils/config/enums'
 import { formatRelativeDate } from 'utils/helpers/format'
 
@@ -9,11 +10,12 @@ export default function GeneralStats({
   traderData,
   account,
   protocol,
+  sx,
 }: {
   traderData: TraderData | undefined
   account: string
   protocol: ProtocolEnum
-}) {
+} & SxProps) {
   const { lastTradeAt, runTimeDays, smartAccount } = traderData ?? {}
   return (
     <Box
@@ -23,6 +25,7 @@ export default function GeneralStats({
         overflow: 'auto hidden',
         borderBottom: 'small',
         borderColor: 'neutral4',
+        ...(sx ?? {}),
       }}
     >
       <Flex

@@ -44,6 +44,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     changeCurrentPage,
     changeCurrentLimit,
     rankingFilters,
+    labelsFilters,
     filters,
     resetFilter,
   } = contextValues
@@ -98,6 +99,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     isFavTraders: true,
     traderFavorites,
     rankingFilters,
+    labelsFilters,
     filters,
     enabled: !noDataMessage,
   })
@@ -113,7 +115,10 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   }
   const checkIsSelected = (data: TraderData) => selectedTraders.includes(data.account)
   const formattedData = data?.data
-    .map((item) => ({ ...item, note: notes ? notes[item.account] : undefined }))
+    .map((item) => ({
+      ...item,
+      note: notes ? notes[`${item.account}-${item.protocol}`] : undefined,
+    }))
     .filter(({ account, protocol }) => {
       const traderFavorite = getTraderFavoriteValue({ address: account, protocol })
       return traderFavorites.includes(traderFavorite)

@@ -355,13 +355,17 @@ const ThemedGlobalStyle = createGlobalStyle`
     font-size: 12px;
   }
   .custom_react_tooltip_arrow_place_top_css {
+    border-top: 1px solid ${({ theme }) => theme.colors.neutral7};
+    border-left: 1px solid ${({ theme }) => theme.colors.neutral7};
     border-bottom: 1px solid ${({ theme }) => theme.colors.neutral4};
     border-right: 1px solid ${({ theme }) => theme.colors.neutral4};
     z-index: 4;
   }
   .custom_react_tooltip_arrow_place_bottom_css {
-    border-top: 1px solid ${({ theme }) => theme.colors.neutral4};
-      border-left: 1px solid ${({ theme }) => theme.colors.neutral4};
+    border-top: 1px solid ${({ theme }) => theme.colors.neutral7};
+    border-left: 1px solid ${({ theme }) => theme.colors.neutral7};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.neutral4};
+    border-right: 1px solid ${({ theme }) => theme.colors.neutral4};
     z-index: 4;
   }
   

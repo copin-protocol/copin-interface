@@ -3,14 +3,14 @@ import isEqual from 'lodash/isEqual'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { getTradersCounter } from 'apis/traderApis'
+import { getTradersCounter, getTradersCounterGraphql } from 'apis/traderApis'
 import { ConditionFormValues, FilterValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderCounter, TraderData } from 'entities/trader'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 
-import { formatRankingRanges } from '../helpers/formatRankingRanges'
+import { formatRankingRanges } from '../helpers/formatRanges'
 import { TradersContextData } from '../useTradersContext'
 import { FilterTabEnum } from './configs'
 
@@ -41,16 +41,19 @@ export default function useTradersCount({
     if (isEqual(ranges, _ranges)) return
     handleCallAPi(ranges)
   }, [ranges])
+
   const { data, isFetching, refetch } = useQuery(
     [QUERY_KEYS.GET_TRADER_FILTER_COUNTER, _ranges, type, protocols, enabled],
     () =>
-      getTradersCounter(
-        protocols,
-        {
-          ranges: filterTab === FilterTabEnum.RANKING ? formatRankingRanges(_ranges) : _ranges,
-        },
-        type
-      ),
+      filterTab === FilterTabEnum.LABELS
+        ? getTradersCounterGraphql([..._ranges, { field: 'protocol', in: protocols }, { field: 'type', match: type }])
+        : getTradersCounter(
+            protocols,
+            {
+              ranges: filterTab === FilterTabEnum.RANKING ? formatRankingRanges(_ranges) : _ranges,
+            },
+            type
+          ),
     {
       keepPreviousData: true,
       retry: 0,

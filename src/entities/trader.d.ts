@@ -19,6 +19,9 @@ export interface TraderData {
   note?: string
   account: string
   smartAccount: string
+  labels: string[]
+  statisticLabels: string[]
+  aggregatedLabels: string[]
   protocol: ProtocolEnum
   type: TimeFrameEnum
   maxDrawdown: number
@@ -53,6 +56,16 @@ export interface TraderData {
   avgLeverage: number
   maxLeverage: number
   minLeverage: number
+  sharpeRatio: number
+  sortinoRatio: number
+  longPnl: number
+  shortPnl: number
+  totalLongVolume: number
+  totalShortVolume: number
+  winStreak: number
+  loseStreak: number
+  maxWinStreak: number
+  maxLoseStreak: number
   runTimeDays: number
   isOpenPosition: boolean
   indexTokens: string[]
@@ -75,11 +88,17 @@ export interface ResponseTraderData extends TraderData {
   realisedAvgRoi: number
   realisedMaxRoi: number
   realisedMaxPnl: number
+  realisedLongPnl: number
+  realisedShortPnl: number
   realisedMaxDrawdown: number
   realisedMaxDrawdownPnl: number
   realisedProfitRate: number
   realisedGainLossRatio: number
   realisedProfitLossRatio: number
+  realisedSharpeRatio: number
+  realisedSortinoRatio: number
+  realisedStatisticLabels: string[]
+  realisedAggregatedLabels: string[]
 }
 
 export type TraderDataKey = keyof TraderData

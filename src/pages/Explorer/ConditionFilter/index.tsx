@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { ChartBar, Funnel } from '@phosphor-icons/react'
+import { FadersHorizontal, Funnel, Percent, Shapes } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import SectionTitle from 'components/@ui/SectionTitle'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
@@ -13,6 +14,7 @@ import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 import DefaultFilterForm from './DefaultFilterForm'
+import LabelsFilterForm from './LabelsFilterForm'
 // import FilterSuggestion from './FilterSuggestion'
 import RankingFilterForm from './RankingFilterForm'
 import { FilterTabEnum } from './configs'
@@ -21,7 +23,9 @@ import { ConditionFilterProps } from './types'
 export default function ConditionFilter({
   filters,
   changeFilters,
+  changeLabels,
   rankingFilters,
+  labelsFilters,
   tab,
   onCancel,
   onClickTitle,
@@ -47,27 +51,39 @@ export default function ConditionFilter({
     [rankingFilters]
   )
 
-  const { isEnableRankingFilter, planToFilterRanking } = useExplorerPermission()
+  const { isEnableRankingFilter, isEnableLabelsFilter, planToFilterRanking, planToFilterLabels } =
+    useExplorerPermission()
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
       <Box onClick={() => onClickTitle?.()}>
+        <SectionTitle title={<Trans>FILTERS</Trans>} icon={Funnel} sx={{ p: 12, mb: 0 }} />
         <TabHeader
           configs={[
             {
               key: FilterTabEnum.DEFAULT as unknown as string,
-              name: <Trans>DEFAULT FILTER</Trans>,
-              icon: <Funnel size={20} />,
+              name: <Trans>STATISTICS</Trans>,
+              icon: <FadersHorizontal size={20} />,
             },
             {
               key: FilterTabEnum.RANKING as unknown as string,
               name: (
                 <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <Trans>PERCENTILE FILTER</Trans>{' '}
+                  <Trans>PERCENTILES</Trans>{' '}
                   {!!planToFilterRanking && <PlanUpgradeIndicator requiredPlan={planToFilterRanking} useLockIcon />}
                 </Flex>
               ),
-              icon: <ChartBar size={20} />,
+              icon: <Percent size={20} />,
+            },
+            {
+              key: FilterTabEnum.LABELS as unknown as string,
+              name: (
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <Trans>LABELS</Trans>{' '}
+                  {!!planToFilterRanking && <PlanUpgradeIndicator requiredPlan={planToFilterRanking} useLockIcon />}
+                </Flex>
+              ),
+              icon: <Shapes size={20} />,
             },
           ]}
           isActiveFn={(config: TabConfig) => config.key === (filterTab as unknown as string)}
@@ -124,6 +140,35 @@ export default function ConditionFilter({
             </Box>
           ) : null}
         </Box>
+        <Box display={filterTab === FilterTabEnum.LABELS ? 'block' : 'none'} width="100%" height="100%">
+          {isEnableLabelsFilter ? (
+            <LabelsFilterForm
+              currentTab={filterTab}
+              lastFilterTab={tab}
+              key={rankingKey}
+              labels={labelsFilters}
+              handleChangeOption={(labels) => changeLabels(labels)}
+              handleClose={onCancel}
+            />
+          ) : planToFilterLabels ? (
+            <Box px={2}>
+              <Box mb={24} />
+              <PlanUpgradePrompt
+                requiredPlan={planToFilterLabels}
+                title={
+                  <Trans>
+                    This features is available from {SUBSCRIPTION_PLAN_TRANSLATION[planToFilterLabels]} plan
+                  </Trans>
+                }
+                description={<Trans>Unlock powerful filters to enhance your copy trading decisions</Trans>}
+                showTitleIcon
+                showLearnMoreButton
+                useLockIcon
+                learnMoreSection={SubscriptionFeatureEnum.TRADER_EXPLORER}
+              />
+            </Box>
+          ) : null}
+        </Box>
       </Box>
     </Flex>
   )
@@ -155,7 +200,7 @@ export function ConditionFilterButton(props: ConditionFilterProps & { hasText?: 
             fontSize: '11px',
           }}
         >
-          {props.filters.length}
+          {props.tab === FilterTabEnum.LABELS ? props.labelsFilters.length : props.filters.length}
         </Box>
       </Button>
       {openModal && (

@@ -16,6 +16,7 @@ import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { SubscriptionFeatureEnum, TimeFilterByEnum, TimeFrameEnum } from 'utils/config/enums'
+import { STATISTIC_TYPE_TRANSLATIONS } from 'utils/config/translations'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
 const GridWrapper = styled(Grid)`
@@ -69,44 +70,6 @@ const statsObj = stats.reduce((prev, cur) => {
   return prev
 }, {} as { [key: string]: StatProps })
 
-const TYPES: { [key in TimeFilterByEnum]?: { index: number; key: string; text: ReactNode } } = {
-  [TimeFilterByEnum.ALL_TIME]: {
-    index: 0,
-    key: 'ALL',
-    text: 'All time',
-  },
-  [TimeFilterByEnum.S60_DAY]: {
-    index: 1,
-    key: '60D',
-    text: '60 days',
-  },
-  [TimeFilterByEnum.S30_DAY]: {
-    index: 2,
-    key: '30D',
-    text: '30 days',
-  },
-  [TimeFilterByEnum.S14_DAY]: {
-    index: 3,
-    key: '14D',
-    text: '14 days',
-  },
-  [TimeFilterByEnum.S7_DAY]: {
-    index: 4,
-    key: '7D',
-    text: '7 days',
-  },
-  [TimeFilterByEnum.S1_DAY]: {
-    index: 5,
-    key: '1D',
-    text: 'Yesterday',
-  },
-  [TimeFilterByEnum.LAST_24H]: {
-    index: 6,
-    key: 'L24H',
-    text: 'Last 24H',
-  },
-}
-
 const AccountStats = memo(function AccountStatsMemo({
   data,
   timeOption,
@@ -127,8 +90,6 @@ const AccountStats = memo(function AccountStatsMemo({
   const externalSource: ExternalTraderListSource = {
     isMarketsLeft: customizeView === 'GRID',
   }
-
-  const types = TYPES
 
   const { timeFramesAllowed, isEnableLast24H, isEnableYesterday, getRequiredPlanByTimeframe } =
     useTraderProfilePermission({})
@@ -228,7 +189,7 @@ const AccountStats = memo(function AccountStatsMemo({
               }}
             >
               <Checkbox checked={currentStatOnly} onChange={(e) => toogleCurrentStatOnly(e.target.checked)}>
-                <Type.Caption>Only show {types[timeOption.id]?.text}</Type.Caption>
+                <Type.Caption>Only show {STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.text}</Type.Caption>
               </Checkbox>
             </Flex>
           )}
@@ -390,9 +351,9 @@ const AccountStats = memo(function AccountStatsMemo({
                 <Type.CaptionBold>{stat.label}</Type.CaptionBold>
                 {currentStatOnly ? (
                   <Box>
-                    {stat.render && formattedData[types[timeOption.id]?.index ?? 0]
+                    {stat.render && formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0]
                       ? stat.render(
-                          formattedData[types[timeOption.id]?.index ?? 0] as TraderData,
+                          formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0] as TraderData,
                           index,
                           externalSource
                         )
@@ -401,13 +362,13 @@ const AccountStats = memo(function AccountStatsMemo({
                 ) : (
                   <div>
                     {[
-                      types[TimeFilterByEnum.ALL_TIME]?.key,
-                      types[TimeFilterByEnum.S60_DAY]?.key,
-                      types[TimeFilterByEnum.S30_DAY]?.key,
-                      types[TimeFilterByEnum.S14_DAY]?.key,
-                      types[TimeFilterByEnum.S7_DAY]?.key,
-                      types[TimeFilterByEnum.S1_DAY]?.key,
-                      types[TimeFilterByEnum.LAST_24H]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.ALL_TIME]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S60_DAY]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S30_DAY]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S14_DAY]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S7_DAY]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S1_DAY]?.key,
+                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.LAST_24H]?.key,
                     ].map((item, i) => {
                       const isNotAllowed =
                         //@ts-ignore
@@ -456,55 +417,57 @@ const AccountStats = memo(function AccountStatsMemo({
       {customizeView === 'LIST' && (
         <>
           <StatsWrapper>
-            {customizeStats.map((key, index) => {
-              const stat = statsObj[key]
-              if (!stat) return <div key={key}></div>
-              return (
-                <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
-                  <Flex
-                    sx={{
-                      pl: 0,
-                      position: 'sticky',
-                      left: 0,
-                      flex: '10%',
-                      py: 2,
-                      zIndex: 3,
-                    }}
-                    className="column-freeze"
-                    alignItems="center"
-                  >
-                    <Type.Caption pl={3} color="neutral3">
-                      {stat.label}
-                    </Type.Caption>
-                    <IconButton
-                      data-tip="React-tooltip"
-                      data-tooltip-id="tt_to_top"
-                      data-tooltip-offset={0}
-                      variant="ghost"
-                      className="to-top-btn"
-                      onClick={() => moveStatToTop(stat.id)}
-                      size={24}
-                      icon={<ArrowLineUp size={13} fontVariant="bold" />}
-                    />
-                  </Flex>
-
-                  {formattedData.map((item, i) => (
-                    <Box
-                      key={i}
-                      textAlign="right"
+            {customizeStats
+              .filter((key) => key !== 'labels')
+              .map((key, index) => {
+                const stat = statsObj[key]
+                if (!stat) return <div key={key}></div>
+                return (
+                  <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
+                    <Flex
                       sx={{
-                        filter: item?.type && !timeFramesAllowed.includes(item.type) ? 'blur(6px)' : 'none',
-                        flex: 1,
+                        pl: 0,
+                        position: 'sticky',
+                        left: 0,
+                        flex: '10%',
                         py: 2,
-                        position: 'relative',
+                        zIndex: 3,
                       }}
+                      className="column-freeze"
+                      alignItems="center"
                     >
-                      {stat.render && item ? stat.render(item, index) : '--'}
-                    </Box>
-                  ))}
-                </Flex>
-              )
-            })}
+                      <Type.Caption pl={3} color="neutral3">
+                        {stat.label}
+                      </Type.Caption>
+                      <IconButton
+                        data-tip="React-tooltip"
+                        data-tooltip-id="tt_to_top"
+                        data-tooltip-offset={0}
+                        variant="ghost"
+                        className="to-top-btn"
+                        onClick={() => moveStatToTop(stat.id)}
+                        size={24}
+                        icon={<ArrowLineUp size={13} fontVariant="bold" />}
+                      />
+                    </Flex>
+
+                    {formattedData.map((item, i) => (
+                      <Box
+                        key={i}
+                        textAlign="right"
+                        sx={{
+                          filter: item?.type && !timeFramesAllowed.includes(item.type) ? 'blur(6px)' : 'none',
+                          flex: 1,
+                          py: 2,
+                          position: 'relative',
+                        }}
+                      >
+                        {stat.render && item ? stat.render(item, index) : '--'}
+                      </Box>
+                    ))}
+                  </Flex>
+                )
+              })}
           </StatsWrapper>
           <Tooltip id="tt_to_top" clickable={false}>
             <Type.Caption>Move stat to top</Type.Caption>

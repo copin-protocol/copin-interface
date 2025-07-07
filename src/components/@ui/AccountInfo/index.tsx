@@ -202,6 +202,10 @@ export function AccountInfo({
         ) : note != null ? (
           note ? (
             <Type.Small
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
               px={2}
               py="2px"
               bg="neutral4"
@@ -219,12 +223,20 @@ export function AccountInfo({
         ) : null}
         {note && note.length > 10 && (
           <Tooltip id={`tt_note_${address}`} clickable={false}>
-            {note}
+            <Type.Caption
+              maxWidth={300}
+              textAlign="center"
+              style={{
+                textTransform: 'none',
+              }}
+            >
+              {note}
+            </Type.Caption>
           </Tooltip>
         )}
         {smartAccount && (
           <Tooltip id={`tt_sm_${smartAccount}`} clickable={false}>
-            Smart Account: {smartAccount}
+            <Type.Caption>Smart Account: {smartAccount}</Type.Caption>
           </Tooltip>
         )}
       </Flex>

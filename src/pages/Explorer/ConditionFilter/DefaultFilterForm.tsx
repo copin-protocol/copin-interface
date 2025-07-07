@@ -2,6 +2,7 @@ import { useResponsive } from 'ahooks'
 import { useMemo, useState } from 'react'
 
 import Divider from 'components/@ui/Divider'
+import { IGNORED_FITLER_FORM_FIELDS } from 'components/@widgets/ConditionFilterForm/helpers'
 import { ConditionFormValues } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
@@ -136,7 +137,7 @@ export default function DefaultFilterForm({
           initialFormValues={formValues}
           invalidFormValues={defaultFormValues.filter(
             (e, i) =>
-              e.key !== 'indexTokens' &&
+              !IGNORED_FITLER_FORM_FIELDS.includes(e.key) &&
               (!fieldsAllowed?.includes(e.key) || i >= (userPermission?.maxFilterFields ?? Infinity))
           )}
           onApply={onApply}

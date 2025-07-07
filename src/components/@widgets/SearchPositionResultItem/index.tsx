@@ -8,7 +8,7 @@ import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { renderEntry, renderOpeningPnL, renderSizeShorten } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useTraderCopying from 'hooks/store/useTraderCopying'
-import Tag from 'theme/Tag'
+import StatusTag from 'theme/Tag/StatusTag'
 import { Box, Flex, Type } from 'theme/base'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -75,7 +75,11 @@ const SearchPositionResultItem = ({
 
           <Flex width="100%" alignItems="center" flexWrap="wrap" sx={{ gap: 24 }}>
             <Type.Caption>
-              <Tag minWidth={70} status={data.isLiquidate ? PositionStatusEnum.LIQUIDATE : data.status} bg="neutral4" />
+              <StatusTag
+                minWidth={70}
+                status={data.isLiquidate ? PositionStatusEnum.LIQUIDATE : data.status}
+                bg="neutral4"
+              />
             </Type.Caption>
             <Flex alignItems="center" sx={{ gap: 2 }}>
               <Type.Caption color="neutral3">Entry:</Type.Caption>

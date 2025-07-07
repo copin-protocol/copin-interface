@@ -18,7 +18,7 @@ import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
-import { formatRankingRanges } from '../helpers/formatRankingRanges'
+import { formatLabelsRanges, formatRankingRanges } from '../helpers/formatRanges'
 import { TradersContextData } from '../useTradersContext'
 import useMapPermissionData from './useMapPermissionData'
 import useTimeFilterData from './useTimeFilterData'
@@ -35,6 +35,7 @@ export default function useQueryTraders({
   traderFavorites,
   rankingFilters,
   filters,
+  labelsFilters,
   currentPage,
   currentLimit,
   currentSort,
@@ -49,6 +50,7 @@ export default function useQueryTraders({
   | 'filterTab'
   | 'filters'
   | 'rankingFilters'
+  | 'labelsFilters'
   | 'currentPage'
   | 'currentLimit'
   | 'currentSort'
@@ -61,6 +63,7 @@ export default function useQueryTraders({
   const { getData } = useMapPermissionData()
   const { userPermission } = useExplorerPermission()
   const { searchParams } = useSearchParams()
+  const pnlWithFeeEnabled = useUserPreferencesStore((state) => state.pnlWithFeeEnabled)
 
   const requestData = useMemo<RequestBodyApiData>(() => {
     const request: Record<string, any> = {
@@ -74,6 +77,9 @@ export default function useQueryTraders({
 
     if (filterTab === FilterTabEnum.RANKING && userPermission?.isEnableRankingFilter) {
       request.ranges = formatRankingRanges(extractFiltersFromFormValues(rankingFilters))
+      // TODO: permission labels filter
+    } else if (filterTab === FilterTabEnum.LABELS && userPermission?.isEnableRankingFilter) {
+      request.ranges = formatLabelsRanges(labelsFilters, pnlWithFeeEnabled)
     } else {
       request.ranges = extractFiltersFromFormValues(filters)
     }
@@ -89,6 +95,7 @@ export default function useQueryTraders({
     filters,
     isFavTraders,
     rankingFilters,
+    labelsFilters,
     userPermission?.isEnableRankingFilter,
   ])
 
@@ -108,13 +115,11 @@ export default function useQueryTraders({
   })
 
   let timeTradersData = timeTraders
-  const { pnlWithFeeEnabled } = useUserPreferencesStore()
+
   if (!loadingTimeTraders && timeTraders) {
     const formattedTimeTraders = timeTraders.data.map((trader) => {
       const newData = hideField(trader)
-      const normalized = pnlWithFeeEnabled
-        ? (newData as ResponseTraderData)
-        : (normalizeTraderData(newData) as ResponseTraderData)
+      const normalized = normalizeTraderData(newData, pnlWithFeeEnabled) as ResponseTraderData
       return getData(normalized)
     })
     const data = { ...timeTraders, data: formattedTimeTraders } as BaseGraphQLResponse<ResponseTraderData>

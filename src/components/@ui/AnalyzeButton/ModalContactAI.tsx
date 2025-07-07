@@ -17,7 +17,7 @@ const ModalContactAI = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
       mode="bottom"
       title={
         <Flex alignItems="center" sx={{ gap: 2 }}>
-          <Type.H5>Analyze With AI</Type.H5>
+          <Type.H5>AI Analyze</Type.H5>
           <Type.Caption color="orange1" sx={{ px: '6px', py: '2px', backgroundColor: 'neutral5', borderRadius: '4px' }}>
             <Trans>Coming soon</Trans>
           </Type.Caption>

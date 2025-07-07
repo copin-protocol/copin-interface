@@ -139,11 +139,13 @@ const ChartProfitComponent = memo(function ChartProfitComponent({
           orders[i].type === OrderTypeEnum.CLOSE ||
           orders[i].type === OrderTypeEnum.LIQUIDATE
         const sign = isDecrease ? -1 : 1
+        const hasSizeAndPrice = orders[i]?.sizeDeltaNumber && orders[i]?.priceNumber
         const sizeDeltaInToken = PROTOCOLS_IN_TOKEN_COLLATERAL.includes(protocol)
-          ? orders[i]?.sizeDeltaNumber && orders[i]?.priceNumber
-            ? orders[i].sizeDeltaNumber / orders[i]?.priceNumber
+          ? hasSizeAndPrice
+            ? orders[i].sizeDeltaNumber / orders[i].priceNumber
             : orders[i]?.sizeDeltaInTokenNumber ?? 0
-          : orders[i]?.sizeDeltaInTokenNumber ?? 0
+          : orders[i]?.sizeDeltaInTokenNumber ??
+            (hasSizeAndPrice ? orders[i].sizeDeltaNumber / orders[i].priceNumber : 0)
         const sizeDeltaNumber =
           orders[i]?.sizeDeltaNumber ?? (sizeDeltaInToken ? sizeDeltaInToken * orders[i].priceNumber : 0)
         const sizeDelta = sign * Math.abs(sizeDeltaNumber)
