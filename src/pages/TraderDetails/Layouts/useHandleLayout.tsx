@@ -1,17 +1,14 @@
 import { useCallback, useState } from 'react'
 
-import useSearchParams from 'hooks/router/useSearchParams'
+import useHyperliquidModeStore from 'hooks/store/useHyperliquidMode'
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
 
 export default function useHandleLayout() {
-  const { searchParams, setSearchParams } = useSearchParams()
   const [positionFullExpanded, toggleFullExpand] = useState(false)
   const [openingPositionFullExpanded, toggleOpeningFullExpand] = useState(false)
-  const [apiMode, toggleApiMode] = useState(() => {
-    return (searchParams?.mode as string)?.toLowerCase() === 'hyperliquid'
-  })
+  const { apiMode, toggleApiMode } = useHyperliquidModeStore()
   const { myProfile } = useMyProfileStore()
   const logEventLayout = useCallback(
     (action: string) => {
@@ -68,11 +65,8 @@ export default function useHandleLayout() {
   }, [])
 
   const handleApiMode = useCallback(() => {
-    toggleApiMode((prev) => {
-      setSearchParams({ mode: prev ? 'standard' : 'hyperliquid' })
-      return !prev
-    })
-  }, [setSearchParams])
+    toggleApiMode()
+  }, [toggleApiMode])
 
   return {
     openingPositionFullExpanded,
