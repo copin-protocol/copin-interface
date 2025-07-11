@@ -213,6 +213,7 @@ export interface OrderData {
   blockTime: string
   createdAt: string
   pair: string
+  latestTransactionTime: string
 }
 
 export interface CheckAvailableResultData {
