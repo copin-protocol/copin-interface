@@ -265,6 +265,7 @@ export function FilterTradersProvider({
   const resetFilter = () => {
     setTimeOption(timeFilterOptions.find((option) => userPermission?.timeFramesAllowed?.[0] === option.id)!)
     setSearchParamsOnly({})
+    localStorage.removeItem(STORAGE_KEYS.DEFAULT_FILTERS)
   }
 
   const contextValue: TradersContextData = {
