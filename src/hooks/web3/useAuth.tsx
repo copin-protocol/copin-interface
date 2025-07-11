@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 
 import { loginPrivyApi, logoutApi } from 'apis/authApis'
 import { clearAuth, getStoredAccount, getStoredJwt, setJwt, storeAuth } from 'apis/helpers'
+import { postLogApi } from 'apis/logApis'
 import { getMyProfileApi } from 'apis/userApis'
 import ConfirmReferralModal from 'components/@auth/ConfirmReferralModal'
 import ToastBody from 'components/@ui/ToastBody'
@@ -13,6 +14,7 @@ import { UserData } from 'entities/user'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { PRIVY_APP_ID } from 'utils/config/constants'
 import { QUERY_KEYS, STORAGE_KEYS } from 'utils/config/keys'
+import { useDeviceFingerprint } from 'utils/helpers/deviceFingerprint'
 import { Account } from 'utils/web3/types'
 
 interface ContextValues {
@@ -45,6 +47,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   const { wallets } = useWallets()
   const [loading, setLoading] = useState(true)
   const { myProfile, isAuthenticated, setMyProfile } = useMyProfile()
+  const { getFingerprint } = useDeviceFingerprint()
   const { refetch: refetchProfile } = useQuery(
     [QUERY_KEYS.GET_USER_PROFILE_AFTER_CHANGE, myProfile?.id],
     getMyProfileApi,
@@ -105,8 +108,12 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   }, [user])
 
   const connect = useCallback(async () => {
+    try {
+      const { encryptedFingerprint } = await getFingerprint()
+      sessionStorage.setItem('device_fingerprint', encryptedFingerprint)
+    } catch (error) {}
     await login()
-  }, [login])
+  }, [login, getFingerprint])
 
   const auth = useCallback(
     async (user: User): Promise<Account | null> => {
@@ -118,14 +125,18 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
           return null
         }
 
+        const fingerprint = sessionStorage.getItem('device_fingerprint')
+        sessionStorage.removeItem('device_fingerprint')
         const response = await loginPrivyApi(jwt)
-        sessionStorage.clear()
         storeAuth({
           jwt: response.access_token,
           account: user.wallet?.address ?? '',
         })
         setMyProfile(response)
         setLoading(false)
+        if (fingerprint) {
+          await postLogApi(fingerprint)
+        }
       } catch (err: any) {
         console.error('Error auth', err)
         toast.error(<ToastBody title={err.name} message={err.message} />)

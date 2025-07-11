@@ -3296,6 +3296,7 @@ msgstr "PERCENTILE RANKING COMPARISON"
 msgid "PERCENTILES"
 msgstr "PERCENTILES"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLChartPnL.tsx
 #: src/pages/VaultDetails/VaultInfo/index.tsx
 msgid "PERFORMANCE"
 msgstr "PERFORMANCE"
@@ -3962,6 +3963,10 @@ msgstr "Save {0}%"
 #: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Save {discountPercent}%"
 msgstr "Save {discountPercent}%"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Security"
+msgstr "Security"
 
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 msgid "See Traders, collateral and more"

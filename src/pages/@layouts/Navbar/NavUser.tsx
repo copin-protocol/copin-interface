@@ -1,5 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { Clock, Crown, Notebook, SignOut, SquareHalf, Star, SubtractSquare, Wallet } from '@phosphor-icons/react'
+import {
+  Clock,
+  Crown,
+  Notebook,
+  Shield,
+  SignOut,
+  SquareHalf,
+  Star,
+  SubtractSquare,
+  Wallet,
+} from '@phosphor-icons/react'
 import { ReactNode, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -353,6 +363,12 @@ const userSettings = [
     event: EVENT_ACTIONS[EventCategory.ROUTES].ALERT_LIST,
     icon: <AlertIcon size={20} />,
     label: <Trans>Alert</Trans>,
+  },
+  {
+    link: ROUTES.SECURITY.path,
+    event: EVENT_ACTIONS[EventCategory.ROUTES].SECURITY,
+    icon: <Shield size={20} />,
+    label: <Trans>Security</Trans>,
   },
   // {
   //   link: ROUTES.REFERRAL_MANAGEMENT.path,
