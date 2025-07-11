@@ -27,6 +27,7 @@ function CustomizeColumn<T, K>({
   label,
   titleFactory,
   defaultKeys,
+  hasLabels = true,
 }: {
   defaultColumns: Partial<ColumnData<T, K>>[] // all column
   currentColumnKeys: (keyof T)[]
@@ -40,6 +41,7 @@ function CustomizeColumn<T, K>({
   buttonSx?: any
   buttonVariant?: ButtonVariant
   label?: ReactNode
+  hasLabels?: boolean
   titleFactory?: (columnData: Partial<ColumnData<T, K>>) => any
 }) {
   const allColumns = useMemo(() => {
@@ -169,24 +171,26 @@ function CustomizeColumn<T, K>({
             />
           </Flex>
           <Box className="item__wrapper">
-            {_defaultColumns.map((item, index) => {
-              const isDisable: boolean = disabledItemFn ? disabledItemFn(item.key) : index < 1
-              const key = item.key
-              if (key == null) return <></>
-              const isChecked = selectedKeys.includes(key)
-              return (
-                <Box py={1} key={key.toString()}>
-                  <ControlledCheckbox
-                    disabled={isDisable}
-                    checked={isChecked}
-                    label={titleFactory?.(item) ?? item.title}
-                    // labelSx={{ fontSize: 14, lineHeight: '20px' }}
-                    size={16}
-                    onChange={() => _handleToggleColumn(key)}
-                  />
-                </Box>
-              )
-            })}
+            {_defaultColumns
+              .filter((v) => hasLabels || (v.key !== 'labels' && v.key !== 'ifLabels'))
+              .map((item, index) => {
+                const isDisable: boolean = disabledItemFn ? disabledItemFn(item.key) : index < 1
+                const key = item.key
+                if (key == null) return <></>
+                const isChecked = selectedKeys.includes(key)
+                return (
+                  <Box py={1} key={key.toString()}>
+                    <ControlledCheckbox
+                      disabled={isDisable}
+                      checked={isChecked}
+                      label={titleFactory?.(item) ?? item.title}
+                      // labelSx={{ fontSize: 14, lineHeight: '20px' }}
+                      size={16}
+                      onChange={() => _handleToggleColumn(key)}
+                    />
+                  </Box>
+                )
+              })}
             {!_defaultColumns.length && (
               <Type.Caption color="neutral2" sx={{ textAlign: 'center', display: 'block', mt: 3 }}>
                 <Trans>No Metric Match</Trans>

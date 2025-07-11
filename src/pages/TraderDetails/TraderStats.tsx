@@ -161,6 +161,7 @@ const AccountStats = memo(function AccountStatsMemo({
                 placement="bottomLeft"
                 currentColumnKeys={customizeStats}
                 handleToggleColumn={(key) => toggleVisibleStat(key.toString())}
+                hasLabels={false}
               />
               <IconButton
                 mt={'-2px'}
@@ -343,74 +344,76 @@ const AccountStats = memo(function AccountStatsMemo({
             gridTemplateColumns: ['1fr 1fr', '1fr 1fr', '1fr 1fr 1fr', '1fr 1fr'],
           }}
         >
-          {customizeStats.map((key, index) => {
-            const stat = statsObj[key]
-            if (!stat) return <div key={key}></div>
-            return (
-              <Box key={key} width="100%" variant="cardBorder" sx={{ borderColor: 'neutral5' }} p={12}>
-                <Type.CaptionBold>{stat.label}</Type.CaptionBold>
-                {currentStatOnly ? (
-                  <Box>
-                    {stat.render && formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0]
-                      ? stat.render(
-                          formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0] as TraderData,
-                          index,
-                          externalSource
-                        )
-                      : '--'}
-                  </Box>
-                ) : (
-                  <div>
-                    {[
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.ALL_TIME]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S60_DAY]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S30_DAY]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S14_DAY]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S7_DAY]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S1_DAY]?.key,
-                      STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.LAST_24H]?.key,
-                    ].map((item, i) => {
-                      const isNotAllowed =
-                        //@ts-ignore
-                        !!formattedData?.[i]?.type && !timeFramesAllowed.includes(formattedData[i]?.type)
-                      const requiredPlan = !!formattedData?.[i]?.type
-                        ? //@ts-ignore
-                          getRequiredPlanByTimeframe(formattedData?.[i]?.type)
-                        : undefined
-                      return (
-                        <Flex key={item} justifyContent="space-between" mt={1}>
-                          <Flex alignItems="center" sx={{ gap: 1 }}>
-                            <Type.Caption color="neutral3" width={40}>
-                              {item}
-                            </Type.Caption>
-                            {isNotAllowed && requiredPlan && (
-                              <PlanUpgradeIndicator
-                                requiredPlan={requiredPlan}
-                                useLockIcon
-                                learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
-                              />
-                            )}
+          {customizeStats
+            .filter((key) => key !== 'labels' && key !== 'ifLabels')
+            .map((key, index) => {
+              const stat = statsObj[key]
+              if (!stat) return <Box display="none" key={key}></Box>
+              return (
+                <Box key={key} width="100%" variant="cardBorder" sx={{ borderColor: 'neutral5' }} p={12}>
+                  <Type.CaptionBold>{stat.label}</Type.CaptionBold>
+                  {currentStatOnly ? (
+                    <Box>
+                      {stat.render && formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0]
+                        ? stat.render(
+                            formattedData[STATISTIC_TYPE_TRANSLATIONS[timeOption.id]?.index ?? 0] as TraderData,
+                            index,
+                            externalSource
+                          )
+                        : '--'}
+                    </Box>
+                  ) : (
+                    <div>
+                      {[
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.ALL_TIME]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S60_DAY]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S30_DAY]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S14_DAY]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S7_DAY]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.S1_DAY]?.key,
+                        STATISTIC_TYPE_TRANSLATIONS[TimeFilterByEnum.LAST_24H]?.key,
+                      ].map((item, i) => {
+                        const isNotAllowed =
+                          //@ts-ignore
+                          !!formattedData?.[i]?.type && !timeFramesAllowed.includes(formattedData[i]?.type)
+                        const requiredPlan = !!formattedData?.[i]?.type
+                          ? //@ts-ignore
+                            getRequiredPlanByTimeframe(formattedData?.[i]?.type)
+                          : undefined
+                        return (
+                          <Flex key={item} justifyContent="space-between" mt={1}>
+                            <Flex alignItems="center" sx={{ gap: 1 }}>
+                              <Type.Caption color="neutral3" width={40}>
+                                {item}
+                              </Type.Caption>
+                              {isNotAllowed && requiredPlan && (
+                                <PlanUpgradeIndicator
+                                  requiredPlan={requiredPlan}
+                                  useLockIcon
+                                  learnMoreSection={SubscriptionFeatureEnum.TRADER_PROFILE}
+                                />
+                              )}
+                            </Flex>
+                            <Box
+                              key={i}
+                              textAlign="right"
+                              sx={{
+                                filter: isNotAllowed ? 'blur(6px)' : 'none',
+                                position: 'relative',
+                              }}
+                            >
+                              {stat.render && formattedData[i]
+                                ? stat.render(formattedData[i] as TraderData, index, externalSource)
+                                : '--'}
+                            </Box>
                           </Flex>
-                          <Box
-                            key={i}
-                            textAlign="right"
-                            sx={{
-                              filter: isNotAllowed ? 'blur(6px)' : 'none',
-                              position: 'relative',
-                            }}
-                          >
-                            {stat.render && formattedData[i]
-                              ? stat.render(formattedData[i] as TraderData, index, externalSource)
-                              : '--'}
-                          </Box>
-                        </Flex>
-                      )
-                    })}
-                  </div>
-                )}
-              </Box>
-            )
-          })}
+                        )
+                      })}
+                    </div>
+                  )}
+                </Box>
+              )
+            })}
         </GridWrapper>
       )}
 
