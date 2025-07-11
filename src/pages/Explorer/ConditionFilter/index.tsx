@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { FadersHorizontal, Funnel, Percent, Shapes } from '@phosphor-icons/react'
+import { FadersHorizontal, Funnel, Percent, Shapes, Tag } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import SectionTitle from 'components/@ui/SectionTitle'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import { useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
 import { TabConfig, TabHeader } from 'theme/Tab'
@@ -14,6 +15,7 @@ import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
 import DefaultFilterForm from './DefaultFilterForm'
+import IFLabelsFilterForm from './IFLabelsFilterForm'
 import LabelsFilterForm from './LabelsFilterForm'
 // import FilterSuggestion from './FilterSuggestion'
 import RankingFilterForm from './RankingFilterForm'
@@ -24,8 +26,10 @@ export default function ConditionFilter({
   filters,
   changeFilters,
   changeLabels,
+  changeIFLabels,
   rankingFilters,
   labelsFilters,
+  ifLabelsFilters,
   tab,
   onCancel,
   onClickTitle,
@@ -53,6 +57,8 @@ export default function ConditionFilter({
 
   const { isEnableRankingFilter, isEnableLabelsFilter, planToFilterRanking, planToFilterLabels } =
     useExplorerPermission()
+
+  const isIF = useIsIF()
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%' }}>
@@ -85,6 +91,15 @@ export default function ConditionFilter({
               ),
               icon: <Shapes size={20} />,
             },
+            ...(isIF
+              ? [
+                  {
+                    key: FilterTabEnum.IF_LABELS as unknown as string,
+                    name: <Trans>IF LABELS</Trans>,
+                    icon: <Tag size={20} />,
+                  },
+                ]
+              : []),
           ]}
           isActiveFn={(config: TabConfig) => config.key === (filterTab as unknown as string)}
           onClickItem={(key: string) => setFilterTab(key as unknown as FilterTabEnum)}
@@ -140,6 +155,7 @@ export default function ConditionFilter({
             </Box>
           ) : null}
         </Box>
+
         <Box display={filterTab === FilterTabEnum.LABELS ? 'block' : 'none'} width="100%" height="100%">
           {isEnableLabelsFilter ? (
             <LabelsFilterForm
@@ -169,6 +185,18 @@ export default function ConditionFilter({
             </Box>
           ) : null}
         </Box>
+        {isIF && (
+          <Box display={filterTab === FilterTabEnum.IF_LABELS ? 'block' : 'none'} width="100%" height="100%">
+            <IFLabelsFilterForm
+              currentTab={filterTab}
+              lastFilterTab={tab}
+              key={rankingKey}
+              labels={ifLabelsFilters}
+              handleChangeOption={(labels) => changeIFLabels(labels)}
+              handleClose={onCancel}
+            />
+          </Box>
+        )}
       </Box>
     </Flex>
   )
@@ -204,7 +232,7 @@ export function ConditionFilterButton(props: ConditionFilterProps & { hasText?: 
         </Box>
       </Button>
       {openModal && (
-        <Modal isOpen minHeight="80svh" mode="bottom" maxHeight="80svh" onDismiss={() => setOpenModal(false)}>
+        <Modal isOpen minHeight="90svh" mode="bottom" maxHeight="90svh" onDismiss={() => setOpenModal(false)}>
           <ConditionFilter {...props} filtersExpanded onCancel={() => setOpenModal(false)} />
         </Modal>
       )}

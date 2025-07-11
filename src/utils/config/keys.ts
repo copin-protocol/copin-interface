@@ -119,6 +119,9 @@ export const QUERY_KEYS = {
   GET_SUBSCRIPTION_FUNGIES_PACKAGES: 'GET_SUBSCRIPTION_FUNGIES_PACKAGES',
   GET_SUBSCRIPTION_PAYMENT_HISTORY: 'GET_SUBSCRIPTION_PAYMENT_HISTORY',
   GET_DEVICE_LOGS: 'GET_DEVICE_LOGS',
+  GET_TRADER_NOTES: 'GET_TRADER_NOTES',
+  GET_TRADER_IF_LABELS: 'GET_TRADER_IF_LABELS',
+  GET_ALL_NOTE_LABELS: 'GET_ALL_NOTE_LABELS',
 }
 
 export const CONTRACT_QUERY_KEYS = {
@@ -150,6 +153,7 @@ export const STORAGE_KEYS = {
   DEFAULT_FILTERS: 'default-filters',
   RANKING_FILTERS: 'ranking-filters',
   LABELS_FILTERS: 'labels-filters',
+  IF_LABELS_FILTERS: 'if-labels-filters',
   FILTER_TAB: 'filter-tab',
   SHOW_CHART: 'show-chart',
   HOME_DESKTOP_LAYOUT: 'home-desktop-layout',
@@ -216,6 +220,7 @@ export const URL_PARAM_KEYS = {
   DEFAULT_FILTERS: 'default_filters',
   RANKING_FILTERS: 'ranking_filters',
   LABELS_FILTERS: 'labels_filters',
+  IF_LABELS_FILTERS: 'if_labels_filters',
   FILTER_TAB: 'filter_tab',
   TRADER_HISTORY_PAGE: 'history_page',
   TRADER_HISTORY_LIMIT: 'history_limit',

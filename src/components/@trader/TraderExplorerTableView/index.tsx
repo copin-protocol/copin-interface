@@ -79,7 +79,7 @@ export default function TraderListTable<T>({
   const { userNextPlan } = useUserNextPlan()
   const _tableSettings = useMemo(() => {
     return isEliteUser
-      ? tableSettings
+      ? tableSettings.filter((setting) => fieldsAllowed.includes(setting.id as string))
       : reorderArray({
           source: fieldsAllowed,
           target:

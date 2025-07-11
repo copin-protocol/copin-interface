@@ -20,6 +20,7 @@ export interface TraderData {
   account: string
   smartAccount: string
   labels: string[]
+  ifLabels: string[]
   statisticLabels: string[]
   aggregatedLabels: string[]
   protocol: ProtocolEnum
@@ -355,4 +356,26 @@ export interface StatisticData {
 
 export type PnlStatisticsResponse = {
   [account: string]: TraderPnlStatisticData
+}
+
+export interface TraderNoteData {
+  id: string
+  account: string
+  protocol: ProtocolEnum
+  note: string
+  username: string
+  userId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface TraderLabelData {
+  id: string
+  account: string
+  protocol: ProtocolEnum
+  labels: string[]
+  userId: string
+  username: string
+  createdAt: string
+  updatedAt: string
 }

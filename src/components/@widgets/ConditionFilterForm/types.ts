@@ -7,6 +7,8 @@ export interface RowValues<T> {
   gte?: number | null
   lte?: number | null
   in?: string[]
+  nin?: string[]
+  exists?: boolean
   and?: {
     field?: string
     gte?: number
@@ -23,8 +25,12 @@ export interface FilterValues {
   gte?: number
   lte?: number
   in?: string[]
+  exists?: boolean
+  nin?: string[]
   and?: {
     field?: string
+    fieldName?: string
+    nin?: string[]
     gte?: number
     lte?: number
     in?: string[]

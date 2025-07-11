@@ -4,9 +4,11 @@ import { useQuery } from 'react-query'
 
 import { normalizeTraderData } from 'apis/normalize'
 import { getPnlStatisticsApi } from 'apis/traderApis'
+import { getAllNoteLabelsApi } from 'apis/traderNoteApis'
 import { RequestBodyApiData } from 'apis/types'
 import { ResponseTraderData } from 'entities/trader'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
+import { useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
@@ -18,7 +20,7 @@ import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
-import { formatLabelsRanges, formatRankingRanges } from '../helpers/formatRanges'
+import { formatIFLabelsRanges, formatLabelsRanges, formatRankingRanges } from '../helpers/formatRanges'
 import { TradersContextData } from '../useTradersContext'
 import useMapPermissionData from './useMapPermissionData'
 import useTimeFilterData from './useTimeFilterData'
@@ -36,6 +38,7 @@ export default function useQueryTraders({
   rankingFilters,
   filters,
   labelsFilters,
+  ifLabelsFilters,
   currentPage,
   currentLimit,
   currentSort,
@@ -51,6 +54,7 @@ export default function useQueryTraders({
   | 'filters'
   | 'rankingFilters'
   | 'labelsFilters'
+  | 'ifLabelsFilters'
   | 'currentPage'
   | 'currentLimit'
   | 'currentSort'
@@ -63,7 +67,11 @@ export default function useQueryTraders({
   const { getData } = useMapPermissionData()
   const { userPermission } = useExplorerPermission()
   const { searchParams } = useSearchParams()
+  const isIF = useIsIF()
   const pnlWithFeeEnabled = useUserPreferencesStore((state) => state.pnlWithFeeEnabled)
+  const { data: allIFLabels } = useQuery(QUERY_KEYS.GET_ALL_NOTE_LABELS, () => getAllNoteLabelsApi(), {
+    enabled: !!isIF,
+  })
 
   const requestData = useMemo<RequestBodyApiData>(() => {
     const request: Record<string, any> = {
@@ -77,9 +85,10 @@ export default function useQueryTraders({
 
     if (filterTab === FilterTabEnum.RANKING && userPermission?.isEnableRankingFilter) {
       request.ranges = formatRankingRanges(extractFiltersFromFormValues(rankingFilters))
-      // TODO: permission labels filter
-    } else if (filterTab === FilterTabEnum.LABELS && userPermission?.isEnableRankingFilter) {
+    } else if (filterTab === FilterTabEnum.LABELS && isIF) {
       request.ranges = formatLabelsRanges(labelsFilters, pnlWithFeeEnabled)
+    } else if (filterTab === FilterTabEnum.IF_LABELS && userPermission?.isEnableRankingFilter) {
+      request.ranges = formatIFLabelsRanges(ifLabelsFilters.filter((label) => allIFLabels?.includes(label)))
     } else {
       request.ranges = extractFiltersFromFormValues(filters)
     }
@@ -91,12 +100,16 @@ export default function useQueryTraders({
     currentPage,
     currentSort?.sortBy,
     currentSort?.sortType,
+    ifLabelsFilters,
+    allIFLabels,
     filterTab,
     filters,
     isFavTraders,
     rankingFilters,
+    pnlWithFeeEnabled,
     labelsFilters,
-    userPermission?.isEnableRankingFilter,
+    isIF,
+    userPermission,
   ])
 
   // const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({

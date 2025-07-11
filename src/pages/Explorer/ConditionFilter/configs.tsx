@@ -55,4 +55,5 @@ export enum FilterTabEnum {
   DEFAULT = 'default',
   RANKING = 'ranking',
   LABELS = 'labels',
+  IF_LABELS = 'ifLabels',
 }

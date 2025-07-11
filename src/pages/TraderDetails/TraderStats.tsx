@@ -418,7 +418,7 @@ const AccountStats = memo(function AccountStatsMemo({
         <>
           <StatsWrapper>
             {customizeStats
-              .filter((key) => key !== 'labels')
+              .filter((key) => key !== 'labels' && key !== 'ifLabels')
               .map((key, index) => {
                 const stat = statsObj[key]
                 if (!stat) return <div key={key}></div>

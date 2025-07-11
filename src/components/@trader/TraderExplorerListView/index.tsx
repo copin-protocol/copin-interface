@@ -45,8 +45,8 @@ export default function TraderExplorerListView({
   //   getValue: (data) => data.id,
   // }).map((v) => ({ ...v, sortBy: fieldsAllowed.includes(v.id as string) || isEliteUser ? v.sortBy : undefined }))
 
-  const headerColumns = _tableSettings.filter((v) => v.id !== 'labels').slice(1, 4)
-  const bodyColumns = _tableSettings.filter((v) => v.id !== 'labels').slice(4)
+  const headerColumns = _tableSettings.filter((v) => v.id !== 'labels' && v.id !== 'ifLabels').slice(1, 4)
+  const bodyColumns = _tableSettings.filter((v) => v.id !== 'labels' && v.id !== 'ifLabels').slice(4)
 
   const mobileScrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -107,6 +107,18 @@ export default function TraderExplorerListView({
                   {labels != null && !!_tableSettings.find((v) => v.id === 'labels') && (
                     <Flex sx={{ gap: 1, flexWrap: 'wrap', pb: 2 }}>
                       <TraderLabels labels={labels} showedItems={4} />
+                    </Flex>
+                  )}
+                  {_data.ifLabels && !!_tableSettings.find((v) => v.id === 'ifLabels') && (
+                    <Flex sx={{ gap: 1, flexWrap: 'wrap', pb: 2 }}>
+                      <TraderLabels
+                        labels={_data.ifLabels.map((label) => ({
+                          key: label,
+                          title: label,
+                        }))}
+                        showedItems={4}
+                        shouldShowTooltip={false}
+                      />
                     </Flex>
                   )}
                   <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
