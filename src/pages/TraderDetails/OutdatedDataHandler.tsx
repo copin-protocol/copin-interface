@@ -28,7 +28,7 @@ const OutdatedDataHandler = memo(
           setOutdatedDate(true)
           return
         }
-        const orderTime = new Date(order.blockTime || order.createdAt)
+        const orderTime = new Date(order.latestTransactionTime || order.blockTime || order.createdAt)
 
         if (perpFills[0].time > orderTime.getTime() + 1000 * 60 * 15) {
           setOutdatedDate(orderTime)
