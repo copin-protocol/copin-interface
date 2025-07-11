@@ -137,6 +137,50 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       )
     },
   },
+  ifLabels: {
+    style: { minWidth: '200px', width: '200px' },
+    text: 'IF Labels',
+    searchText: 'IF Labels',
+    label: (
+      <LabelWithTooltip id="tt_if_labels_label" tooltip="Labels that FM flagged">
+        IF Labels
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    filter: {
+      conditionType: 'in',
+      in: [],
+    },
+    id: 'ifLabels',
+    render: (item) => {
+      if (!item.ifLabels || item.ifLabels.length === 0)
+        return (
+          <Flex height={56} alignItems="center" justifyContent="end">
+            <Type.Caption color="neutral3">--</Type.Caption>
+          </Flex>
+        )
+      const labels = item.ifLabels.map((label) => {
+        return {
+          key: label,
+          title: label,
+        }
+      })
+      return (
+        <Flex
+          sx={{
+            gap: 1,
+            flexWrap: 'wrap',
+            py: 2,
+            justifyContent: ['start', 'end'],
+            height: ['auto', 56],
+            alignItems: 'center',
+          }}
+        >
+          <TraderLabels labels={labels} showedItems={3} shouldShowTooltip={false} />
+        </Flex>
+      )
+    },
+  },
   pnlStatistics: {
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     text: <Trans>Pnl Overtime</Trans>,
@@ -208,7 +252,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     style: { minWidth: ['100px', '120px'] },
     text: <PnlTitle type="lower" color="inherit" />,
     searchText: 'PnL',
-    label: <PnlTitleWithTooltip />,
+    label: <PnlTitleWithTooltip type="lower" />,
     unit: '$',
     sortBy: 'pnl',
     visible: true,
@@ -914,7 +958,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     style: { minWidth: ['130px', '150px'] },
     text: <PnlTitle type="lower" direction="long" color="inherit" />,
     searchText: 'Long PnL',
-    label: <PnlTitleWithTooltip direction="long" />,
+    label: <PnlTitleWithTooltip type="lower" direction="long" />,
     unit: '$',
     sortBy: 'longPnl',
     visible: true,
@@ -929,7 +973,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     style: { minWidth: ['130px', '150px'] },
     text: <PnlTitle type="lower" direction="short" color="inherit" />,
     searchText: 'Short PnL',
-    label: <PnlTitleWithTooltip direction="short" />,
+    label: <PnlTitleWithTooltip type="lower" direction="short" />,
     unit: '$',
     sortBy: 'shortPnl',
     visible: true,
@@ -947,6 +991,7 @@ const tableColumnKeys: (keyof TraderData)[] = [
   'runTimeDays',
   'pnlStatistics',
   'lastTradeAtTs',
+  'ifLabels',
   'labels',
   'indexTokens',
   'pnl',
@@ -1004,6 +1049,7 @@ const mobileTableColumnKeys: (keyof TraderData)[] = [
   'avgRoi',
   'runTimeDays',
   'lastTradeAtTs',
+  'ifLabels',
   'indexTokens',
   'totalGain',
   'totalLoss',

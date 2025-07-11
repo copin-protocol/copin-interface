@@ -45,6 +45,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     changeCurrentLimit,
     rankingFilters,
     labelsFilters,
+    ifLabelsFilters,
     filters,
     resetFilter,
   } = contextValues
@@ -100,6 +101,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     traderFavorites,
     rankingFilters,
     labelsFilters,
+    ifLabelsFilters,
     filters,
     enabled: !noDataMessage,
   })

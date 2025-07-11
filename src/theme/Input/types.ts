@@ -29,6 +29,8 @@ export type TextareaProps = {
   block?: boolean
   error?: any
   variant?: string
+  affix?: ReactNode
+  suffix?: ReactNode
 } & TextareaHTMLAttributes<HTMLTextAreaElement>
 
 export type NumberInputProps = {

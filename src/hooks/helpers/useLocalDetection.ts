@@ -5,6 +5,8 @@ interface LocalDetectionResult {
   isVN: boolean | null
   countryCode: string | null | undefined
   countryName: string | null | undefined
+  region: string | null | undefined
+  ip: string | null | undefined
   isLoading: boolean
   error: string | null
 }
@@ -21,6 +23,8 @@ export const useLocalDetection = (): LocalDetectionResult => {
     isVN: data ? data.country_code === 'VN' : null,
     countryCode: data?.country_code,
     countryName: data?.country,
+    region: data?.region,
+    ip: data?.ip,
     isLoading,
     error: error ? 'Failed to detect location' : null,
   }

@@ -17,7 +17,16 @@ import SortTradersDropdown from './SortTradersDropdown'
 export default function TradersAnalytics() {
   const contextValues = useTradersContext()
 
-  const { filters, changeFilters, rankingFilters, filterTab, labelsFilters, changeLabels } = contextValues
+  const {
+    filters,
+    changeFilters,
+    rankingFilters,
+    filterTab,
+    labelsFilters,
+    ifLabelsFilters,
+    changeLabels,
+    changeIFLabels,
+  } = contextValues
   const _filters = filterTab === FilterTabEnum.RANKING ? rankingFilters : filters
   const { lg } = useResponsive()
 
@@ -28,10 +37,14 @@ export default function TradersAnalytics() {
         <AnalyticsLayoutDesktop
           timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
           filterTag={
-            filterTab === FilterTabEnum.LABELS ? (
+            filterTab === FilterTabEnum.LABELS || filterTab === FilterTabEnum.IF_LABELS ? (
               <Flex sx={{ gap: 2, alignItems: 'center', mt: '2px' }}>
                 <TraderLabels
-                  labels={labelsFilters.map((value) => ({ key: value })) || []}
+                  labels={
+                    filterTab === FilterTabEnum.LABELS
+                      ? labelsFilters.map((value) => ({ key: value }))
+                      : ifLabelsFilters.map((value) => ({ key: value, title: value }))
+                  }
                   shouldShowTooltip={false}
                   showedItems={3}
                 />
@@ -46,8 +59,10 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               changeLabels={changeLabels}
+              changeIFLabels={changeIFLabels}
               rankingFilters={rankingFilters}
               labelsFilters={labelsFilters}
+              ifLabelsFilters={ifLabelsFilters}
               tab={filterTab}
             />
           }
@@ -68,8 +83,10 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               changeLabels={changeLabels}
+              changeIFLabels={changeIFLabels}
               rankingFilters={rankingFilters}
               labelsFilters={labelsFilters}
+              ifLabelsFilters={ifLabelsFilters}
               tab={filterTab}
             />
           }

@@ -192,6 +192,12 @@ const ROUTES = {
     path: '/perp-explorer/:perpdex',
     path_prefix: '/perp-explorer',
   },
+  SECURITY: {
+    path: '/security',
+  },
+  DEVICE_LOGS: {
+    path: '/security/device-logs',
+  },
   // CHECKOUT: {
   //   path: '/checkout',
   // },

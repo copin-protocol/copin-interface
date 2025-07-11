@@ -25,6 +25,7 @@ import {
   DEFAULT_SORT_BY,
   getInitFilterTab,
   getInitFilters,
+  getInitIFLabelsFilters,
   getInitLabelsFilters,
   getInitSort,
 } from './helpers/getInitValues'
@@ -49,8 +50,11 @@ export interface TradersContextData {
   filters: ConditionFormValues<TraderData>
   changeFilters: (props: { filters: ConditionFormValues<TraderData>; filterTab: FilterTabEnum }) => void
   changeLabels: (labels: string[]) => void
+  changeIFLabels: (labels: string[]) => void
+  ifLabelsFilters: string[]
   rankingFilters: ConditionFormValues<TraderData>
   labelsFilters: string[]
+
   currentSort: TraderListSortProps<TraderData> | undefined
   changeCurrentSort: (sort: TraderListSortProps<TraderData> | undefined) => void
   filterTab: FilterTabEnum
@@ -177,17 +181,32 @@ export function FilterTradersProvider({
   }).filter((option) => !!RANKING_FIELD_NAMES.includes(option.key))
 
   const labelsFilters = getInitLabelsFilters({ searchParams, accounts })
+  const ifLabelsFilters = getInitIFLabelsFilters({ searchParams })
 
   const changeLabels = (labels: string[]) => {
     setSearchParams({
       [URL_PARAM_KEYS.LABELS_FILTERS]: labels.join('__'),
       [URL_PARAM_KEYS.PAGE]: '1',
       [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.LABELS,
+      [URL_PARAM_KEYS.IF_LABELS_FILTERS]: null,
       [URL_PARAM_KEYS.RANKING_FILTERS]: null,
       [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
     })
     // localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
     localStorage.setItem(STORAGE_KEYS.LABELS_FILTERS, JSON.stringify(labels))
+  }
+
+  const changeIFLabels = (labels: string[]) => {
+    setSearchParams({
+      [URL_PARAM_KEYS.IF_LABELS_FILTERS]: labels.join('__'),
+      [URL_PARAM_KEYS.PAGE]: '1',
+      [URL_PARAM_KEYS.FILTER_TAB]: FilterTabEnum.IF_LABELS,
+      [URL_PARAM_KEYS.LABELS_FILTERS]: null,
+      [URL_PARAM_KEYS.RANKING_FILTERS]: null,
+      [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
+    })
+    // localStorage.setItem(STORAGE_KEYS.FILTER_TAB, filterTab)
+    localStorage.setItem(STORAGE_KEYS.IF_LABELS_FILTERS, JSON.stringify(labels))
   }
 
   const changeFilters = ({
@@ -201,6 +220,7 @@ export function FilterTradersProvider({
     const payload = {
       [URL_PARAM_KEYS.FILTER_TAB]: filterTab,
       [URL_PARAM_KEYS.PAGE]: '1',
+      [URL_PARAM_KEYS.IF_LABELS_FILTERS]: null,
       [URL_PARAM_KEYS.RANKING_FILTERS]: null,
       [URL_PARAM_KEYS.LABELS_FILTERS]: null,
       [URL_PARAM_KEYS.DEFAULT_FILTERS]: null,
@@ -266,6 +286,8 @@ export function FilterTradersProvider({
     filters,
     changeFilters,
     changeLabels,
+    changeIFLabels,
+    ifLabelsFilters,
     rankingFilters,
     labelsFilters,
     currentSort,

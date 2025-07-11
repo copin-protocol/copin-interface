@@ -67,7 +67,13 @@ export const PnlTitle = ({ type = 'upper', color = 'neutral1', character, direct
   // return <>{pnlWithFeeEnabled ? <Trans>PNL*</Trans> : <Trans>PNL</Trans>}</>
 }
 
-export const PnlTitleWithTooltip = ({ direction = 'all' }: { direction?: 'all' | 'long' | 'short' }) => {
+export const PnlTitleWithTooltip = ({
+  direction = 'all',
+  type,
+}: {
+  direction?: 'all' | 'long' | 'short'
+  type?: 'upper' | 'lower'
+}) => {
   const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
   let tooltipId = ''
   let text = ''
@@ -98,7 +104,7 @@ export const PnlTitleWithTooltip = ({ direction = 'all' }: { direction?: 'all' |
 
   return (
     <LabelWithTooltip id={tooltipId} tooltip={tooltipText}>
-      <PnlTitle direction={direction} />
+      <PnlTitle direction={direction} type={type} />
     </LabelWithTooltip>
   )
 }

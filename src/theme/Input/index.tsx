@@ -18,7 +18,7 @@ export const StyledInput = styled.input`
   background: transparent !important;
   padding: 0;
   border: none;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 24px;
   width: 100%;
 
@@ -36,6 +36,9 @@ const StyledTextarea = styled.textarea`
   padding: 0;
   border: none;
   width: 100%;
+  font-size: 12px;
+  line-height: 24px;
+  resize: none;
 `
 
 export const StyledPrefix = styled.div`
@@ -123,7 +126,14 @@ const Input = forwardRef(
 
 export const Textarea = forwardRef(
   (
-    { block, sx, variant, ...props }: TextareaProps & SxProps & TextareaHTMLAttributes<HTMLTextAreaElement>,
+    {
+      block,
+      sx,
+      variant,
+      affix,
+      suffix,
+      ...props
+    }: TextareaProps & SxProps & TextareaHTMLAttributes<HTMLTextAreaElement>,
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => (
     <InputWrapper
@@ -137,7 +147,9 @@ export const Textarea = forwardRef(
         }
       }}
     >
+      {!!affix && <StyledPrefix>{affix}</StyledPrefix>}
       <StyledTextarea {...props} ref={ref}></StyledTextarea>
+      {!!suffix && <StyledSuffix>{suffix}</StyledSuffix>}
     </InputWrapper>
   )
 )

@@ -86,6 +86,7 @@ function getTraderStatisticQuery(functionName: string) {
         pairs
         maxDrawdown
         maxDrawdownPnl
+        ifLabels
         statisticLabels
         aggregatedLabels
         realisedStatisticLabels

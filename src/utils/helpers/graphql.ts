@@ -13,6 +13,9 @@ export const transformGraphqlFilters = (filters: { fieldName?: string; [key: str
           if (Array.isArray(value)) {
             return [key, value]
           }
+          if (typeof value === 'boolean') {
+            return [key, value]
+          }
           return [key, String(value)]
         })
     )

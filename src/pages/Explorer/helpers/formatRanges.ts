@@ -16,6 +16,38 @@ export function formatRankingRanges(ranges: FilterValues[]) {
   })
 }
 
+export function formatIFLabelsRanges(values: any[]) {
+  if (values?.length === 0) {
+    return [
+      {
+        fieldName: 'ifLabels',
+        nin: [],
+      },
+      {
+        fieldName: 'ifLabels',
+        exists: true,
+      },
+    ]
+  }
+
+  return [{ fieldName: 'ifLabels', in: values }]
+}
+
+export function formatIFLabelsRangesWithAnd(values: any[]) {
+  if (values?.length === 0) {
+    return [
+      {
+        and: [
+          { fieldName: 'ifLabels', nin: [] },
+          { fieldName: 'ifLabels', exists: true },
+        ],
+      },
+    ]
+  }
+
+  return [{ fieldName: 'ifLabels', in: values }]
+}
+
 export function formatLabelsRanges(values: any[], pnlWithFeeEnabled?: boolean) {
   if (values?.length === 0) return []
   const conditions: { field: string; in: string[] }[] = []

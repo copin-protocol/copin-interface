@@ -8,6 +8,7 @@ import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
 import AnalyzeAction from 'components/@ui/AnalyzeButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { PositionData, TraderData } from 'entities/trader.d'
+import { useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import Dropdown from 'theme/Dropdown'
 import { Box, Flex, IconBox, Type } from 'theme/base'
@@ -18,6 +19,7 @@ import { EventCategory } from 'utils/tracking/types'
 
 import AlertAction from './AlertAction'
 import ExpandTraderRankingButton from './ExpandTraderRankingButton'
+import NoteAction from './NoteAction'
 
 export interface PositionSortPros {
   sortBy: keyof PositionData
@@ -51,6 +53,7 @@ export default function TraderActionButtons({
   const { xl } = useResponsive()
   // const { isDA } = useCopyWalletContext()
   const { isAllowedProtocol } = useTraderProfilePermission({ protocol })
+  const isIF = useIsIF()
   return (
     <>
       {xl ? (
@@ -90,7 +93,11 @@ export default function TraderActionButtons({
           {/*    }*/}
           {/*  />*/}
           {/*)}*/}
-          <AnalyzeAction forceDisabled={!isAllowedProtocol} />
+          {isIF ? (
+            <NoteAction account={account} protocol={protocol} ifLabels={traderData?.ifLabels} />
+          ) : (
+            <AnalyzeAction forceDisabled={!isAllowedProtocol} />
+          )}
           {!disabledActions?.includes('alert') && <AlertAction protocol={protocol} account={account} />}
           {!isDrawer && (
             <ExpandTraderRankingButton
@@ -153,9 +160,13 @@ export default function TraderActionButtons({
                 {/*<Box height="40px">*/}
                 {/*  <TradeProtocolAction protocol={protocol} />*/}
                 {/*</Box>*/}
-                <Box height="40px">
-                  <AnalyzeAction forceDisabled={!isAllowedProtocol} />
-                </Box>
+                <Flex height="40px" alignItems="center" justifyContent="center">
+                  {isIF ? (
+                    <NoteAction account={account} protocol={protocol} ifLabels={traderData?.ifLabels} />
+                  ) : (
+                    <AnalyzeAction forceDisabled={!isAllowedProtocol} />
+                  )}
+                </Flex>
                 {!disabledActions?.includes('alert') && (
                   <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
                     <AlertAction account={account} protocol={protocol} />

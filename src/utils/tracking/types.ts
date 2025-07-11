@@ -118,6 +118,7 @@ export const EVENT_ACTIONS = {
     HOME_COPYTRADE_MANAGEMENT: 'home_copytrade_management',
     HOME_GETTING_STARTED: 'home_getting_started',
     HOME_POSITION_DETAILS: 'home_position_details',
+    SECURITY: 'security',
   },
   [EventCategory.SEARCH]: {
     SEARCH_CLICK: 'search_click',

@@ -863,6 +863,7 @@ msgstr "CHARTS"
 msgid "CLAIM HISTORY"
 msgstr "CLAIM HISTORY"
 
+#: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
 #: src/pages/Explorer/ConditionFilter/LabelsFilterForm.tsx
 msgid "CLEAR ALL"
 msgstr "CLEAR ALL"
@@ -2118,6 +2119,10 @@ msgstr "Hyperliquid Alert"
 msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
+#: src/pages/Explorer/ConditionFilter/index.tsx
+msgid "IF LABELS"
+msgstr "IF LABELS"
+
 #: src/pages/MyProfile/index.tsx
 msgid "IF WALLET"
 msgstr "IF WALLET"
@@ -3024,6 +3029,7 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
+#: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
 #: src/pages/Explorer/ConditionFilter/LabelsFilterForm.tsx
 msgid "No labels found"
 msgstr "No labels found"
@@ -3296,6 +3302,7 @@ msgstr "PERCENTILE RANKING COMPARISON"
 msgid "PERCENTILES"
 msgstr "PERCENTILES"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLChartPnL.tsx
 #: src/pages/VaultDetails/VaultInfo/index.tsx
 msgid "PERFORMANCE"
 msgstr "PERFORMANCE"
@@ -3962,6 +3969,10 @@ msgstr "Save {0}%"
 #: src/pages/Settings/UserSubscription/MySubscriptionPage.tsx
 msgid "Save {discountPercent}%"
 msgstr "Save {discountPercent}%"
+
+#: src/pages/@layouts/Navbar/NavUser.tsx
+msgid "Security"
+msgstr "Security"
 
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 msgid "See Traders, collateral and more"
