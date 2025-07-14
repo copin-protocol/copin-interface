@@ -79,7 +79,7 @@ export default function HLTraderPositionListView({
                 </Type.Caption>
                 <Type.Caption>{!!weightPercent ? `${formatNumber(weightPercent, 2, 2)}%` : '--'}</Type.Caption>
               </Flex>
-              <Flex flex="33%" sx={{ alignItems: 'center', gap: 1 }}>
+              <Flex flex="34%" sx={{ alignItems: 'center', gap: 1 }}>
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Funding:
                 </Type.Caption>

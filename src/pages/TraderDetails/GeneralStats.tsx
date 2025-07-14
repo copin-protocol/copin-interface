@@ -129,6 +129,7 @@ const CommonStats = ({
         alignItems: 'center',
         gap: [1, 2, 2, 2, 24],
         flexWrap: 'wrap',
+        justifyContent: 'flex-end',
       }}
     >
       <Box minWidth="fit-content" textAlign="left" color="neutral3" flex={['1', 'none']}>
@@ -183,7 +184,7 @@ const HyperliquidCommonStats = ({
       }}
     >
       <Flex
-        width={['100%', 'auto']}
+        width={['30%', 'auto']}
         flexDirection={['column', 'row']}
         alignItems={['flex-start', 'center']}
         sx={{ gap: [0, 2] }}
@@ -202,7 +203,7 @@ const HyperliquidCommonStats = ({
         </Type.Caption>
       </Flex>
       <Flex
-        width={['50%', 'auto']}
+        width={['30%', 'auto']}
         flexDirection={['column', 'row']}
         alignItems={['flex-start', 'center']}
         sx={{ gap: [0, 2] }}

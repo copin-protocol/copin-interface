@@ -126,27 +126,31 @@ export default function HLTraderOpeningPositionsTableView({
             activeIcon: <Notebook size={20} weight="fill" />,
             count: totalOpening,
           },
-          {
-            name: <Trans>Orders</Trans>,
-            key: HLPositionTab.OPEN_ORDERS,
-            icon: <BookOpen size={20} />,
-            activeIcon: <BookOpen size={20} weight="fill" />,
-            count: totalOpenOrders,
-          },
-          {
-            name: <Trans>Fills</Trans>,
-            key: HLPositionTab.ORDER_FILLED,
-            icon: <Clock size={20} />,
-            activeIcon: <Clock size={20} weight="fill" />,
-            count: totalOrderFilled,
-          },
-          {
-            name: <Trans>TWAP</Trans>,
-            key: HLPositionTab.ORDER_TWAP,
-            icon: <Alarm size={20} />,
-            activeIcon: <Alarm size={20} weight="fill" />,
-            count: totalTwapFilled,
-          },
+          ...(isDrawer
+            ? []
+            : [
+                {
+                  name: <Trans>Orders</Trans>,
+                  key: HLPositionTab.OPEN_ORDERS,
+                  icon: <BookOpen size={20} />,
+                  activeIcon: <BookOpen size={20} weight="fill" />,
+                  count: totalOpenOrders,
+                },
+                {
+                  name: <Trans>Fills</Trans>,
+                  key: HLPositionTab.ORDER_FILLED,
+                  icon: <Clock size={20} />,
+                  activeIcon: <Clock size={20} weight="fill" />,
+                  count: totalOrderFilled,
+                },
+                {
+                  name: <Trans>TWAP</Trans>,
+                  key: HLPositionTab.ORDER_TWAP,
+                  icon: <Alarm size={20} />,
+                  activeIcon: <Alarm size={20} weight="fill" />,
+                  count: totalTwapFilled,
+                },
+              ]),
         ]}
         isActiveFn={(config) => config.key === tab}
         onClickItem={(key) => setTab(key as TabKeyEnum)}

@@ -50,12 +50,14 @@ export default function PositionMobileView({
   protocol,
   address,
   isLite,
+  isDrawer,
 }: {
   historyPositions: ReactNode
   openingPositions: ReactNode
   protocol?: ProtocolEnum
   address?: string
   isLite?: boolean
+  isDrawer?: boolean
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
@@ -171,7 +173,7 @@ export default function PositionMobileView({
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
-        configs={isLite ? LITE_TABS : isHyperliquid ? HYPERLIQUID_TABS : TABS}
+        configs={isLite ? LITE_TABS : isHyperliquid ? (isDrawer ? TABS : HYPERLIQUID_TABS) : TABS}
         isActiveFn={(config) => config.key === currentTabKey}
         onClickItem={handleChangeTab}
         hasLine

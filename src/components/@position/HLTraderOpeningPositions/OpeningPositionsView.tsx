@@ -113,7 +113,7 @@ export default function OpeningPositionsView({
         </Flex>
       )}
       {data && data?.assetPositions?.length > 0 && (
-        <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
+        <Box flex="1 0 0" overflowX="auto" overflowY="hidden" sx={{ height: isDrawer ? 152 : 'auto' }}>
           {sm ? (
             <Table
               restrictHeight={!isDrawer && lg}
