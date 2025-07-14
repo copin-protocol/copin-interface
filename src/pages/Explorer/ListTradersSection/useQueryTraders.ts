@@ -85,9 +85,9 @@ export default function useQueryTraders({
 
     if (filterTab === FilterTabEnum.RANKING && userPermission?.isEnableRankingFilter) {
       request.ranges = formatRankingRanges(extractFiltersFromFormValues(rankingFilters))
-    } else if (filterTab === FilterTabEnum.LABELS && isIF) {
+    } else if (filterTab === FilterTabEnum.LABELS && userPermission?.isEnableLabelsFilter) {
       request.ranges = formatLabelsRanges(labelsFilters, pnlWithFeeEnabled)
-    } else if (filterTab === FilterTabEnum.IF_LABELS && userPermission?.isEnableRankingFilter) {
+    } else if (filterTab === FilterTabEnum.IF_LABELS && isIF) {
       request.ranges = formatIFLabelsRanges(ifLabelsFilters.filter((label) => allIFLabels?.includes(label)))
     } else {
       request.ranges = extractFiltersFromFormValues(filters)
