@@ -1,15 +1,13 @@
-import { Trans } from '@lingui/macro'
-import { Gauge } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { HYPERLIQUID_API_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
+import useHyperliquidPortfolio from 'hooks/features/trader/useHyperliquidPortfolio'
 import { useHyperliquidTraderContext } from 'hooks/features/trader/useHyperliquidTraderContext'
-import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import { Button } from 'theme/Buttons'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
 import TabItem from 'theme/Tab/TabItem'
@@ -18,8 +16,6 @@ import { themeColors } from 'theme/colors'
 import { TimeFilterByEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
-import SectionTitle from '../../../components/@ui/SectionTitle'
-import HLPerformance from './HLPerformance'
 import { formatChartData } from './helpers'
 
 interface TimeSelectionProps {
@@ -117,7 +113,7 @@ function PnLChart({ data, timeOption }: PnLChartProps) {
   }
   return (
     <Box flex={2}>
-      <ResponsiveContainer width="100%" height={sm ? 248 : 150}>
+      <ResponsiveContainer width="100%" height={sm ? 160 : 150}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
@@ -144,6 +140,7 @@ function PnLChart({ data, timeOption }: PnLChartProps) {
             tick={{ fill: themeColors.neutral3, fontSize: 12 }}
             axisLine={false}
             tickLine={false}
+            domain={['auto', 'auto']}
           />
           <Tooltip
             contentStyle={{
@@ -166,7 +163,7 @@ function PnLChart({ data, timeOption }: PnLChartProps) {
             }}
           />
           <Area
-            type="linear"
+            type="step"
             dataKey="pnl"
             stroke="url(#strokeColor)"
             strokeWidth={2}
@@ -190,19 +187,19 @@ interface ToggleButtonGroupProps<T extends ToggleButtonValue> {
 
 function ToggleButtonGroup<T extends ToggleButtonValue>({ options, value, onChange }: ToggleButtonGroupProps<T>) {
   return (
-    <Flex alignItems="center" sx={{ gap: '2px', p: 1, border: 'small', borderColor: 'neutral5', borderRadius: 1 }}>
+    <Flex alignItems="center" sx={{ gap: '2px', p: 1, border: 'small', borderColor: 'neutral5', borderRadius: '32px' }}>
       {options.map((opt) => (
         <Button
           key={String(opt.value)}
           type="button"
-          variant="ghost"
+          variant="ghostActive"
           onClick={() => onChange(opt.value)}
           px={1}
           py="2px"
           sx={{
-            color: value === opt.value ? 'primary1' : 'neutral1',
-            backgroundColor: value === opt.value ? '#4EAEFD2E' : 'transparent',
-            '&:hover': { color: 'primary2', backgroundColor: `#4EAEFD2E` },
+            borderRadius: '16px',
+            color: value === opt.value ? 'neutral1' : 'neutral3',
+            backgroundColor: value === opt.value ? 'neutral4' : 'transparent',
           }}
         >
           <Type.Caption>{opt.label}</Type.Caption>
@@ -213,38 +210,41 @@ function ToggleButtonGroup<T extends ToggleButtonValue>({ options, value, onChan
 }
 
 export default function HLChartPnL() {
-  const { hlPortfolioData, hlAccountData } = useHyperliquidTraderContext()
-  const { currentOption, changeCurrentOption } = useOptionChange({
-    optionName: 'hlTime',
-    options: HYPERLIQUID_API_FILTER_OPTIONS,
-    defaultOption: TimeFilterByEnum.LAST_24H.toString(),
-  })
-  const [isCombined, setIsCombined] = useState(false)
-  const [isAccountValue, setIsAccountValue] = useState(false)
-  const chartData = useMemo(
-    () => formatChartData(hlPortfolioData, currentOption.id, isAccountValue, isCombined),
-    [hlPortfolioData, currentOption.id, isAccountValue, isCombined]
-  )
-  const latestPnL = chartData.length ? chartData[chartData.length - 1].pnl : 0
+  const {
+    hlPortfolioData,
+    timeOption,
+    changeTimeOption,
+    isCombined,
+    setIsCombined,
+    isAccountValue,
+    setIsAccountValue,
+  } = useHyperliquidTraderContext()
 
-  const { xl } = useResponsive()
+  const { historyData } = useHyperliquidPortfolio({
+    hlPortfolioData,
+    isCombined,
+    isAccountValue,
+    timeOption: timeOption.id,
+  })
+  const chartData = useMemo(() => formatChartData(historyData), [historyData])
+  const latestPnL = chartData.length ? chartData[chartData.length - 1].pnl : 0
 
   return (
     <Flex>
-      {xl && (
-        <Box flex={1} px={12} sx={{ borderRight: 'small', borderColor: 'neutral4' }}>
-          <SectionTitle icon={Gauge} title={<Trans>PERFORMANCE</Trans>} sx={{ mt: 12, mb: 2 }} />
-          <HLPerformance hlAccountData={hlAccountData} />
-        </Box>
-      )}
+      {/*{xl && (*/}
+      {/*  <Box flex={1} px={12} sx={{ borderRight: 'small', borderColor: 'neutral4' }}>*/}
+      {/*    <SectionTitle icon={Gauge} title={<Trans>PERFORMANCE</Trans>} sx={{ mt: 12, mb: 2 }} />*/}
+      {/*    <HLPerformance />*/}
+      {/*  </Box>*/}
+      {/*)}*/}
       <Flex flex={2} flexDirection="column">
         <Flex mt={[2, 1]} alignItems="center" justifyContent="space-between" px={12}>
-          <TimeSelection timeOption={currentOption} onChange={changeCurrentOption} />
+          <TimeSelection timeOption={timeOption} onChange={changeTimeOption} />
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <ToggleButtonGroup<boolean>
               options={[
                 { label: 'COMBINED', value: true },
-                { label: 'PERP ONLY', value: false },
+                { label: 'PERP', value: false },
               ]}
               value={isCombined}
               onChange={setIsCombined}
@@ -252,16 +252,16 @@ export default function HLChartPnL() {
             <ToggleButtonGroup<boolean>
               options={[
                 { label: 'PNL', value: false },
-                { label: 'ACCOUNT VALUE', value: true },
+                { label: 'VALUE', value: true },
               ]}
               value={isAccountValue}
               onChange={setIsAccountValue}
             />
           </Flex>
         </Flex>
-        <Flex mt={2} flexDirection="column" alignItems="center">
+        <Flex mt={1} flexDirection="column" alignItems="center">
           <Type.Caption>
-            {currentOption.text} {isAccountValue ? 'ACCOUNT VALUE' : 'PNL'} ({isCombined ? 'COMBINED' : 'PERP ONLY'})
+            {timeOption.text} {isAccountValue ? 'ACCOUNT VALUE' : 'PNL'} ({isCombined ? 'COMBINED' : 'PERP ONLY'})
           </Type.Caption>
           <Type.H5
             color={latestPnL > 0 ? 'green1' : latestPnL < 0 ? 'red2' : 'inherit'}
@@ -270,7 +270,7 @@ export default function HLChartPnL() {
             <AmountText amount={latestPnL} maxDigit={0} suffix="$" />
           </Type.H5>
         </Flex>
-        <PnLChart data={chartData} timeOption={currentOption} />
+        <PnLChart data={chartData} timeOption={timeOption} />
       </Flex>
     </Flex>
   )

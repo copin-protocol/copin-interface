@@ -5,13 +5,12 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import { GroupedFillsData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -63,41 +62,46 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
         return (
           <Box sx={{ p: [2, 3] }} key={index + symbol + item.orderId + item.txHash + item.timestamp}>
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
-              <Type.Caption color="neutral3">
+              <Type.Caption color="neutral3" flex={4}>
                 <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
               </Type.Caption>
-              <Type.Caption color="neutral3">-</Type.Caption>
-              <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">
-                {item.avgPrice ? PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 }) : 'N/A'}
-              </Type.Caption>
+
+              <Box flex={7}>
+                <Type.Caption color={item.isLong ? 'green1' : 'red2'} mr={2}>
+                  {item.direction}
+                </Type.Caption>
+                <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
+              </Box>
             </Flex>
             <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Value:
-                    </Box>
-                    ${formatNumber(item.totalSize, 0, 0)}
-                  </Type.Caption>
-                </Flex>
-                <Flex flex={1} alignItems="center">
+              <Flex sx={{ width: '100%', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+                <Flex flex={4} alignItems="center">
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
                       Size:
                     </Box>
-                    {formatNumber(item.totalSizeInToken, 0, 0)}
+                    {formatNumber(item.totalSizeInToken)}
+                  </Type.Caption>
+                </Flex>
+                <Flex flex={7} alignItems="center" sx={{ gap: 3 }}>
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Price:
+                    </Box>
+                    {item.avgPrice ? PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 }) : 'N/A'}
+                  </Type.Caption>
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Value:
+                    </Box>
+                    ${compactNumber(item.totalSize, 2)}
                   </Type.Caption>
                 </Flex>
               </Flex>
             </Flex>
             <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
+              <Flex sx={{ width: '100%', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+                <Flex flex={4} sx={{ alignItems: 'center', gap: '1ch' }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     Fees:
                   </Type.Caption>
@@ -109,8 +113,8 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
                     )}
                   </Type.Caption>
                 </Flex>
-                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <PnlTitle type="lower" character=":" />
+                <Flex flex={7} sx={{ alignItems: 'center', gap: '1ch' }}>
+                  <PnlTitle type="lower" character=":" color="neutral3" />
                   <Type.Caption color="neutral3">
                     {!!item.totalPnl ? <SignedText value={item.totalPnl} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
                   </Type.Caption>

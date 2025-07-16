@@ -10,6 +10,7 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
+import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
@@ -100,6 +101,30 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
 
   const scrollDeps = useMemo(() => [currentPage, currentLimit], [currentLimit, currentPage])
 
+  const [width, setWidth] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return
+      const width = containerRef.current.getBoundingClientRect().width
+      setWidth(width)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  let tableSettings: ColumnData<GroupedFillsData>[]
+  if (isDrawer) {
+    tableSettings = drawerFillColumns
+  } else if (xl && isExpanded) {
+    tableSettings = fullFillColumns
+  } else if (width >= 832) {
+    tableSettings = drawerFillColumns
+  } else {
+    tableSettings = fillColumns
+  }
+
   return (
     <>
       {isLoading && <Loading />}
@@ -115,7 +140,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
         <>
           {sm ? (
             <>
-              <Box flex="1 0 0" overflow="hidden">
+              <Box ref={containerRef} flex="1 0 0" overflow="hidden">
                 <Table
                   restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
                   wrapperSx={{
@@ -126,10 +151,11 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
                     '& td:last-child': { pr: 2 },
                   }}
                   data={paginatedData.data}
-                  columns={isDrawer ? drawerFillColumns : xl && isExpanded ? fullFillColumns : fillColumns}
+                  columns={tableSettings}
                   isLoading={isLoading}
                   // renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
                   scrollToTopDependencies={scrollDeps}
+                  externalSource={{ isExpanded }}
                   noDataComponent={
                     !dataLength && !isLoading ? (
                       <NoOrderWrapper isDrawer>

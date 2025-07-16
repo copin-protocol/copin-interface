@@ -12,6 +12,10 @@ export type LayoutProps = {
   openingPositions?: JSX.Element
   closedPositions?: JSX.Element
   hyperliquidApiMode?: JSX.Element
+  hlPerformance?: JSX.Element
+  hlChartPnl?: JSX.Element
+  hlOverview?: JSX.Element
+  hlPortfolio?: JSX.Element
   openingPositionFullExpanded?: boolean
   positionFullExpanded?: boolean
   chartFullExpanded?: boolean

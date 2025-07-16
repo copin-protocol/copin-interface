@@ -36,7 +36,11 @@ export default function ValueOrToken({
   if (!value && !component && !valueInToken) return <>{'--'}</>
   if (value != null && !component) {
     const sign = value < 0 ? '-' : ''
-    return <>{`${sign}${hasPrefix ? '$' : ''}${formatNumber(Math.abs(value), maxDigit, minDigit)}`}</>
+    return (
+      <>{`${sign}${hasPrefix ? '$' : ''}${
+        hasCompact ? compactNumber(Math.abs(value), maxDigit) : formatNumber(Math.abs(value), maxDigit, minDigit)
+      }`}</>
+    )
   }
   const isToken = !!indexToken && !!valueInToken && !!protocol
   const tooltipId = uuid()
@@ -56,7 +60,9 @@ export default function ValueOrToken({
           ? hasCompact
             ? compactNumber(valueInToken, 2)
             : formatNumber(valueInToken, 2, 2)
-          : `${hasPrefix && !defaultToken ? '$' : ''}${formatNumber(value, maxDigit, minDigit)}`}
+          : `${hasPrefix && !defaultToken ? '$' : ''}${
+              hasCompact ? compactNumber(value, maxDigit) : formatNumber(value, maxDigit, minDigit)
+            }`}
         {(isToken || defaultToken) && (
           <Image
             src={

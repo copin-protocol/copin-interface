@@ -4,12 +4,11 @@ import { useEffect, useRef } from 'react'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { HlOrderData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { compactNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -60,44 +59,23 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
         const symbol = getSymbolFromPair(item.pair)
         return (
           <Box sx={{ p: [2, 3] }} key={item.timestamp + item.orderId}>
-            <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
-              <Type.Caption color="neutral3">
+            <Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
+              <Type.Caption flex={1} color="neutral3">
                 <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
               </Type.Caption>
-              <Type.Caption color="neutral3">-</Type.Caption>
-              <Type.Caption
-                color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}
-              >
-                {item.reduceOnly ? 'Close ' : ''}
-                {item.isLong ? 'Long' : 'Short'}
-              </Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">
-                {item.priceNumber && !item.isPositionTpsl
-                  ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
-                  : 'Market'}
-              </Type.Caption>
+              <Box flex={1}>
+                <Type.Caption
+                  mr={2}
+                  color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}
+                >
+                  {item.reduceOnly ? 'Close ' : ''}
+                  {item.isLong ? 'Long' : 'Short'}
+                </Type.Caption>
+                <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
+              </Box>
             </Flex>
-            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Value:
-                    </Box>
-                    ${compactNumber(item.sizeNumber)}
-                  </Type.Caption>
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Size:
-                    </Box>
-                    {compactNumber(item.sizeInTokenNumber)}
-                  </Type.Caption>
-                </Flex>
+            <Box>
+              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between', mt: 1 }}>
                 <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     Type:
@@ -106,8 +84,36 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
                     <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>
                   </Type.Caption>
                 </Flex>
+                <Flex flex={1} alignItems="center">
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Price:
+                    </Box>
+                    {item.priceNumber && !item.isPositionTpsl
+                      ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
+                      : 'Market'}
+                  </Type.Caption>
+                </Flex>
               </Flex>
-            </Flex>
+              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between', mt: 1 }}>
+                <Flex flex={1} alignItems="center">
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Size:
+                    </Box>
+                    {formatNumber(item.sizeInTokenNumber)}
+                  </Type.Caption>
+                </Flex>
+                <Flex flex={1} alignItems="center">
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Value:
+                    </Box>
+                    ${compactNumber(item.sizeNumber)}
+                  </Type.Caption>
+                </Flex>
+              </Flex>
+            </Box>
           </Box>
         )
       })}

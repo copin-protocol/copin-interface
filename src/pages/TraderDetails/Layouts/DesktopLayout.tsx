@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useSize } from 'ahooks'
 import { useCallback, useReducer } from 'react'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
@@ -7,6 +8,7 @@ import DirectionButton from 'components/@ui/DirectionButton'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useMyProfile from 'hooks/store/useMyProfile'
 import { Box, Flex, Grid } from 'theme/base'
+import { PROFILE_BREAKPOINT_XL } from 'utils/config/constants'
 import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory } from 'utils/tracking/types'
@@ -15,12 +17,15 @@ import ProtocolPermissionContainer from './ProtocolPermissionContainer'
 import { LayoutProps } from './types'
 
 const DesktopLayout = (props: LayoutProps) => {
+  const size = useSize(document.body)
   const { openingPositionFullExpanded, positionFullExpanded, chartFullExpanded } = props
   const { myProfile } = useMyProfile()
   const { isEnablePosition, requiredPlanToViewPosition } = useTraderProfilePermission({ protocol: props.protocol })
 
   const [positionTopExpanded, toggleTopExpand] = useReducer((state) => !state, false)
-  const rowOneHeight = 'max(33%, 300px)'
+  const rowOneMaxHeight = 250
+  const rowOneHeight = `max(33%, ${rowOneMaxHeight}px)`
+  const rowPostionHeight = `max(calc(33% + 40px), ${rowOneMaxHeight + 40}px)`
 
   const logEventLayout = useCallback(
     (action: string) => {
@@ -58,7 +63,9 @@ const DesktopLayout = (props: LayoutProps) => {
               overflow: 'hidden',
               gridTemplate: `
               "MAIN POSITIONS" minmax(0px, 1fr) / ${
-                openingPositionFullExpanded || positionFullExpanded ? '0px 1fr' : '1fr 550px'
+                openingPositionFullExpanded || positionFullExpanded
+                  ? '0px 1fr'
+                  : `1fr ${size && size?.width > PROFILE_BREAKPOINT_XL ? '918px' : '500px'}`
               }
             `,
             }}
@@ -74,7 +81,98 @@ const DesktopLayout = (props: LayoutProps) => {
             >
               <Box width="100%">{props.traderStatsSummary}</Box>
               {props.protocol === ProtocolEnum.HYPERLIQUID && props.apiMode ? (
-                <Box sx={{ width: '100%', height: '100%' }}>{props.hyperliquidApiMode}</Box>
+                <Flex
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    gridArea: 'STATS / CHARTS',
+                  }}
+                >
+                  <Box
+                    id="CHARTS"
+                    sx={{
+                      minWidth: 350,
+                      maxWidth: 350,
+                      gridArea: 'CHARTS / CHARTS',
+                      overflow: 'hidden',
+                      display: 'grid',
+                      gridTemplate: `
+            "RADAR" minmax(1fr, ${rowOneHeight})
+            "CANDLESTICK" minmax(1fr, 1fr)
+          `,
+                    }}
+                  >
+                    <Flex flexDirection="column" height="100%">
+                      <Box
+                        height={rowOneHeight}
+                        maxHeight={rowOneMaxHeight}
+                        sx={{
+                          gridArea: 'RADAR',
+                          overflow: 'hidden',
+                          position: 'relative',
+                        }}
+                      >
+                        {props.hlPerformance}
+                        <Box
+                          sx={{
+                            height: '100%',
+                            width: '1px',
+                            bg: 'neutral4',
+                            position: 'absolute',
+                            right: 0,
+                            top: 0,
+                          }}
+                        />
+                      </Box>
+                      <Box
+                        sx={{
+                          gridArea: 'CANDLESTICK',
+                          overflow: 'hidden',
+                          borderRight: 'small',
+                          borderTop: 'smallDashed',
+                          borderColor: 'neutral4',
+                          flex: '1 0 0',
+                        }}
+                      >
+                        <Box height="100%">{props.hlOverview}</Box>
+                      </Box>
+                    </Flex>
+                  </Box>
+
+                  <Box
+                    width="100%"
+                    id="STATS"
+                    sx={{
+                      gridArea: 'STATS / STATS',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {
+                      <Box height="100%" sx={{ flexDirection: 'column', display: 'flex' }}>
+                        <Flex
+                          sx={{
+                            width: '100%',
+                            height: rowOneHeight,
+                            flexDirection: 'column',
+                            overflow: 'hidden',
+                            flexShrink: 0,
+                          }}
+                        >
+                          <Box flex="1 0 0">{props.hlChartPnl}</Box>
+                        </Flex>
+                        <Box
+                          overflow="auto"
+                          flex="1 0 0"
+                          mr={'-1px'}
+                          sx={{ position: 'relative', borderTop: 'smallDashed', borderColor: 'neutral4' }}
+                        >
+                          <Box height="100%">{props.hlPortfolio}</Box>
+                        </Box>
+                      </Box>
+                    }
+                  </Box>
+                </Flex>
               ) : (
                 <Flex
                   sx={{
@@ -87,8 +185,8 @@ const DesktopLayout = (props: LayoutProps) => {
                   <Box
                     id="CHARTS"
                     sx={{
-                      minWidth: 400,
-                      maxWidth: 400,
+                      minWidth: 350,
+                      maxWidth: 350,
                       gridArea: 'CHARTS / CHARTS',
                       overflow: 'hidden',
                       display: 'grid',
@@ -158,10 +256,10 @@ const DesktopLayout = (props: LayoutProps) => {
                         <Flex
                           sx={{
                             width: '100%',
-                            height: 'max(33%, 300px)',
+                            height: rowOneHeight,
                             flexDirection: 'column',
                             overflow: 'hidden',
-                            bg: 'neutral5',
+                            // bg: 'neutral5',
                             flexShrink: 0,
                           }}
                         >
@@ -190,7 +288,7 @@ const DesktopLayout = (props: LayoutProps) => {
                     ? 'minmax(0px, 1fr)'
                     : positionFullExpanded || positionTopExpanded
                     ? '0px'
-                    : `${rowOneHeight}`
+                    : `${rowPostionHeight}`
                 }
                 "HISTORY" ${openingPositionFullExpanded ? '0px' : 'minmax(0px, 1fr)'}
               `,

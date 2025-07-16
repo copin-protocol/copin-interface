@@ -1,4 +1,6 @@
-import { OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+import { HlOrderStatusEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config/enums'
+
+import { MappedRebateTier, MappedVipTier } from '../hooks/features/trader/useHyperliquidFees'
 
 export interface HlAccountData {
   marginSummary: MarginSummary
@@ -52,6 +54,16 @@ interface Position {
 export interface AssetPosition {
   type: string
   position: Position
+}
+
+export interface HlSubAccountData {
+  subAccountUser: string
+  master: string
+  name: string
+  clearinghouseState: HlAccountData
+  spotState: HlAccountSpotRawData
+  perpEquity: number
+  spotEquity: number
 }
 
 export interface HlOrderRawData {
@@ -197,6 +209,68 @@ export interface HlTwapOrderData {
   timestamp: number
 }
 
+export interface HlHistoricalOrderRawData {
+  order: HlOrderRawData
+  status:
+    | 'filled'
+    | 'open'
+    | 'canceled'
+    | 'triggered'
+    | 'rejected'
+    | 'marginCanceled'
+    | 'openInterestCapCanceled'
+    | 'vaultWithdrawalCanceled'
+    | 'selfTradeCanceled'
+    | 'reduceOnlyCanceled'
+    | 'siblingFilledCanceled'
+    | 'delistedCanceled'
+    | 'liquidatedCanceled'
+    | 'scheduledCancel'
+    | 'tickRejected'
+    | 'minTradeNtlRejected'
+    | 'perpMarginRejected'
+    | 'reduceOnlyRejected'
+    | 'badAloPxRejected'
+    | 'iocCancelRejected'
+    | 'badTriggerPxRejected'
+    | 'marketOrderNoLiquidityRejected'
+    | 'positionIncreaseAtOpenInterestCapRejected'
+    | 'positionFlipAtOpenInterestCapRejected'
+    | 'tooAggressiveAtOpenInterestCapRejected'
+    | 'openInterestIncreaseRejected'
+    | 'insufficientSpotBalanceRejected'
+    | 'oracleRejected'
+    | 'perpMaxPositionRejected'
+  statusTimestamp: number
+}
+
+export interface HlHistoricalOrderData {
+  orderId: number
+  closeId?: number
+  account: string
+  pair: string
+  indexToken: string
+  side: string
+  originalSizeNumber: number
+  originalSizeInTokenNumber: number
+  sizeNumber: number
+  sizeInTokenNumber: number
+  priceNumber: number
+  triggerPriceNumber: number
+  triggerCondition: string
+  isTrigger: boolean
+  isPositionTpsl: boolean
+  isLong: boolean
+  isBuy: boolean
+  reduceOnly: boolean
+  orderType: string
+  type: OrderTypeEnum
+  protocol: ProtocolEnum
+  timestamp: number
+  statusTimestamp: number
+  status: HlOrderStatusEnum
+}
+
 export interface HlPortfolioHistoryPoint {
   timestamp: number
   value: string
@@ -292,4 +366,97 @@ export interface HlEvmContractData {
 
 export interface HlPriceData {
   [token: string]: number
+}
+
+export interface HlFeesRawData {
+  dailyUserVlm: HlDailyVolumeData[]
+  feeSchedule: HlFeeScheduleData
+  userCrossRate: string
+  userAddRate: string
+  userSpotCrossRate: string
+  userSpotAddRate: string
+  activeReferralDiscount: string
+  trial: string
+  feeTrialReward: string
+  nextTrialAvailableTimestamp: string
+  stakingLink: HlStakingLink
+  activeStakingDiscount: HlStakingDiscountTier
+}
+
+export interface HlFeesData {
+  totalUserTaker: number
+  totalUserMaker: number
+  totalUser14DVolume: number
+  makerVolumeShare: number
+  takerFee: number
+  makerFee: number
+  spotTakerFee: number
+  spotMakerFee: number
+  vipTiers: MappedVipTier[]
+  mmTiers: MappedRebateTier[]
+  minTierVolume: number
+  currentVipTier?: MappedVipTier
+  currentMakerRebateTier?: MappedRebateTier
+  stakingDiscount: number
+  stakingLevel: number
+  referralDiscount: number
+  dailyUserVolume: HlDailyVolumeData[]
+  stakingDiscountTiers: HlStakingDiscountTier[]
+}
+
+export interface HlDailyVolumeData {
+  date: string
+  userCross: string
+  userAdd: string
+  exchange: string
+}
+
+export interface HlFeeScheduleData {
+  cross: string
+  add: string
+  spotCross: string
+  spotAdd: string
+  tiers: HlFeeTier
+  referralDiscount: string
+  stakingDiscountTiers: HlStakingDiscountTier[]
+}
+
+export interface HlStakingDiscountTier {
+  bpsOfMaxSupply: string
+  discount: string
+}
+
+export interface HlStakingLink {
+  type: string
+  stakingUser: string
+}
+
+export interface HlFeeTier {
+  vip: HlFeeTierVIP[]
+  mm: HlFeeTierMM[]
+}
+
+export interface HlFeeTierVIP {
+  ntlCutoff: string
+  cross: string
+  add: string
+  spotCross: string
+  spotAdd: string
+}
+
+export interface HlFeeTierMM {
+  makerFractionCutoff: string
+  add: string
+}
+
+export interface HlAccountStakingData {
+  delegated: string
+  undelegated: string
+  totalPendingWithdrawal: number
+  nPendingWithdrawals: number
+}
+
+export interface HlAccountVaultData {
+  vaultAddress: string
+  equity: string
 }

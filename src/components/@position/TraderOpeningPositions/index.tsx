@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, Pulse } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
+import { useResponsive, useSize } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
@@ -23,9 +23,9 @@ import Badge from 'theme/Badge'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
-import { TableSortProps } from 'theme/Table/types'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
-import { DEFAULT_LIMIT } from 'utils/config/constants'
+import { DEFAULT_LIMIT, PROFILE_BREAKPOINT_XL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -140,6 +140,19 @@ export default function TraderOpeningPositionsTableView({
 
   const totalOpening = data?.length ?? 0
 
+  const size = useSize(document.body)
+
+  let tableSettings: ColumnData<PositionData>[]
+  if (isDrawer) {
+    tableSettings = drawerOpeningColumns
+  } else if (xl && isExpanded) {
+    tableSettings = fullOpeningColumns
+  } else if (size && size.width >= PROFILE_BREAKPOINT_XL) {
+    tableSettings = drawerOpeningColumns
+  } else {
+    tableSettings = openingColumns
+  }
+
   return (
     <Box
       className="opening"
@@ -214,7 +227,7 @@ export default function TraderOpeningPositionsTableView({
                 '& td:last-child': { pr: 2 },
               }}
               data={tableData?.data}
-              columns={isDrawer ? drawerOpeningColumns : xl && isExpanded ? fullOpeningColumns : openingColumns}
+              columns={tableSettings}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSortExpanded}
               isLoading={isLoading}

@@ -6,7 +6,7 @@ import {
   ChartScatter,
   ClockCounterClockwise,
 } from '@phosphor-icons/react'
-import { useResponsive } from 'ahooks'
+import { useResponsive, useSize } from 'ahooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -31,6 +31,7 @@ import { ColumnData } from 'theme/Table/types'
 import Tooltip from 'theme/Tooltip'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { PROFILE_BREAKPOINT_XL } from 'utils/config/constants'
 import { PairFilterEnum, ProtocolEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
 import { generatePositionDetailsRoute } from 'utils/helpers/generateRoute'
@@ -45,6 +46,7 @@ import {
   fullHistoryColumns,
   getEntryColumn,
   historyColumns,
+  xlHistoryColumns,
 } from '../configs/traderPositionRenderProps'
 import useQueryClosedPositions from './useQueryClosedPositions'
 import useQueryClosedPositionsMobile from './useQueryClosedPositionsMobile'
@@ -154,6 +156,8 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     return getEntryColumn(pairs, excludedPairs, handleChangePairs)
   }, [pairs, excludedPairs, handleChangePairs])
 
+  const size = useSize(document.body)
+
   let tableSettings: ColumnData<PositionData>[]
   if (isDrawer) {
     tableSettings = drawerHistoryColumns
@@ -161,6 +165,8 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     const cloned = [...fullHistoryColumns]
     cloned.splice(2, 0, entryColumn)
     tableSettings = cloned
+  } else if (size && size.width >= PROFILE_BREAKPOINT_XL) {
+    tableSettings = xlHistoryColumns
   } else {
     tableSettings = historyColumns
   }

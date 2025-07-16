@@ -2,6 +2,8 @@ import { CopyPositionData } from 'entities/copyTrade'
 import {
   AssetPosition,
   GroupedFillsData,
+  HlHistoricalOrderData,
+  HlHistoricalOrderRawData,
   HlOrderData,
   HlOrderFillData,
   HlOrderFillRawData,
@@ -10,7 +12,13 @@ import {
   HlTwapOrderRawData,
 } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
-import { CopyTradePlatformEnum, MarginModeEnum, PositionStatusEnum, ProtocolEnum } from 'utils/config/enums'
+import {
+  CopyTradePlatformEnum,
+  HlOrderStatusEnum,
+  MarginModeEnum,
+  PositionStatusEnum,
+  ProtocolEnum,
+} from 'utils/config/enums'
 import { PROTOCOL_PRICE_MULTIPLE_MAPPING } from 'utils/helpers/price'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
@@ -152,7 +160,7 @@ export function parseHLOrderFillData({ account, data }: { account: string; data:
         timestamp: e.time,
       } as HlOrderFillData
     })
-    .filter((d) => !['Buy', 'Sell'].includes(d.direction))
+    .filter((d) => !['Buy', 'Sell'].includes(d.direction) || !d.pair.startsWith('@'))
 }
 
 export function convertPairHL(symbol: string) {
@@ -248,5 +256,114 @@ export function parseHLTwapOrderFillData({ account, data }: { account: string; d
         timestamp: e.fill.time,
       } as HlTwapOrderData
     })
-    .filter((d) => !d.pair.startsWith('@'))
+    .filter((d) => !['Buy', 'Sell'].includes(d.direction) || !d.pair.startsWith('@'))
+}
+
+export function parseHLHistoricalOrderData({ account, data }: { account: string; data: HlHistoricalOrderRawData[] }) {
+  if (!data) return []
+  return data
+    .map((e) => {
+      const order = e.order
+      return {
+        account,
+        protocol: ProtocolEnum.HYPERLIQUID,
+        orderId: order.oid,
+        closeId: order.cloid,
+        pair: convertPairHL(order.coin),
+        originalSizeNumber: Number(order.origSz) * Number(order.limitPx),
+        originalSizeInTokenNumber: Number(order.origSz),
+        sizeNumber: Number(order.sz) * Number(order.limitPx),
+        sizeInTokenNumber: Number(order.sz),
+        priceNumber: Number(order.limitPx),
+        triggerPriceNumber: Number(order.triggerPx),
+        triggerCondition: order.triggerCondition,
+        isTrigger: order.isTrigger,
+        isPositionTpsl: order.isPositionTpsl,
+        reduceOnly: order.reduceOnly,
+        isLong:
+          order.side === 'B' && order.reduceOnly
+            ? false
+            : order.side === 'A' && order.reduceOnly
+            ? true
+            : order.side === 'B',
+        isBuy: order.side === 'B',
+        orderType: order.orderType,
+        type: order.orderType,
+        timestamp: order.timestamp,
+        statusTimestamp: e.statusTimestamp,
+        status: e.status,
+      } as HlHistoricalOrderData
+    })
+    .filter((d) => !['Buy', 'Sell'].includes(d.side) || !d.pair.startsWith('@'))
+}
+
+export function convertHlOrderStatus(status: HlOrderStatusEnum): string {
+  switch (status) {
+    // Open / Filled / Triggered
+    case HlOrderStatusEnum.OPEN:
+      return 'Placed successfully'
+    case HlOrderStatusEnum.FILLED:
+      return 'Filled'
+    case HlOrderStatusEnum.TRIGGERED:
+      return 'Trigger order triggered'
+
+    // User cancel
+    case HlOrderStatusEnum.CANCELED:
+      return 'Canceled by user'
+    case HlOrderStatusEnum.MARGIN_CANCELED:
+      return 'Canceled because insufficient margin to fill'
+    case HlOrderStatusEnum.VAULT_WITHDRAWAL_CANCELED:
+      return 'Vaults only. Canceled due to a user’s withdrawal from vault'
+    case HlOrderStatusEnum.OPEN_INTEREST_CAP_CANCELED:
+      return 'Canceled due to order being too aggressive when open interest was at cap'
+    case HlOrderStatusEnum.SELF_TRADE_CANCELED:
+      return 'Canceled due to self-trade prevention'
+    case HlOrderStatusEnum.REDUCE_ONLY_CANCELED:
+      return 'Canceled reduce-only order that does not reduce position'
+    case HlOrderStatusEnum.SIBLING_FILLED_CANCELED:
+      return 'TP/SL only. Canceled due to sibling order being filled'
+    case HlOrderStatusEnum.DELISTED_CANCELED:
+      return 'Canceled due to asset delisting'
+    case HlOrderStatusEnum.LIQUIDATED_CANCELED:
+      return 'Canceled due to liquidation'
+    case HlOrderStatusEnum.SCHEDULED_CANCEL:
+      return 'API only. Canceled due to exceeding scheduled cancel deadline (dead man’s switch)'
+
+    // General rejected
+    case HlOrderStatusEnum.REJECTED:
+      return 'Rejected at time of placement'
+    case HlOrderStatusEnum.TICK_REJECTED:
+      return 'Rejected due to invalid tick price'
+    case HlOrderStatusEnum.MIN_TRADE_NTL_REJECTED:
+      return 'Rejected due to order notional below minimum'
+    case HlOrderStatusEnum.PERP_MARGIN_REJECTED:
+      return 'Rejected due to insufficient margin'
+    case HlOrderStatusEnum.REDUCE_ONLY_REJECTED:
+      return 'Rejected due to reduce-only'
+    case HlOrderStatusEnum.BAD_ALO_PX_REJECTED:
+      return 'Rejected due to post-only immediate match'
+    case HlOrderStatusEnum.IOC_CANCEL_REJECTED:
+      return 'Rejected due to IOC not able to match'
+    case HlOrderStatusEnum.BAD_TRIGGER_PX_REJECTED:
+      return 'Rejected due to invalid TP/SL price'
+    case HlOrderStatusEnum.MARKET_ORDER_NO_LIQUIDITY_REJECTED:
+      return 'Rejected due to lack of liquidity for market order'
+    case HlOrderStatusEnum.POSITION_INCREASE_AT_OPEN_INTEREST_CAP_REJECTED:
+      return 'Rejected due to open interest cap'
+    case HlOrderStatusEnum.POSITION_FLIP_AT_OPEN_INTEREST_CAP_REJECTED:
+      return 'Rejected due to open interest cap'
+    case HlOrderStatusEnum.TOO_AGGRESSIVE_AT_OPEN_INTEREST_CAP_REJECTED:
+      return 'Rejected due to price too aggressive at open interest cap'
+    case HlOrderStatusEnum.OPEN_INTEREST_INCREASE_REJECTED:
+      return 'Rejected due to open interest cap'
+    case HlOrderStatusEnum.INSUFFICIENT_SPOT_BALANCE_REJECTED:
+      return 'Rejected due to insufficient spot balance'
+    case HlOrderStatusEnum.ORACLE_REJECTED:
+      return 'Rejected due to price too far from oracle'
+    case HlOrderStatusEnum.PERP_MAX_POSITION_REJECTED:
+      return 'Rejected due to exceeding margin tier limit at current leverage'
+
+    default:
+      return 'Unknown status'
+  }
 }

@@ -1,15 +1,21 @@
+import { v4 as uuid } from 'uuid'
+
+import { convertHlOrderStatus } from 'components/@position/helpers/hyperliquid'
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
-import { HlOrderData } from 'entities/hyperliquid'
+import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
+import { HlHistoricalOrderData } from 'entities/hyperliquid'
 import { ColumnData } from 'theme/Table/types'
-import { Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { Box, Type } from 'theme/base'
+import { DAYJS_FULL_DATE_FORMAT, IGNORED_REASON_HL_ORDER_STATUS } from 'utils/config/constants'
+import { HlOrderStatusEnum } from 'utils/config/enums'
+import { HYPERLIQUID_ORDER_STATUS_TRANS } from 'utils/config/translations'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-import OpenOrderPairFilterIcon from './OpenOrderPairFilterIcon'
+import HistoricalOrderPairFilterIcon from './HistoricalOrderPairFilterIcon'
 
-const openTimeColumn: ColumnData<HlOrderData> = {
+const openTimeColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Time',
   dataIndex: 'timestamp',
   key: 'timestamp',
@@ -21,7 +27,7 @@ const openTimeColumn: ColumnData<HlOrderData> = {
     </Type.Caption>
   ),
 }
-const openTimeShortColumn: ColumnData<HlOrderData> = {
+const openTimeShortColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Time',
   dataIndex: 'timestamp',
   key: 'timestamp',
@@ -34,12 +40,12 @@ const openTimeShortColumn: ColumnData<HlOrderData> = {
   ),
 }
 
-const priceColumn: ColumnData<HlOrderData> = {
+const priceColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Limit Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
   sortBy: 'priceNumber',
-  style: { minWidth: '120px', textAlign: 'right', pr: '12px' },
+  style: { minWidth: '110px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.priceNumber && !item.isPositionTpsl
@@ -49,7 +55,7 @@ const priceColumn: ColumnData<HlOrderData> = {
   ),
 }
 
-const sizeColumn: ColumnData<HlOrderData> = {
+const sizeColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Value',
   dataIndex: 'sizeNumber',
   key: 'sizeNumber',
@@ -64,7 +70,7 @@ const sizeColumn: ColumnData<HlOrderData> = {
   ),
 }
 
-const sizeInTokenColumn: ColumnData<HlOrderData> = {
+const sizeInTokenColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Size',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
@@ -83,34 +89,53 @@ const sizeInTokenColumn: ColumnData<HlOrderData> = {
   ),
 }
 
-const symbolColumn: ColumnData<HlOrderData> = {
+const originalSizeInTokenColumn: ColumnData<HlHistoricalOrderData> = {
+  title: 'Filled Size',
+  dataIndex: 'originalSizeInTokenNumber',
+  key: 'originalSizeInTokenNumber',
+  sortBy: 'originalSizeInTokenNumber',
+  style: { minWidth: '100px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
+    <Type.Caption color="neutral1">
+      {item.status === HlOrderStatusEnum.FILLED && item.originalSizeInTokenNumber
+        ? `${
+            externalSource?.isExpanded
+              ? formatNumber(item.originalSizeInTokenNumber, 2, 2)
+              : compactNumber(item.originalSizeInTokenNumber, 2)
+          }`
+        : '--'}
+    </Type.Caption>
+  ),
+}
+
+const symbolColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Pair',
   dataIndex: 'pair',
   key: 'pair',
   // sortBy: 'pair',
-  style: { width: '100px' },
+  style: { minWidth: '80px' },
   render: (item) => {
     const symbol = getSymbolFromPair(item.pair)
     return <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
   },
 }
 
-const orderTypeColumn: ColumnData<HlOrderData> = {
+const orderTypeColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Type',
   dataIndex: 'orderType',
   key: 'orderType',
   // sortBy: 'orderType',
-  style: { width: '100px' },
+  style: { minWidth: '100px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>
   },
 }
 
-const directionColumn: ColumnData<HlOrderData> = {
+const directionColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Direction',
   dataIndex: 'side',
   key: 'side',
-  style: { width: '120px' },
+  style: { minWidth: '100px' },
   render: (item) => {
     return (
       <Type.Caption color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}>
@@ -121,57 +146,98 @@ const directionColumn: ColumnData<HlOrderData> = {
   },
 }
 
-const triggerConditionColumn: ColumnData<HlOrderData> = {
+const triggerConditionColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Trigger Condition',
   dataIndex: 'triggerCondition',
   key: 'triggerCondition',
   // sortBy: 'triggerCondition',
-  style: { width: '150px' },
+  style: { minWidth: '120px', textAlign: 'right', pr: '12px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.triggerCondition ?? '--'}</Type.Caption>
   },
 }
 
-const reduceOnlyColumn: ColumnData<HlOrderData> = {
+const reduceOnlyColumn: ColumnData<HlHistoricalOrderData> = {
   title: 'Reduce Only',
   dataIndex: 'reduceOnly',
   key: 'reduceOnly',
   // sortBy: 'reduceOnly',
-  style: { width: '90px' },
+  style: { minWidth: '80px' },
   render: (item) => {
     return <Type.Caption color="neutral1">{item.reduceOnly ? 'Yes' : 'No'}</Type.Caption>
   },
 }
 
-export const fullOrderColumns: ColumnData<HlOrderData>[] = [
+const orderStatusColumn: ColumnData<HlHistoricalOrderData> = {
+  title: 'Status',
+  dataIndex: 'status',
+  key: 'status',
+  sortBy: 'status',
+  style: { minWidth: '100px', textAlign: 'right', pr: '12px' },
+  render: (item) => {
+    const status = item.status ? HYPERLIQUID_ORDER_STATUS_TRANS[item.status] : '--'
+    const hasTooltip = !IGNORED_REASON_HL_ORDER_STATUS.includes(item.status)
+    const tooltipId = uuid()
+    return (
+      <Box color="neutral1">
+        {hasTooltip ? (
+          <LabelWithTooltip
+            id={tooltipId}
+            tooltip={
+              <Type.Caption color="neutral2" sx={{ maxWidth: 350 }}>
+                {convertHlOrderStatus(item.status)}
+              </Type.Caption>
+            }
+            dashed
+          >
+            {status}
+          </LabelWithTooltip>
+        ) : (
+          <Type.Caption> {status}</Type.Caption>
+        )}
+      </Box>
+    )
+  },
+}
+
+export const fullHistoricalOrderColumns: ColumnData<HlHistoricalOrderData>[] = [
   openTimeColumn,
   orderTypeColumn,
-  { ...symbolColumn, filterComponent: <OpenOrderPairFilterIcon /> },
+  { ...symbolColumn, filterComponent: <HistoricalOrderPairFilterIcon /> },
   directionColumn,
-  triggerConditionColumn,
+
   reduceOnlyColumn,
-  sizeColumn,
   sizeInTokenColumn,
+  sizeColumn,
+
+  originalSizeInTokenColumn,
   priceColumn,
+  triggerConditionColumn,
+  orderStatusColumn,
 ]
 
-export const orderColumns: ColumnData<HlOrderData>[] = [
+export const historicalOrderColumns: ColumnData<HlHistoricalOrderData>[] = [
   openTimeShortColumn,
   symbolColumn,
   directionColumn,
-  sizeColumn,
   sizeInTokenColumn,
+  sizeColumn,
+  originalSizeInTokenColumn,
   priceColumn,
+  orderStatusColumn,
 ]
 
-export const drawerOrderColumns: ColumnData<HlOrderData>[] = [
+export const drawerHistoricalOrderColumns: ColumnData<HlHistoricalOrderData>[] = [
   openTimeColumn,
   orderTypeColumn,
   symbolColumn,
   directionColumn,
-  triggerConditionColumn,
-  reduceOnlyColumn,
-  sizeColumn,
+
+  // reduceOnlyColumn,
   sizeInTokenColumn,
+  sizeColumn,
+  originalSizeInTokenColumn,
   priceColumn,
+  orderStatusColumn,
+  // triggerConditionColumn,
 ]

@@ -12,6 +12,7 @@ import { formatNumber } from 'utils/helpers/format'
 
 export type ExternalSourceHlPosition = {
   totalPositionValue?: number
+  isExpanded?: boolean
   submitting?: boolean
   currentId?: string
   handleClosePosition?: (data: PositionData) => void
@@ -24,16 +25,27 @@ export const collateralColumn: ColumnData<PositionData, ExternalSourceHlPosition
   key: 'collateral',
   sortBy: 'collateral',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => renderPositionCollateral(item),
+  render: (item, _, externalSource) => renderPositionCollateral({ item, isCompactNumber: !externalSource?.isExpanded }),
 }
-const renderPositionCollateral = (item: PositionData, defaultToken?: string) => (
+const renderPositionCollateral = ({
+  item,
+  defaultToken,
+  isCompactNumber = false,
+}: {
+  item: PositionData
+  defaultToken?: string
+  isCompactNumber?: boolean
+}) => (
   <Type.Caption color="neutral1">
     <ValueOrToken
       protocol={item.protocol}
       indexToken={item.collateralToken}
       value={item.collateral}
       valueInToken={item.collateralInToken}
+      hasCompact={isCompactNumber}
       defaultToken={defaultToken}
+      maxDigit={isCompactNumber ? 2 : undefined}
+      minDigit={isCompactNumber ? 2 : undefined}
     />
   </Type.Caption>
 )
@@ -43,10 +55,18 @@ export const fundingColumn: ColumnData<PositionData, ExternalSourceHlPosition> =
   key: 'funding',
   sortBy: 'funding',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => renderPositionFunding(item),
+  render: (item, _, externalSource) => renderPositionFunding({ item, isCompactNumber: !externalSource?.isExpanded }),
 }
 
-const renderPositionFunding = (item: PositionData, prefix = '$') => (
+const renderPositionFunding = ({
+  item,
+  prefix = '$',
+  isCompactNumber = false,
+}: {
+  item: PositionData
+  prefix?: string
+  isCompactNumber?: boolean
+}) => (
   <Type.Caption color="neutral1">
     <ValueOrToken
       protocol={item.protocol}
@@ -58,6 +78,7 @@ const renderPositionFunding = (item: PositionData, prefix = '$') => (
           value={
             item.funding == null && item.fundingInToken == null ? undefined : (item.funding ?? item.fundingInToken) * -1
           }
+          isCompactNumber={isCompactNumber}
           maxDigit={2}
           minDigit={2}
           prefix={prefix}
@@ -106,7 +127,7 @@ export const pnlColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   key: 'pnl',
   sortBy: 'pnl',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => renderPositionPnL({ item }),
+  render: (item, _, externalSource) => renderPositionPnL({ item, isCompactNumber: !externalSource?.isExpanded }),
 }
 const renderPositionPnL = ({
   item,
@@ -135,7 +156,7 @@ export const weightColumn: ColumnData<PositionData, ExternalSourceHlPosition> = 
   title: 'Weight',
   key: undefined,
   sortBy: 'size',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '80px', textAlign: 'right' },
   render: (item, _, externalSource) => renderPositionWeight(item, externalSource?.totalPositionValue),
 }
 const renderPositionWeight = (item: PositionData, totalPositionValue?: number) => {
@@ -168,9 +189,10 @@ export const fullOpeningColumns: ColumnData<PositionData, ExternalSourceHlPositi
 
 export const openingColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
   { ...entryColumn, style: { minWidth: 185 } },
-  sizeOpeningColumn,
+  { ...sizeOpeningColumn, style: { minWidth: 200 } },
   {
     ...pnlColumn,
+    style: { minWidth: 80, textAlign: 'right' },
     render: (item) => renderPositionPnL({ item, isCompactNumber: true }),
   },
   actionColumn,

@@ -52,6 +52,10 @@ msgstr "10,000 records"
 msgid "14 Days"
 msgstr "14 Days"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "14 Days Volume"
+msgstr "14 Days Volume"
+
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
 #: src/components/@ui/TimeFilter/constants.tsx
@@ -180,6 +184,10 @@ msgstr "<0>Please provide details about the issue you noticed. You can also atta
 #: src/pages/PerpDEXsExplorer/components/ReportPerpDEXModal.tsx
 msgid "<0>Telegram Contact</0>"
 msgstr "<0>Telegram Contact</0>"
+
+#: src/components/@position/HLTraderOpeningPositions/HistoricalOrdersView.tsx
+msgid "<0>This trader's historical orders is empty</0><1>Once the trader starts a new historical order, you'll see it listed here</1>"
+msgstr "<0>This trader's historical orders is empty</0><1>Once the trader starts a new historical order, you'll see it listed here</1>"
 
 #: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
 msgid "<0>This trader's opening orders is empty</0><1>Once the trader starts a new open order, you'll see it listed here</1>"
@@ -1824,6 +1832,10 @@ msgstr "FEATURE"
 msgid "FEE"
 msgstr "FEE"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalFeesSchedule.tsx
+msgid "FEE TIERS"
+msgstr "FEE TIERS"
+
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 msgid "FIELD"
 msgstr "FIELD"
@@ -1861,6 +1873,10 @@ msgstr "Features"
 msgid "Fee"
 msgstr "Fee"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalFeesSchedule.tsx
+msgid "Fee Schedule"
+msgstr "Fee Schedule"
+
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 msgid "Fees"
@@ -1869,6 +1885,10 @@ msgstr "Fees"
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Fees & Funding:"
 msgstr "Fees & Funding:"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Fees (Taker / Maker)"
+msgstr "Fees (Taker / Maker)"
 
 #: src/pages/VaultDetails/VaultInfo/VaultBalances.tsx
 msgid "Fees and Profit Sharing"
@@ -2083,6 +2103,10 @@ msgstr "High leverage and high draw down"
 #: src/pages/TraderDetails/CopyManagementDrawer.tsx
 msgid "History"
 msgstr "History"
+
+#: src/components/@position/HLTraderOpeningPositions/index.tsx
+msgid "History Orders"
+msgstr "History Orders"
 
 #: src/pages/Subscription/FAQ.tsx
 msgid "How do I change my subscription plan?"
@@ -2525,6 +2549,10 @@ msgstr "Low Overtrading"
 msgid "Low leverage and low draw down"
 msgstr "Low leverage and low draw down"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalFeesSchedule.tsx
+msgid "MAKER REBATE TIERS"
+msgstr "MAKER REBATE TIERS"
+
 #: src/pages/Settings/AlertDashboard/config.tsx
 msgid "MANAGE ALERT"
 msgstr "MANAGE ALERT"
@@ -2653,6 +2681,7 @@ msgstr "Max Draw Down"
 
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
 #: src/pages/TraderDetails/TraderStats.tsx
 #: src/utils/config/options.tsx
 msgid "Max Drawdown"
@@ -3029,6 +3058,10 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
+#: src/components/@position/HLTraderOpeningPositions/HistoricalOrdersView.tsx
+msgid "No historical orders are matched this filter"
+msgstr "No historical orders are matched this filter"
+
 #: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
 #: src/pages/Explorer/ConditionFilter/LabelsFilterForm.tsx
 msgid "No labels found"
@@ -3049,6 +3082,10 @@ msgstr "No opening orders are matched this filter"
 #: src/components/@dailyTrades/OrderListView.tsx
 msgid "No order found"
 msgstr "No order found"
+
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+msgid "No order was found"
+msgstr "No order was found"
 
 #: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
 msgid "No orders filled are matched this filter"
@@ -3302,7 +3339,7 @@ msgstr "PERCENTILE RANKING COMPARISON"
 msgid "PERCENTILES"
 msgstr "PERCENTILES"
 
-#: src/pages/TraderDetails/HyperliquidApiMode/HLChartPnL.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPerformance.tsx
 #: src/pages/VaultDetails/VaultInfo/index.tsx
 msgid "PERFORMANCE"
 msgstr "PERFORMANCE"
@@ -3333,6 +3370,11 @@ msgstr "PNL Ratio"
 #: src/pages/@layouts/Footer/index.tsx
 msgid "POLICY"
 msgstr "POLICY"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLOverview.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "PORTFOLIO"
+msgstr "PORTFOLIO"
 
 #: src/pages/Subscription/v1/Plans.tsx
 #: src/pages/Subscription/v1/Plans.tsx
@@ -3405,6 +3447,18 @@ msgstr "Performance"
 #: src/pages/PerpDEXsExplorer/PermissionContainer.tsx
 msgid "Perp Explorer"
 msgstr "Perp Explorer"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Perps"
+msgstr "Perps"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Perps Equity"
+msgstr "Perps Equity"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalFeesSchedule.tsx
+msgid "Perps and spot volume are counted together to determine trader fee tier, and spot volume counts double toward trader fee tier. Negative fees are rebates. Staking discounts do not apply to maker rebates."
+msgstr "Perps and spot volume are counted together to determine trader fee tier, and spot volume counts double toward trader fee tier. Negative fees are rebates. Staking discounts do not apply to maker rebates."
 
 #: src/pages/Subscription/v1/Plans.tsx
 #: src/pages/Subscription/v1/Plans.tsx
@@ -3941,6 +3995,10 @@ msgstr "STATUS"
 msgid "STOPPED"
 msgstr "STOPPED"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalSubAccounts.tsx
+msgid "SUB-ACCOUNTS"
+msgstr "SUB-ACCOUNTS"
+
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 msgid "SUBSCRIPTION"
 msgstr "SUBSCRIPTION"
@@ -4196,9 +4254,25 @@ msgstr "Source Size Token"
 msgid "Source Trader"
 msgstr "Source Trader"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Spot"
+msgstr "Spot"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Spot Equity"
+msgstr "Spot Equity"
+
 #: src/utils/config/translations.tsx
 msgid "Stable"
 msgstr "Stable"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Staking Amount"
+msgstr "Staking Amount"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalFeesSchedule.tsx
+msgid "Staking Discount / HYPE Staked"
+msgstr "Staking Discount / HYPE Staked"
 
 #: src/pages/PerpDEXsExplorer/helpers/eventsHelper.tsx
 msgid "Start in {daysLeft} days"
@@ -4266,6 +4340,10 @@ msgstr "Stopped"
 #: src/components/@subscription/FungiesPaymentForm.tsx
 msgid "Sub Total"
 msgstr "Sub Total"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Sub-Accounts"
+msgstr "Sub-Accounts"
 
 #: src/pages/Subscription/index.tsx
 #: src/pages/Subscription/v1/v1.tsx
@@ -4844,6 +4922,10 @@ msgstr "Top Profit"
 msgid "Total"
 msgstr "Total"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Total Equity"
+msgstr "Total Equity"
+
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Total Gain"
 msgstr "Total Gain"
@@ -5319,6 +5401,10 @@ msgstr "Vault Address"
 msgid "Vault Copying"
 msgstr "Vault Copying"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "Vault Equity"
+msgstr "Vault Equity"
+
 #: src/pages/MyProfile/index.tsx
 msgid "Vault Management"
 msgstr "Vault Management"
@@ -5327,12 +5413,21 @@ msgstr "Vault Management"
 msgid "Verify account"
 msgstr "Verify account"
 
+#: src/components/@position/HLTraderOpeningPositions/HistoricalOrdersView.tsx
 #: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
 #: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
 #: src/components/@position/HLTraderOpeningPositions/OrderTwapWrapper.tsx
 #: src/pages/@layouts/Navbar/SearchBox.tsx
 msgid "View All"
 msgstr "View All"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "View Fee Schedule"
+msgstr "View Fee Schedule"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "View Volume"
+msgstr "View Volume"
 
 #: src/components/@wallet/CreateWalletModals/CreateSmartWalletModal.tsx
 msgid "View more"
@@ -5347,8 +5442,13 @@ msgid "View positions and more trader insights."
 msgstr "View positions and more trader insights."
 
 #: src/pages/Stats/index.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
 msgid "Volume"
 msgstr "Volume"
+
+#: src/pages/TraderDetails/HyperliquidApiMode/ModalDailyVolume.tsx
+msgid "Volume History"
+msgstr "Volume History"
 
 #: src/pages/SystemStatus/Layouts/Layout.tsx
 msgid "WALLET WATCHER"

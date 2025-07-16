@@ -111,27 +111,34 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
       {currentStats && (
-        <Flex alignItems="center" p={2} height={32} sx={{ gap: 0, borderTop: 'smallDashed', borderColor: 'neutral4' }}>
-          <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">WIN RATE:</Type.Caption>
-            <Type.CaptionBold>
+        <Flex alignItems="center" p={2} height={24} sx={{ gap: 0, borderTop: 'smallDashed', borderColor: 'neutral4' }}>
+          <Flex flex={1} sx={{ gap: 1 }}>
+            <Type.Small color="neutral2">WIN RATE:</Type.Small>
+            <Type.SmallBold>
               {formatNumber((currentStats.totalWin / currentStats.totalTrade) * 100, 2, 2)}%
-            </Type.CaptionBold>
+            </Type.SmallBold>
           </Flex>
-          <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">VOLUME:</Type.Caption>
-            <Type.CaptionBold>${compactNumber(currentStats.totalVolume, 1)}</Type.CaptionBold>
+          <Flex flex={1} sx={{ gap: 1 }}>
+            <Type.Small color="neutral2">VOLUME:</Type.Small>
+            <Type.SmallBold>${compactNumber(currentStats.totalVolume, 1)}</Type.SmallBold>
           </Flex>
-          <Flex flex={1} sx={{ gap: 2 }}>
-            <Type.Caption color="neutral2">PNL:</Type.Caption>
-            <Type.CaptionBold>
-              <SignedText value={currentStats.realisedPnl} fontInherit minDigit={0} maxDigit={0} prefix="$" />
-            </Type.CaptionBold>
+          <Flex flex={1} sx={{ gap: 1 }}>
+            <Type.Small color="neutral2">PNL:</Type.Small>
+            <Type.SmallBold>
+              <SignedText
+                value={currentStats.realisedPnl}
+                fontInherit
+                minDigit={0}
+                maxDigit={0}
+                prefix="$"
+                isCompactNumber
+              />
+            </Type.SmallBold>
           </Flex>
         </Flex>
       )}
       <Box
-        height={40}
+        height={32}
         sx={{
           position: 'relative',
           '&:hover': {
@@ -175,13 +182,13 @@ export function ListTokenStatistic({ data, currentPair, changePair }: TokenStati
                   '& > *': { flexShrink: 0 },
                 }}
               >
-                <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
-                <Type.Caption>
+                <Image src={icon} sx={{ width: 18, height: 18, borderRadius: '50%' }} alt={symbol} />
+                <Type.Small>
                   {getSymbolFromPair(stats.pair, true)}{' '}
                   <Box as="span" color="neutral3">
                     ({formatNumber(stats.totalTrade, 0)})
                   </Box>
-                </Type.Caption>
+                </Type.Small>
               </Flex>
             )
           })}

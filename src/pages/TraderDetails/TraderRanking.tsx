@@ -60,7 +60,7 @@ const TraderRanking = memo(function TraderRankingMemo({
         alignItems: 'center',
         position: 'relative',
         // paddingTop: [3, 56, 56, 10],
-        bg: 'neutral5',
+        // bg: 'neutral5',
       }}
     >
       <BlurMask isBlur={!isEnableTraderRanking}>
@@ -92,13 +92,13 @@ const TraderRanking = memo(function TraderRankingMemo({
               width: '100%',
               alignItems: 'center',
               height: 40,
-              borderBottom: 'small',
-              borderBottomColor: 'neutral4',
+              // borderBottom: 'small',
+              // borderBottomColor: 'neutral4',
             }}
           >
             <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
           </Flex>
-          <Type.CaptionBold mt={12} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
+          <Type.CaptionBold mt={2} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
             <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>
               <Box as="span">Better than {avgScore.toFixed(0)}% traders</Box>
               <CustomizeRankingColumns />

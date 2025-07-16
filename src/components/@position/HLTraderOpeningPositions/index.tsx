@@ -1,5 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Alarm, ArrowsIn, ArrowsOutSimple, BookOpen, Clock, Notebook } from '@phosphor-icons/react'
+import {
+  Alarm,
+  ArrowsIn,
+  ArrowsOutSimple,
+  BookOpen,
+  Clock,
+  ClockCounterClockwise,
+  Notebook,
+} from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory } from 'react-router-dom'
@@ -26,6 +34,7 @@ import { pageToOffset } from 'utils/helpers/transform'
 
 import HLPositionDetailsDrawer from '../HLTraderPositionDetails/HLPositionDetailsDrawer'
 import { parseHLOrderData, parseHLPositionData } from '../helpers/hyperliquid'
+import HistoricalOrdersView from './HistoricalOrdersView'
 import OpenOrdersView from './OpenOrdersView'
 import OpeningPositionsView from './OpeningPositionsView'
 import OrderFiledView from './OrderFilledView'
@@ -50,6 +59,7 @@ export enum HLPositionTab {
   OPEN_POSITIONS = 'open_position',
   OPEN_ORDERS = 'open_order',
   ORDER_FILLED = 'order_filled',
+  HISTORICAL_ORDERS = 'historical_order',
   ORDER_TWAP = 'order_twap',
 }
 
@@ -73,17 +83,21 @@ export default function HLTraderOpeningPositionsTableView({
     openOrders,
     groupedFilledOrders,
     twapOrders,
+    historicalOrders,
     totalOpenOrders,
     totalOpening,
     totalOrderFilled,
     totalTwapFilled,
+    totalHistoricalOrders,
     isLoading,
     isLoadingOpenOders,
     isLoadingFilledOrders,
     isLoadingTwapOders,
+    isLoadingHistoricalOders,
     onOpenOrderPageChange,
     onOrderFilledPageChange,
     onTwapOrderPageChange,
+    onHistoricalOrderPageChange,
   } = useHyperliquidTraderContext()
   const [tab, setTab] = useState<string>(HLPositionTab.OPEN_POSITIONS)
 
@@ -144,6 +158,13 @@ export default function HLTraderOpeningPositionsTableView({
                   count: totalOrderFilled,
                 },
                 {
+                  name: <Trans>History Orders</Trans>,
+                  key: HLPositionTab.HISTORICAL_ORDERS,
+                  icon: <ClockCounterClockwise size={20} />,
+                  activeIcon: <ClockCounterClockwise size={20} weight="fill" />,
+                  count: totalHistoricalOrders,
+                },
+                {
                   name: <Trans>TWAP</Trans>,
                   key: HLPositionTab.ORDER_TWAP,
                   icon: <Alarm size={20} />,
@@ -185,7 +206,6 @@ export default function HLTraderOpeningPositionsTableView({
           )
         }
       />
-
       {tab === HLPositionTab.OPEN_POSITIONS && (
         <Box flex="1 0 0" display={['block', isDrawer ? 'block' : 'flex']} flexDirection="column" overflow="hidden">
           <OpeningPositionsView
@@ -229,6 +249,23 @@ export default function HLTraderOpeningPositionsTableView({
             toggleExpand={handleToggleExpand}
             isLoading={isLoadingFilledOrders}
             data={groupedFilledOrders}
+            isDrawer={!!isDrawer}
+            isExpanded={!!isExpanded}
+          />
+        </Box>
+      )}
+      {tab === HLPositionTab.HISTORICAL_ORDERS && (
+        <Box
+          display={['block', isDrawer ? 'block' : 'flex']}
+          flexDirection="column"
+          height="100%"
+          bg={isDrawer || !totalHistoricalOrders ? 'transparent' : 'neutral5'}
+        >
+          <HistoricalOrdersView
+            onPageChange={onHistoricalOrderPageChange}
+            toggleExpand={handleToggleExpand}
+            isLoading={isLoadingHistoricalOders}
+            data={historicalOrders}
             isDrawer={!!isDrawer}
             isExpanded={!!isExpanded}
           />

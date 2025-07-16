@@ -38,6 +38,10 @@ import ChartTrader from './ChartTrader'
 import TraderChartPositions from './ChartTrader/ChartPositions'
 import GeneralStats from './GeneralStats'
 import HyperliquidApiMode from './HyperliquidApiMode'
+import HLChartPnL from './HyperliquidApiMode/HLChartPnL'
+import HLOverview from './HyperliquidApiMode/HLOverview'
+import HLPerformance from './HyperliquidApiMode/HLPerformance'
+import HLPortfolio from './HyperliquidApiMode/HLPortfolio'
 import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
@@ -153,7 +157,7 @@ export function TraderDetailsComponent({
     }
   }, [address, protocol, isLastViewed])
 
-  const { sm, lg, xl } = useResponsive()
+  const { sm, lg, md, xl } = useResponsive()
 
   const Layout = useMemo(() => {
     let layout = MobileLayout
@@ -264,8 +268,8 @@ export function TraderDetailsComponent({
           }
           heatmap={<div></div>}
           openingPositions={
-            sm ? (
-              protocol === ProtocolEnum.HYPERLIQUID ? (
+            protocol === ProtocolEnum.HYPERLIQUID ? (
+              lg ? (
                 <HLTraderOpeningPositionsTableView
                   address={address}
                   protocol={protocol}
@@ -273,15 +277,15 @@ export function TraderDetailsComponent({
                   toggleExpand={handleOpeningPositionsExpand}
                 />
               ) : (
-                <TraderOpeningPositionsTableView
-                  address={address}
-                  protocol={protocol}
-                  isExpanded={openingPositionFullExpanded}
-                  toggleExpand={handleOpeningPositionsExpand}
-                />
+                <HLTraderOpeningPositionsListView address={address} protocol={protocol} />
               )
-            ) : protocol === ProtocolEnum.HYPERLIQUID ? (
-              <HLTraderOpeningPositionsListView address={address} protocol={protocol} />
+            ) : sm ? (
+              <TraderOpeningPositionsTableView
+                address={address}
+                protocol={protocol}
+                isExpanded={openingPositionFullExpanded}
+                toggleExpand={handleOpeningPositionsExpand}
+              />
             ) : (
               <TraderOpeningPositionsListView address={address} protocol={protocol} />
             )
@@ -305,6 +309,10 @@ export function TraderDetailsComponent({
             )
           }
           hyperliquidApiMode={<HyperliquidApiMode address={address} protocol={protocol} />}
+          hlPerformance={<HLPerformance />}
+          hlPortfolio={<HLPortfolio />}
+          hlOverview={<HLOverview />}
+          hlChartPnl={<HLChartPnL />}
           openingPositionFullExpanded={openingPositionFullExpanded}
           positionFullExpanded={positionFullExpanded}
           chartFullExpanded={chartFullExpanded}

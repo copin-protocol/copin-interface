@@ -38,7 +38,7 @@ const TradeLabelsFrame = ({
       .flat()
       .filter((label) => label != null) ?? []) as { key: string; title: React.ReactNode; tooltip: React.ReactNode }[]
   }, [traderStats])
-  return labels ? (
+  return !!labels?.length ? (
     // eslint-disable-next-line react/jsx-no-undef
     <Box sx={{ alignItems: 'center', gap: 2, display: 'flex', ...(sx ?? {}) }}>
       <TraderLabels labels={labels} tooltipPlacement="bottom" showedItems={showedItems} />

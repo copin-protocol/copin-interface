@@ -8,7 +8,7 @@ import useGlobalStore from 'hooks/store/useGlobalStore'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import OrderTwapPairFilterIcon from './OrderTwapPairFilterIcon'
@@ -48,7 +48,7 @@ const shortTimeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Time',
   dataIndex: 'timestamp',
   key: 'timestamp',
-  style: { width: '60px' },
+  style: { minWidth: '60px' },
   render: (item) => (
     <Type.Caption color="neutral3">
       <RelativeShortTimeText date={item.timestamp} />
@@ -61,33 +61,43 @@ const pairColumn: ColumnData<HlTwapOrderData> = {
   title: 'Pair',
   dataIndex: 'pair',
   key: 'pair',
-  style: { width: '100px' },
+  style: { minWidth: '75px' },
   render: (item) => <Type.Caption color="neutral1">{getSymbolFromPair(item.pair)}</Type.Caption>,
 }
 const directionColumn: ColumnData<HlTwapOrderData> = {
   title: 'Direction',
   dataIndex: 'isLong',
   key: 'isLong',
-  style: { width: '100px' },
+  style: { minWidth: '90px' },
   render: (item) => <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>,
 }
 const valueColumn: ColumnData<HlTwapOrderData> = {
   title: 'Value',
   dataIndex: 'sizeNumber',
   key: 'sizeNumber',
-  style: { minWidth: '90px', textAlign: 'right' },
-  render: (item) => (
-    <Type.Caption color="neutral1">{item.sizeNumber ? `$${formatNumber(item.sizeNumber, 0, 0)}` : '--'}</Type.Caption>
+  style: { minWidth: '80px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
+    <Type.Caption color="neutral1">
+      {item.sizeNumber
+        ? `$${externalSource?.isExpanded ? formatNumber(item.sizeNumber, 0, 0) : compactNumber(item.sizeNumber, 2)}`
+        : '--'}
+    </Type.Caption>
   ),
 }
 const sizeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Size',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
-  style: { minWidth: '90px', textAlign: 'right' },
-  render: (item) => (
+  style: { minWidth: '80px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
     <Type.Caption color="neutral1">
-      {item.sizeInTokenNumber ? formatNumber(item.sizeInTokenNumber, 2, 2) : '--'}
+      {item.sizeInTokenNumber
+        ? `${
+            externalSource?.isExpanded
+              ? formatNumber(item.sizeInTokenNumber, 2, 2)
+              : compactNumber(item.sizeInTokenNumber, 2)
+          }`
+        : '--'}
     </Type.Caption>
   ),
 }
@@ -95,7 +105,7 @@ const priceColumn: ColumnData<HlTwapOrderData> = {
   title: 'Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
-  style: { minWidth: '90px', textAlign: 'right' },
+  style: { minWidth: '80px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">
       {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : '--'}
@@ -106,8 +116,8 @@ const feeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Fee',
   dataIndex: 'fee',
   key: 'fee',
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => (
+  style: { minWidth: '80px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
     <>
       {!!item.fee ? (
         <SignedText
@@ -115,6 +125,7 @@ const feeColumn: ColumnData<HlTwapOrderData> = {
           maxDigit={2}
           minDigit={2}
           prefix="$"
+          isCompactNumber={!externalSource?.isExpanded}
           sx={{ color: 'neutral1', fontSize: '12px' }}
         />
       ) : (
@@ -127,10 +138,20 @@ const pnlColumn: ColumnData<HlTwapOrderData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => (
+  style: { minWidth: '85px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
     <Type.Caption color="neutral3">
-      {!!item.pnl ? <SignedText value={item.pnl} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+      {!!item.pnl ? (
+        <SignedText
+          isCompactNumber={!externalSource?.isExpanded}
+          value={item.pnl}
+          maxDigit={2}
+          minDigit={2}
+          prefix="$"
+        />
+      ) : (
+        '--'
+      )}
     </Type.Caption>
   ),
 }
@@ -138,14 +159,14 @@ const twapIdColumn: ColumnData<HlTwapOrderData> = {
   title: 'TWAP ID',
   dataIndex: 'twapOrderId',
   key: 'twapOrderId',
-  style: { minWidth: '100px', textAlign: 'right', pr: 12 },
+  style: { minWidth: '90px', textAlign: 'right', pr: 12 },
   render: (item) => <Type.Caption color="neutral1">#{item.twapOrderId}</Type.Caption>,
 }
 const startPositionColumn: ColumnData<HlTwapOrderData> = {
   title: 'Start Position',
   dataIndex: 'startPosition',
   key: 'startPosition',
-  style: { minWidth: '120px', textAlign: 'right' },
+  style: { minWidth: '150px', textAlign: 'right' },
   render: (item) => <Type.Caption color="neutral1">{item.startPosition}</Type.Caption>,
 }
 
