@@ -206,7 +206,7 @@ export function getEntryColumn(
     dataIndex: 'averagePrice',
     key: 'averagePrice',
     sortBy: 'averagePrice',
-    style: { flex: 1 },
+    style: { flex: 1, minWidth: 170 },
     render: (item) => renderEntry(item),
     filterComponent: <PairFilterIcon pairs={pairs} excludedPairs={excludedPairs} changePairs={changePairs} />,
   }
@@ -462,7 +462,7 @@ const mixPnLColumn: ColumnData<PositionData> = {
 
 export const historyColumns: ColumnData<PositionData>[] = [
   { ...timeColumn, style: { minWidth: 80, flex: 1 } },
-  { ...entryColumn, style: { flex: 1.8, minWidth: 150 } },
+  { ...entryColumn, style: { flex: 1.8, minWidth: 170 } },
   {
     ...sizeColumn,
     style: { minWidth: 60, flex: 1, textAlign: 'right', justifyContent: 'end' },
@@ -675,7 +675,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
 
 export const fullOpeningColumns: ColumnData<PositionData>[] = [
   openTimeColumn,
-  { ...entryColumn, style: { minWidth: 150 } },
+  { ...entryColumn, style: { minWidth: 170 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
   collateralColumn,
   avgDurationColumn,
@@ -688,9 +688,9 @@ export const fullOpeningColumns: ColumnData<PositionData>[] = [
 
 export const openingColumns: ColumnData<PositionData>[] = [
   openTimeShortColumn,
-  { ...entryColumn, style: { minWidth: 185 } },
-  { ...sizeOpeningColumn, style: { minWidth: 200 } },
-  { ...pnlOpeningColumn, style: { minWidth: 90, textAlign: 'right' } },
+  { ...entryColumn, style: { minWidth: 180 } },
+  { ...sizeOpeningColumn, style: { minWidth: 190 } },
+  { ...pnlOpeningColumn, style: { minWidth: 80, textAlign: 'right' } },
   actionColumn,
 ]
 
@@ -719,7 +719,7 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
 export const xlHistoryColumns: ColumnData<PositionData>[] = [
   { ...openTimeColumn, style: { minWidth: 140, flex: 1.5 } },
   { ...closeTimeColumn, style: { minWidth: 140, flex: 1.5, pl: 2 } },
-  { ...entryColumn, style: { minWidth: 150, flex: 1.5, pl: 2 } },
+  { ...entryColumn, style: { minWidth: 170, flex: 1.5, pl: 2 } },
   {
     ...sizeColumn,
     style: { minWidth: 80, flex: 1, textAlign: 'right', justifyContent: 'end' },

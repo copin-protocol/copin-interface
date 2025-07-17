@@ -186,7 +186,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
               />
               <Box
                 width={isExpanded ? 500 : 'auto'}
-                height={isExpanded ? '100%' : [56, 56, 56, 56, 96]}
+                height={isExpanded ? '100%' : 56}
                 order={isExpanded ? 1 : 2}
                 sx={{
                   flexShrink: 0,

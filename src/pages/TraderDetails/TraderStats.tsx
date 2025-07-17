@@ -107,7 +107,7 @@ const AccountStats = memo(function AccountStatsMemo({
   }, [data, isEnableLast24H, isEnableYesterday])
 
   return (
-    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 965 : undefined} pb={[3, 4, 4, 4, 44]}>
+    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 965 : undefined}>
       <Box
         sx={{
           mr: '1px',

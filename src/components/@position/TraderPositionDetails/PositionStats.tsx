@@ -203,7 +203,7 @@ const MobileLayout = ({ data, prices, hasFundingFee, hasLiquidate, isOpening, ch
           value={formatDuration(data.durationInSecond)}
         />
         <Flex sx={{ minWidth: '220px' }}>
-          {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data)}
+          {isOpening ? renderSizeOpeningWithPrices(data, prices) : renderSize(data, undefined, true)}
         </Flex>
       </Flex>
 

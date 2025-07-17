@@ -54,7 +54,7 @@ export default function HLOverview() {
   const [tab, setTab] = useState<TabEnum>(xl ? TabEnum.DEPOSIT : TabEnum.PERFORMANCE)
 
   return (
-    <Flex flexDirection="column" width="100%" height={xl ? 'calc(100% - 40px)' : '100%'}>
+    <Flex flexDirection="column" width="100%" height="100%">
       <Tabs
         defaultActiveKey={tab}
         onChange={(tab) => setTab(tab as TabEnum)}

@@ -65,7 +65,7 @@ const DesktopLayout = (props: LayoutProps) => {
               "MAIN POSITIONS" minmax(0px, 1fr) / ${
                 openingPositionFullExpanded || positionFullExpanded
                   ? '0px 1fr'
-                  : `1fr ${size && size?.width > PROFILE_BREAKPOINT_XL ? '918px' : '500px'}`
+                  : `1fr ${size && size?.width > PROFILE_BREAKPOINT_XL ? '918px' : '525px'}`
               }
             `,
             }}
@@ -84,7 +84,7 @@ const DesktopLayout = (props: LayoutProps) => {
                 <Flex
                   sx={{
                     width: '100%',
-                    height: '100%',
+                    height: ['100%', '100%', '100%', '100%', 'calc(100% - 40px)'],
                     overflow: 'hidden',
                     gridArea: 'STATS / CHARTS',
                   }}
@@ -177,7 +177,7 @@ const DesktopLayout = (props: LayoutProps) => {
                 <Flex
                   sx={{
                     width: '100%',
-                    height: '100%',
+                    height: ['100%', '100%', '100%', '100%', 'calc(100% - 40px)'],
                     overflow: 'hidden',
                     gridArea: 'STATS / CHARTS',
                   }}

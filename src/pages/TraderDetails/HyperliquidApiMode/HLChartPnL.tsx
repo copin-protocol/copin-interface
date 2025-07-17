@@ -187,7 +187,10 @@ interface ToggleButtonGroupProps<T extends ToggleButtonValue> {
 
 function ToggleButtonGroup<T extends ToggleButtonValue>({ options, value, onChange }: ToggleButtonGroupProps<T>) {
   return (
-    <Flex alignItems="center" sx={{ gap: '2px', p: 1, border: 'small', borderColor: 'neutral5', borderRadius: '32px' }}>
+    <Flex
+      alignItems="center"
+      sx={{ gap: '2px', p: '2px', border: 'small', borderColor: 'neutral5', borderRadius: '32px' }}
+    >
       {options.map((opt) => (
         <Button
           key={String(opt.value)}
@@ -195,14 +198,14 @@ function ToggleButtonGroup<T extends ToggleButtonValue>({ options, value, onChan
           variant="ghostActive"
           onClick={() => onChange(opt.value)}
           px={1}
-          py="2px"
+          py="1px"
           sx={{
             borderRadius: '16px',
             color: value === opt.value ? 'neutral1' : 'neutral3',
             backgroundColor: value === opt.value ? 'neutral4' : 'transparent',
           }}
         >
-          <Type.Caption>{opt.label}</Type.Caption>
+          <Type.Small>{opt.label}</Type.Small>
         </Button>
       ))}
     </Flex>
@@ -238,9 +241,9 @@ export default function HLChartPnL() {
       {/*  </Box>*/}
       {/*)}*/}
       <Flex flex={2} flexDirection="column">
-        <Flex mt={[2, 1]} alignItems="center" justifyContent="space-between" px={12}>
+        <Flex mt={[2, 1]} alignItems="center" justifyContent="space-between" px={2}>
           <TimeSelection timeOption={timeOption} onChange={changeTimeOption} />
-          <Flex alignItems="center" sx={{ gap: 2 }}>
+          <Flex alignItems="center" sx={{ gap: 1 }}>
             <ToggleButtonGroup<boolean>
               options={[
                 { label: 'COMBINED', value: true },

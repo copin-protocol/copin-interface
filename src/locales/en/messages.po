@@ -23,6 +23,10 @@ msgstr "${0}"
 msgid "(Coming soon)"
 msgstr "(Coming soon)"
 
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
+msgid "(Taker / Maker)"
+msgstr "(Taker / Maker)"
+
 #: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "({0}% off)"
 msgstr "({0}% off)"
@@ -1879,16 +1883,13 @@ msgstr "Fee Schedule"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
+#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
 msgid "Fees"
 msgstr "Fees"
 
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Fees & Funding:"
 msgstr "Fees & Funding:"
-
-#: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
-msgid "Fees (Taker / Maker)"
-msgstr "Fees (Taker / Maker)"
 
 #: src/pages/VaultDetails/VaultInfo/VaultBalances.tsx
 msgid "Fees and Profit Sharing"

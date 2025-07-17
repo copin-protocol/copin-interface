@@ -112,9 +112,15 @@ export default function HLPortfolio() {
           </Flex>
           <Flex flex={1} flexDirection="column" variant="card" sx={{ gap: 1, p: 2 }}>
             <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 1 }}>
-              <Type.Caption color="neutral3">
-                <Trans>Fees (Taker / Maker)</Trans>
-              </Type.Caption>
+              <Flex sx={{ flex: 1, flexWrap: 'wrap' }}>
+                <Type.Caption color="neutral3" mr="1ch">
+                  <Trans>Fees</Trans>
+                </Type.Caption>
+                <Type.Caption color="neutral3">
+                  <Trans>(Taker / Maker)</Trans>
+                </Type.Caption>
+              </Flex>
+
               {sm && (
                 <Dropdown
                   buttonVariant="ghost"
@@ -169,7 +175,13 @@ export default function HLPortfolio() {
             </Button>
           </Flex>
         </Flex>
-        <Flex flex={1} flexDirection="column" width="100%" justifyContent="space-between" sx={{ gap: 2 }}>
+        <Flex
+          flex={1}
+          flexDirection="column"
+          width="100%"
+          justifyContent="space-between"
+          sx={{ gap: 2, pb: [0, 0, 0, 0, 12] }}
+        >
           <RowItem label={<Trans>Volume</Trans>} value={`$${formatNumber(userPortfolio?.totalVolume, 0)}`} />
           {userPortfolio?.mdd && userPortfolio?.mdd < 100 && (
             <RowItem
