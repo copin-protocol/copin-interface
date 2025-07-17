@@ -94,7 +94,7 @@ export default function TraderActionButtons({
           {/*  />*/}
           {/*)}*/}
           {isIF ? (
-            <NoteAction account={account} protocol={protocol} ifLabels={traderData?.ifLabels} />
+            <NoteAction account={account} protocol={protocol} />
           ) : (
             <AnalyzeAction forceDisabled={!isAllowedProtocol} />
           )}
@@ -145,8 +145,10 @@ export default function TraderActionButtons({
             // right: 12,
             pr: 12,
             zIndex: 10,
+            alignItems: 'center',
           }}
         >
+          {isIF && <NoteAction account={account} protocol={protocol} />}
           <Dropdown
             hasArrow={false}
             buttonVariant="ghost"
@@ -161,11 +163,7 @@ export default function TraderActionButtons({
                 {/*  <TradeProtocolAction protocol={protocol} />*/}
                 {/*</Box>*/}
                 <Flex height="40px" alignItems="center" justifyContent="center">
-                  {isIF ? (
-                    <NoteAction account={account} protocol={protocol} ifLabels={traderData?.ifLabels} />
-                  ) : (
-                    <AnalyzeAction forceDisabled={!isAllowedProtocol} />
-                  )}
+                  <AnalyzeAction forceDisabled={!isAllowedProtocol} />
                 </Flex>
                 {!disabledActions?.includes('alert') && (
                   <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>

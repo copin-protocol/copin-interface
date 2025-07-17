@@ -11,6 +11,7 @@ import {
   deleteTraderNoteApi,
   getAllNoteLabelsApi,
   getTraderLabelsApi,
+  getTraderNoteCountApi,
   getTraderNotesApi,
 } from 'apis/traderNoteApis'
 import { AccountInfo } from 'components/@ui/AccountInfo'
@@ -19,6 +20,7 @@ import NoDataFound from 'components/@ui/NoDataFound'
 import ToastBody from 'components/@ui/ToastBody'
 import TraderLabels from 'components/@ui/TraderLabels'
 import { TraderNoteData } from 'entities/trader'
+import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -86,18 +88,61 @@ const NoteItem = ({
         <Box sx={{ position: 'absolute', top: 0, left: '4px', height: '100%', width: '1px', bg: 'neutral5' }} />
         <Flex flex="1" sx={{ gap: 2, alignItems: 'center' }}>
           <Type.Caption sx={{ flex: 1, ml: 3, whiteSpace: 'pre-wrap' }}>
-            {note.note.split(' ').map((word, index) => (
-              <>
-                {searchTerms && searchTerms.some((term) => word.toLowerCase().includes(term)) ? (
-                  <span key={`${word}-${index}`} style={{ backgroundColor: themeColors.neutral4 }}>
-                    {word}
+            {note.note.split(' ').map((word, index) => {
+              // Check if word is a URL
+
+              const isHighlighted = searchTerms && searchTerms.some((term) => word.toLowerCase().includes(term))
+              const isTraderLink = word.startsWith('https://app.copin.io/trader/')
+
+              if (isTraderLink) {
+                const [, , , , address, protocol] = word.split('?')[0].split('/')
+
+                return (
+                  <Flex key={`${word}-${index}`} sx={{ alignItems: 'center' }}>
+                    <AccountInfo
+                      size={24}
+                      isOpenPosition
+                      address={address}
+                      protocol={protocol.toUpperCase() as ProtocolEnum}
+                      hasHover={false}
+                      sx={{
+                        backgroundColor: isHighlighted ? 'neutral4' : 'transparent',
+                      }}
+                    />
+                    {index !== note.note.split(' ').length - 1 && ' '}
+                  </Flex>
+                )
+              }
+              const isUrl = /^(https?:\/\/|www\.)/i.test(word)
+              if (isUrl) {
+                const url = word.startsWith('www.') ? `https://${word}` : word
+                return (
+                  <span key={`${word}-${index}`}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: themeColors.neutral1,
+                        textDecoration: 'underline',
+                        backgroundColor: isHighlighted ? themeColors.neutral4 : 'transparent',
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {word}
+                    </a>
+                    {index !== note.note.split(' ').length - 1 && ' '}
                   </span>
-                ) : (
-                  word
-                )}
-                {index !== note.note.split(' ').length - 1 && ' '}
-              </>
-            ))}
+                )
+              }
+
+              return (
+                <span key={`${word}-${index}`}>
+                  {isHighlighted ? <span style={{ backgroundColor: themeColors.neutral4 }}>{word}</span> : word}
+                  {index !== note.note.split(' ').length - 1 && ' '}
+                </span>
+              )
+            })}
           </Type.Caption>
           {userId === note.userId && (
             <Popconfirm
@@ -335,6 +380,7 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
   const [searchText, setSearchText] = useState<string>('')
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>('')
   const [hasNote, setHasNote] = useState<boolean>(false)
+  const refetchQueries = useRefetchQueries()
   const searchInputRef = useRef<HTMLInputElement>(null)
   const noteInputRef = useRef<HTMLTextAreaElement>(null)
   const {
@@ -365,6 +411,7 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
         noteInputRef.current.value = ''
       }
       refetchNotes()
+      refetchQueries([QUERY_KEYS.GET_TRADER_NOTE_COUNT])
     },
   })
 
@@ -477,25 +524,24 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
   )
 }
 
-const NoteAction = ({
-  account,
-  protocol,
-  ifLabels,
-}: {
-  account: string
-  protocol: ProtocolEnum
-  ifLabels?: string[]
-}) => {
+const NoteAction = ({ account, protocol }: { account: string; protocol: ProtocolEnum }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { sm } = useResponsive()
+  const { data: noteCount } = useQuery([QUERY_KEYS.GET_TRADER_NOTE_COUNT, account, protocol], () =>
+    getTraderNoteCountApi({
+      account,
+      protocol,
+    })
+  )
   return (
     <div>
       <ButtonWithIcon
-        variant={ifLabels?.length ? 'ghostPrimary' : 'ghost'}
+        variant={noteCount ? 'ghostPrimary' : 'ghost'}
         icon={<Pencil size={16} />}
         onClick={() => setIsOpen(true)}
       >
-        Notes {ifLabels?.length ? `(${ifLabels.length} Labels)` : ''}
+        Notes
+        {!!noteCount && ` (${noteCount})`}
       </ButtonWithIcon>
       <Drawer
         isOpen={isOpen}

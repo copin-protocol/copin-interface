@@ -17,6 +17,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import NoDataFound from 'components/@ui/NoDataFound'
 import NotFound from 'components/@ui/NotFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TraderLabels from 'components/@ui/TraderLabels'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { HyperliquidTraderProvider } from 'hooks/features/trader/useHyperliquidTraderContext'
@@ -184,6 +185,8 @@ export function TraderDetailsComponent({
     return <NotFound title="Protocol not support" message="" />
   }
 
+  const ifLabels = traderData?.find((data) => data && !!data.ifLabels)?.ifLabels
+
   if (!address) return <NotFound title="No statistics found for this trader" message="" />
 
   return (
@@ -220,6 +223,20 @@ export function TraderDetailsComponent({
               </Flex>
               {!!traderData && !lg && (
                 <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
+                  {!!ifLabels && (
+                    <Flex sx={{ flexWrap: 'wrap', gap: 2, mb: 2 }}>
+                      <TraderLabels
+                        labels={
+                          ifLabels?.map((label) => ({
+                            key: label,
+                            title: label,
+                          })) ?? []
+                        }
+                        showedItems={3}
+                        shouldShowTooltip={false}
+                      />
+                    </Flex>
+                  )}
                   <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
                 </Box>
               )}

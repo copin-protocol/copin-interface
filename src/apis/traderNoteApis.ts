@@ -67,3 +67,7 @@ export async function getTraderLabelsApi(params: GetTraderNotesParams): Promise<
 export async function getAllNoteLabelsApi(): Promise<string[]> {
   return requester.get(`${SERVICE}/label/all`).then((res: any) => res.data)
 }
+
+export async function getTraderNoteCountApi(params: { account: string; protocol: ProtocolEnum }): Promise<number> {
+  return requester.get(`${SERVICE}/count`, { params }).then((res: any) => res.data)
+}

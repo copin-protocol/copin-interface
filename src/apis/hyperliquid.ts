@@ -18,6 +18,8 @@ import {
 } from 'entities/hyperliquid'
 import { HYPERLIQUID_BUILDER_CODE } from 'utils/config/constants'
 
+const HYPERLIQUID_API = 'https://hyper.copin.io'
+
 export async function checkUserApproveBuilderFees(user: string) {
   return axios
     .post(`https://api.hyperliquid.xyz/info`, {
@@ -30,7 +32,7 @@ export async function checkUserApproveBuilderFees(user: string) {
 
 export async function getHlAccountInfo({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'clearinghouseState',
       user,
     })
@@ -39,7 +41,7 @@ export async function getHlAccountInfo({ user }: { user: string }) {
 
 export async function getHlAccountSpotHolding({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'spotClearinghouseState',
       user,
     })
@@ -48,7 +50,7 @@ export async function getHlAccountSpotHolding({ user }: { user: string }) {
 
 export async function getHlSubAccounts({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'subAccounts',
       user,
     })
@@ -57,7 +59,7 @@ export async function getHlSubAccounts({ user }: { user: string }) {
 
 export async function getHlOpenOrders({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'frontendOpenOrders',
       user,
     })
@@ -66,7 +68,7 @@ export async function getHlOpenOrders({ user }: { user: string }) {
 
 export async function getHlOrderFilled({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'userFills',
       user,
       aggregateByTime: true,
@@ -76,7 +78,7 @@ export async function getHlOrderFilled({ user }: { user: string }) {
 
 export async function getHlHistoricalOrders({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'historicalOrders',
       user,
     })
@@ -85,7 +87,7 @@ export async function getHlHistoricalOrders({ user }: { user: string }) {
 
 export async function getHlTwapOrderFilled({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'userTwapSliceFills',
       user,
     })
@@ -94,7 +96,7 @@ export async function getHlTwapOrderFilled({ user }: { user: string }) {
 
 export async function getHlPortfolio({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'portfolio',
       user,
     })
@@ -103,7 +105,7 @@ export async function getHlPortfolio({ user }: { user: string }) {
 
 export async function getHlAccountFees({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'userFees',
       user,
     })
@@ -112,7 +114,7 @@ export async function getHlAccountFees({ user }: { user: string }) {
 
 export async function getHlAccountStaking({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'delegatorSummary',
       user,
     })
@@ -121,7 +123,7 @@ export async function getHlAccountStaking({ user }: { user: string }) {
 
 export async function getHlAccountVault({ user }: { user: string }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'userVaultEquities',
       user,
     })
@@ -130,7 +132,7 @@ export async function getHlAccountVault({ user }: { user: string }) {
 
 export async function getHlNonFundingLedger({ user, startTime }: { user: string; startTime: number }) {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'userNonFundingLedgerUpdates',
       user,
       startTime,
@@ -140,7 +142,7 @@ export async function getHlNonFundingLedger({ user, startTime }: { user: string;
 
 export async function getHlSpotMeta() {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'spotMeta',
     })
     .then((res: any) => res.data as HlSpotMetaData)
@@ -148,7 +150,7 @@ export async function getHlSpotMeta() {
 
 export async function getHlLatestPrices() {
   return axios
-    .post(`https://api-ui.hyperliquid.xyz/info`, {
+    .post(`${HYPERLIQUID_API}/info`, {
       type: 'allMids',
     })
     .then((res: any) => res.data as HlPriceData)
