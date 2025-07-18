@@ -71,15 +71,21 @@ export default function HLTraderPositionListView({
 
         return (
           <Box role="button" sx={{ p: 2 }} key={position.id} onClick={() => onClickItem?.(position)}>
-            <Flex sx={{ alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
-              <Box flex="37%">{renderEntry(position)}</Box>
-              <Flex flex="30%" sx={{ alignItems: 'center', gap: 1 }}>
+            <Flex sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Box flex={['60%', '40%', '15%']}>{renderEntry(position)}</Box>
+              <Flex flex={['40%', '30%', '10%']} minWidth="105px" sx={{ alignItems: 'center', gap: 1 }}>
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Weight:
                 </Type.Caption>
                 <Type.Caption>{!!weightPercent ? `${formatNumber(weightPercent, 2, 2)}%` : '--'}</Type.Caption>
               </Flex>
-              <Flex flex="33%" sx={{ alignItems: 'center', gap: 1 }}>
+
+              <Box
+                display={['none', 'flex', 'flex']}
+                flex={['40%', '30%', '10%']}
+                sx={{ alignItems: 'center', gap: 1 }}
+                order={[5, 0, 5]}
+              >
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Funding:
                 </Type.Caption>
@@ -93,32 +99,31 @@ export default function HLTraderPositionListView({
                     isCompactNumber
                   />
                 </Type.Caption>
-              </Flex>
-            </Flex>
-            <Flex mt={1} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex="66%" alignItems="center">
-                  {isOpening ? (
-                    <>
-                      <Box sx={{ width: 200, flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
-                      {/* <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+              </Box>
+
+              <Flex flex={['60%', '70%', '25%']} alignItems="center" my={12}>
+                {isOpening ? (
+                  <>
+                    <Box sx={{ width: [200, 250, 200], flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
+                    {/* <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                       -
                     </Type.Caption> */}
-                    </>
-                  ) : (
-                    <Type.Caption color="neutral1">
-                      <Box as="span" color="neutral3" mr="1ch">
-                        Size:
-                      </Box>
-                      ${formatNumber(position.size, 0, 0)}
-                      <Box as="span" color="neutral3" sx={{ mx: 1 }}>
-                        |
-                      </Box>
-                      {formatLeverage(position.marginMode, position.leverage)}
-                    </Type.Caption>
-                  )}
-                </Flex>
-                <Flex flex="34%" sx={{ alignItems: 'center', gap: 1 }}>
+                  </>
+                ) : (
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Size:
+                    </Box>
+                    ${formatNumber(position.size, 0, 0)}
+                    <Box as="span" color="neutral3" sx={{ mx: 1 }}>
+                      |
+                    </Box>
+                    {formatLeverage(position.marginMode, position.leverage)}
+                  </Type.Caption>
+                )}
+              </Flex>
+              <Box flex={['40%', '30%', '10%']}>
+                <Flex sx={{ alignItems: 'center', gap: 1 }}>
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     PnL:
                   </Type.Caption>
@@ -126,7 +131,23 @@ export default function HLTraderPositionListView({
                     <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
                   </Type.Caption>
                 </Flex>
-              </Flex>
+                <Box display={['flex', 'none']} sx={{ alignItems: 'center', gap: 1 }} mt="4px">
+                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                    Funding:
+                  </Type.Caption>
+                  <Type.Caption>
+                    <SignedText
+                      value={position.funding * -1}
+                      minDigit={2}
+                      maxDigit={2}
+                      prefix="$"
+                      fontInherit
+                      isCompactNumber
+                    />
+                  </Type.Caption>
+                </Box>
+              </Box>
+
               {isOpening && hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />}
             </Flex>
           </Box>

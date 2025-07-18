@@ -8,22 +8,24 @@ import { Box, Flex } from 'theme/base'
 
 import HLDepositWithdraw from './HLDepositWithdraw'
 import HLPerformance from './HLPerformance'
+import HLPortfolio from './HLPortfolio'
 import HLSpotHolding from './HLSpotHolding'
 
 enum TabEnum {
   PERFORMANCE = 'PERFORMANCE',
+  PORTFOLIO = 'PORTFOLIO',
   SPOT = 'SPOT',
   DEPOSIT = 'DEPOSIT',
 }
 
 const tabsDesktop: TabConfig[] = [
   {
-    key: TabEnum.SPOT,
-    name: <Trans>SPOT HOLDINGS</Trans>,
-  },
-  {
     key: TabEnum.DEPOSIT,
     name: <Trans>DEPOSIT & WITHDRAW</Trans>,
+  },
+  {
+    key: TabEnum.SPOT,
+    name: <Trans>SPOT HOLDINGS</Trans>,
   },
 ]
 
@@ -33,31 +35,32 @@ const tabsMobile: TabConfig[] = [
     name: <Trans>PERP PERFORMANCE</Trans>,
   },
   {
-    key: TabEnum.SPOT,
-    name: <Trans>SPOT HOLDINGS</Trans>,
+    key: TabEnum.PORTFOLIO,
+    name: <Trans>PORTFOLIO</Trans>,
   },
   {
     key: TabEnum.DEPOSIT,
     name: <Trans>DEPOSIT & WITHDRAW</Trans>,
   },
+  {
+    key: TabEnum.SPOT,
+    name: <Trans>SPOT HOLDINGS</Trans>,
+  },
 ]
 
 export default function HLOverview() {
   const { xl } = useResponsive()
-  const { hlAccountData, hlAccountSpotData, address } = useHyperliquidTraderContext()
-  const [tab, setTab] = useState<TabEnum>(xl ? TabEnum.SPOT : TabEnum.PERFORMANCE)
+  const { hlAccountSpotData, address } = useHyperliquidTraderContext()
+  const [tab, setTab] = useState<TabEnum>(xl ? TabEnum.DEPOSIT : TabEnum.PERFORMANCE)
 
   return (
-    <Flex flexDirection="column" width="100%" height={tab !== TabEnum.PERFORMANCE && xl ? 'calc(100% - 40px)' : '100%'}>
+    <Flex flexDirection="column" width="100%" height="100%">
       <Tabs
         defaultActiveKey={tab}
         onChange={(tab) => setTab(tab as TabEnum)}
         sx={{
           width: '100%',
         }}
-        // tabPanelSx={{
-        //   height: '200px',
-        // }}
       >
         {(xl ? tabsDesktop : tabsMobile).map((tab) => (
           <TabPane tab={tab.name} key={tab.key}>
@@ -67,9 +70,10 @@ export default function HLOverview() {
       </Tabs>
       {!xl && tab === TabEnum.PERFORMANCE && (
         <Box p={12}>
-          <HLPerformance hlAccountData={hlAccountData} />
+          <HLPerformance />
         </Box>
       )}
+      {!xl && tab === TabEnum.PORTFOLIO && <HLPortfolio />}
       {tab === TabEnum.SPOT && <HLSpotHolding hlAccountSpotData={hlAccountSpotData} />}
       {tab === TabEnum.DEPOSIT && <HLDepositWithdraw address={address} />}
     </Flex>

@@ -2,31 +2,47 @@ import React, { ReactNode, createContext, useCallback, useContext, useMemo, useS
 import { useQuery } from 'react-query'
 
 import {
+  getHlAccountFees,
   getHlAccountInfo,
   getHlAccountSpotHolding,
+  getHlAccountStaking,
+  getHlAccountVault,
+  getHlHistoricalOrders,
   getHlLatestPrices,
   getHlOpenOrders,
   getHlOrderFilled,
   getHlPortfolio,
   getHlSpotMeta,
+  getHlSubAccounts,
   getHlTwapOrderFilled,
 } from 'apis/hyperliquid'
 import {
   groupHLOrderFillsByOid,
+  parseHLHistoricalOrderData,
   parseHLOrderData,
   parseHLOrderFillData,
   parseHLTwapOrderFillData,
 } from 'components/@position/helpers/hyperliquid'
+import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import { HYPERLIQUID_API_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import {
   GroupedFillsData,
   HlAccountData,
   HlAccountSpotData,
+  HlAccountStakingData,
+  HlAccountVaultData,
+  HlFeesRawData,
+  HlHistoricalOrderData,
   HlOrderData,
   HlOrderFillData,
   HlPortfolioRawData,
+  HlSubAccountData,
   HlTokenMappingData,
   HlTwapOrderData,
 } from 'entities/hyperliquid'
+import { useOptionChange } from 'hooks/helpers/useOptionChange'
+import useHyperliquidModeStore from 'hooks/store/useHyperliquidMode'
+import { parseHlSpotData } from 'pages/TraderDetails/HyperliquidApiMode/helpers'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
@@ -35,25 +51,44 @@ export interface HyperliquidTraderContextData {
   protocol: ProtocolEnum
   hlAccountData?: HlAccountData
   hlAccountSpotData?: HlAccountSpotData[]
+  hlAccountVaultData?: HlAccountVaultData[]
   hlPortfolioData?: HlPortfolioRawData
+  hlFeesData?: HlFeesRawData
+  hlStakingData?: HlAccountStakingData
+  hlSubAccounts?: HlSubAccountData[]
+  hlSpotTokens?: HlTokenMappingData[]
   openOrders?: HlOrderData[]
   filledOrders?: HlOrderFillData[]
   groupedFilledOrders?: GroupedFillsData[]
   twapOrders?: HlTwapOrderData[]
+  historicalOrders?: HlHistoricalOrderData[]
   totalOpening: number
   totalOpenOrders: number
   totalOrderFilled: number
   totalTwapFilled: number
+  totalHistoricalOrders: number
   isLoading: boolean
+  isLoadingSubAccounts: boolean
   isLoadingPortfolio: boolean
+  isLoadingFees: boolean
+  isLoadingStaking: boolean
   isLoadingAccountSpot: boolean
+  isLoadingAccountVault: boolean
   isLoadingSpotMeta: boolean
   isLoadingOpenOders: boolean
   isLoadingFilledOrders: boolean
   isLoadingTwapOders: boolean
+  isLoadingHistoricalOders: boolean
+  isCombined: boolean
+  isAccountValue: boolean
+  timeOption: TimeFilterProps
+  changeTimeOption: (option: TimeFilterProps) => void
+  setIsCombined: (value: boolean) => void
+  setIsAccountValue: (value: boolean) => void
   onOpenOrderPageChange: (page: number) => void
   onOrderFilledPageChange: (page: number) => void
   onTwapOrderPageChange: (page: number) => void
+  onHistoricalOrderPageChange: (page: number) => void
 }
 
 const HyperliquidTraderContext = createContext<HyperliquidTraderContextData>({} as HyperliquidTraderContextData)
@@ -66,7 +101,18 @@ export const HyperliquidTraderProvider = ({
   protocol: ProtocolEnum
   children: ReactNode
 }) => {
+  const { timeframe, setTimeframe } = useHyperliquidModeStore()
+  const [isCombined, setIsCombined] = useState(false)
+  const [isAccountValue, setIsAccountValue] = useState(false)
+  const { currentOption, changeCurrentOption } = useOptionChange({
+    optionName: 'hlTime',
+    options: HYPERLIQUID_API_FILTER_OPTIONS,
+    defaultOption: timeframe.toString(),
+    optionNameToBeDelete: ['hlTime'],
+  })
+
   const isHyperliquid = protocol === ProtocolEnum.HYPERLIQUID
+
   const { data: hlAccountData, isLoading } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_TRADER_DETAIL, address],
     () =>
@@ -81,6 +127,20 @@ export const HyperliquidTraderProvider = ({
     }
   )
 
+  const { data: hlSubAccounts, isLoading: isLoadingSubAccounts } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_SUB_ACCOUNTS, address],
+    () =>
+      getHlSubAccounts({
+        user: address,
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 60_000,
+      keepPreviousData: true,
+    }
+  )
+
   const { data: hlPortfolioData, isLoading: isLoadingPortfolio } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_TRADER_PORTFOLIO, address],
     () =>
@@ -90,7 +150,49 @@ export const HyperliquidTraderProvider = ({
     {
       enabled: !!address && isHyperliquid,
       retry: 0,
-      refetchInterval: 15_000,
+      refetchInterval: 60_000,
+      keepPreviousData: true,
+    }
+  )
+
+  const { data: hlFeesData, isLoading: isLoadingFees } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_FEES, address],
+    () =>
+      getHlAccountFees({
+        user: address,
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 60_000,
+      keepPreviousData: true,
+    }
+  )
+
+  const { data: hlStakingData, isLoading: isLoadingStaking } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_STAKING, address],
+    () =>
+      getHlAccountStaking({
+        user: address,
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 60_000,
+      keepPreviousData: true,
+    }
+  )
+
+  const { data: hlAccountVaultData, isLoading: isLoadingAccountVault } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_TRADER_VAULT_EQUITIES, address],
+    () =>
+      getHlAccountVault({
+        user: address,
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: 60_000,
       keepPreviousData: true,
     }
   )
@@ -104,6 +206,7 @@ export const HyperliquidTraderProvider = ({
     {
       enabled: !!address && isHyperliquid,
       retry: 0,
+      refetchInterval: 60_000,
       keepPreviousData: true,
     }
   )
@@ -138,30 +241,15 @@ export const HyperliquidTraderProvider = ({
       },
       enabled: isHyperliquid,
       retry: 0,
+      refetchInterval: 60_000,
       keepPreviousData: true,
     }
   )
 
-  const hlAccountSpotData = useMemo(() => {
-    return hlAccountSpotRawData?.balances?.map((balance) => {
-      const coin = balance.coin
-      const price = coin === 'USDC' ? 1 : hlSpotTokens.find((e) => e.baseToken.name === coin)?.price ?? 0
-      const total = Number(balance.total)
-      const entryValue = Number(balance.entryNtl)
-      const currentValue = total * price
-      const unrealizedPnl = coin === 'USDC' ? undefined : currentValue - entryValue
-      return {
-        coin,
-        price,
-        total,
-        entryValue,
-        currentValue,
-        unrealizedPnl,
-        roe: entryValue && unrealizedPnl ? (unrealizedPnl / entryValue) * 100 : 0,
-        token: balance.token,
-      } as HlAccountSpotData
-    })
-  }, [hlAccountSpotRawData?.balances, hlSpotTokens])
+  const hlAccountSpotData = useMemo(
+    () => parseHlSpotData(hlAccountSpotRawData, hlSpotTokens),
+    [hlAccountSpotRawData, hlSpotTokens]
+  )
 
   const [enabledRefetchOpenOrder, setEnabledRefetchOpenOrder] = useState(true)
   const { data: openOrders, isLoading: isLoadingOpenOders } = useQuery(
@@ -231,7 +319,7 @@ export const HyperliquidTraderProvider = ({
     {
       enabled: !!address && isHyperliquid,
       retry: 0,
-      refetchInterval: enabledRefetchTwapOrder ? 15_000 : undefined,
+      refetchInterval: enabledRefetchTwapOrder ? 30_000 : undefined,
       keepPreviousData: true,
       select: (data) => {
         return parseHLTwapOrderFillData({ account: address, data })
@@ -247,35 +335,89 @@ export const HyperliquidTraderProvider = ({
     return (b.timestamp ?? 0) - (a.timestamp ?? 0)
   })
 
+  const [enabledRefetchHistoricalOrder, setEnabledRefetchHistoricalOrder] = useState(true)
+  const { data: historicalOrders, isLoading: isLoadingHistoricalOders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_HISTORICAL_ORDERS, address],
+    () =>
+      getHlHistoricalOrders({
+        user: address,
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: enabledRefetchHistoricalOrder ? 30_000 : undefined,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLHistoricalOrderData({ account: address, data })
+      },
+    }
+  )
+  const onHistoricalOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchHistoricalOrder(true)
+    } else setEnabledRefetchHistoricalOrder(false)
+  }, [])
+  historicalOrders?.sort((a, b) => {
+    return (b.timestamp ?? 0) - (a.timestamp ?? 0)
+  })
+
+  const changeTimeOption = useCallback(
+    (option: TimeFilterProps) => {
+      changeCurrentOption(option)
+      setTimeframe(option.id)
+    },
+    [changeCurrentOption, setTimeframe]
+  )
+
   const totalOpening = hlAccountData?.assetPositions?.length ?? 0
   const totalOpenOrders = openOrders?.length ?? 0
   const totalOrderFilled = groupedFilledOrders?.length ?? 0
   const totalTwapFilled = twapOrders?.length ?? 0
+  const totalHistoricalOrders = historicalOrders?.length ?? 0
 
   const contextValue: HyperliquidTraderContextData = {
     address,
     protocol,
     hlAccountData,
     hlAccountSpotData,
+    hlAccountVaultData,
     hlPortfolioData,
+    hlFeesData,
+    hlStakingData,
+    hlSubAccounts,
+    hlSpotTokens,
     openOrders,
     filledOrders,
     groupedFilledOrders,
     twapOrders,
+    historicalOrders,
     totalOpening,
     totalOpenOrders,
     totalOrderFilled,
     totalTwapFilled,
+    totalHistoricalOrders,
     isLoading,
+    isLoadingSubAccounts,
     isLoadingPortfolio,
+    isLoadingFees,
+    isLoadingStaking,
     isLoadingAccountSpot,
+    isLoadingAccountVault,
     isLoadingSpotMeta,
     isLoadingOpenOders,
     isLoadingFilledOrders,
     isLoadingTwapOders,
+    isLoadingHistoricalOders,
+    isCombined,
+    isAccountValue,
+    timeOption: currentOption,
+    changeTimeOption,
+    setIsCombined,
+    setIsAccountValue,
     onOpenOrderPageChange,
     onOrderFilledPageChange,
     onTwapOrderPageChange,
+    onHistoricalOrderPageChange,
   }
 
   return <HyperliquidTraderContext.Provider value={contextValue}>{children}</HyperliquidTraderContext.Provider>

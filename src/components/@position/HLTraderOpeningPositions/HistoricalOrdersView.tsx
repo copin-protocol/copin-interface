@@ -2,9 +2,8 @@ import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { drawerOrderColumns, fullOrderColumns, orderColumns } from 'components/@position/configs/hlOrderRenderProps'
 import Divider from 'components/@ui/Divider'
-import { HlOrderData } from 'entities/hyperliquid'
+import { HlHistoricalOrderData } from 'entities/hyperliquid'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
 import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
@@ -16,12 +15,17 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { SortTypeEnum } from 'utils/config/enums'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
 
-import HLOpenOrderListView from './HLOpenOrderListView'
+import {
+  drawerHistoricalOrderColumns,
+  fullHistoricalOrderColumns,
+  historicalOrderColumns,
+} from '../configs/hlHistoricalOrderRenderProps'
+import HLHistoricalOrderListView from './HLHistoricalOrderListView'
 import NoOrderWrapper from './NoOrderWrapper'
-import { OpenOrderProvider, useOpenOrderContext } from './useOpenOrderContext'
+import { HistoricalOrderProvider, useHistoricalOrderContext } from './useHistoricalOrderContext'
 
 type Props = {
-  data: HlOrderData[] | undefined
+  data: HlHistoricalOrderData[] | undefined
   isLoading: boolean
   isExpanded: boolean
   isDrawer: boolean
@@ -29,16 +33,16 @@ type Props = {
   onPageChange: (page: number) => void
 }
 
-export default function OpenOrdersView(props: Props) {
+export default function HistoricalOrdersView(props: Props) {
   return (
-    <OpenOrderProvider>
-      <OpenOrdersWrapper {...props} />
-    </OpenOrderProvider>
+    <HistoricalOrderProvider>
+      <HistoricalOrdersWrapper {...props} />
+    </HistoricalOrderProvider>
   )
 }
 
-const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer, onPageChange }: Props) => {
-  const { pairs, excludedPairs, changePairs } = useOpenOrderContext()
+const HistoricalOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer, onPageChange }: Props) => {
+  const { pairs, excludedPairs, changePairs } = useHistoricalOrderContext()
   useEffect(() => {
     changePairs([], [])
   }, [isExpanded])
@@ -59,17 +63,17 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
 
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)
-  const [currentSort, setCurrentSort] = useState<TableSortProps<HlOrderData> | undefined>({
+  const [currentSort, setCurrentSort] = useState<TableSortProps<HlHistoricalOrderData> | undefined>({
     sortBy: 'timestamp',
     sortType: SortTypeEnum.DESC,
   })
 
-  const changeCurrentSort = (sort: TableSortProps<HlOrderData> | undefined) => {
+  const changeCurrentSort = (sort: TableSortProps<HlHistoricalOrderData> | undefined) => {
     setCurrentSort(sort)
     setCurrentPage(1)
   }
 
-  const sortedData: HlOrderData[] | undefined = useMemo(() => {
+  const sortedData: HlHistoricalOrderData[] | undefined = useMemo(() => {
     if (filteredData?.length) {
       const _sortedData = [...filteredData]
       if (_sortedData && _sortedData.length > 0 && !!currentSort) {
@@ -89,14 +93,14 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
   }, [currentSort, filteredData])
 
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: sortedData })
-  const dataRef = useRef(sortedData)
-  useEffect(() => {
-    if (dataRef.current !== sortedData) {
-      setCurrentPage(1)
-      onPageChange(1)
-      dataRef.current = sortedData
-    }
-  }, [sortedData, onPageChange])
+  // const dataRef = useRef(sortedData)
+  // useEffect(() => {
+  //   if (dataRef.current !== sortedData) {
+  //     setCurrentPage(1)
+  //     onPageChange(1)
+  //     dataRef.current = sortedData
+  //   }
+  // }, [sortedData, onPageChange])
 
   const handleChangePage = useCallback(
     (page: number) => {
@@ -124,15 +128,15 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  let tableSettings: ColumnData<HlOrderData>[]
+  let tableSettings: ColumnData<HlHistoricalOrderData>[]
   if (isDrawer) {
-    tableSettings = drawerOrderColumns
+    tableSettings = drawerHistoricalOrderColumns
   } else if (xl && isExpanded) {
-    tableSettings = fullOrderColumns
+    tableSettings = fullHistoricalOrderColumns
   } else if (width >= 832) {
-    tableSettings = drawerOrderColumns
+    tableSettings = drawerHistoricalOrderColumns
   } else {
-    tableSettings = orderColumns
+    tableSettings = historicalOrderColumns
   }
 
   return (
@@ -141,9 +145,9 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
       {!totalDataLength && !isLoading ? (
         <NoOrderWrapper isDrawer={isDrawer}>
           <Trans>
-            <Type.CaptionBold display="block">This trader&apos;s opening orders is empty</Type.CaptionBold>
+            <Type.CaptionBold display="block">This trader&apos;s historical orders is empty</Type.CaptionBold>
             <Type.Caption mt={1} color="neutral3" textAlign="center" display="block">
-              Once the trader starts a new open order, you&apos;ll see it listed here
+              Once the trader starts a new historical order, you&apos;ll see it listed here
             </Type.Caption>
           </Trans>
         </NoOrderWrapper>
@@ -165,14 +169,14 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
                   data={paginatedData?.data}
                   columns={tableSettings}
                   isLoading={isLoading}
+                  externalSource={{ isExpanded }}
                   // renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
                   scrollToTopDependencies={scrollDeps}
-                  externalSource={{ isExpanded }}
                   noDataComponent={
                     !dataLength && !isLoading ? (
                       <NoOrderWrapper isDrawer>
                         <Type.CaptionBold display="block">
-                          <Trans>No opening orders are matched this filter</Trans>
+                          <Trans>No historical orders are matched this filter</Trans>
                         </Type.CaptionBold>
                       </NoOrderWrapper>
                     ) : undefined
@@ -211,7 +215,7 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
           ) : (
             <Flex flexDirection="column" height="100%" flex="1 0 0" overflow="hidden">
               {!!paginatedData?.data?.length && (
-                <HLOpenOrderListView data={paginatedData?.data} isLoading={isLoading} scrollDep={scrollDeps} />
+                <HLHistoricalOrderListView data={paginatedData?.data} isLoading={isLoading} scrollDep={scrollDeps} />
               )}
               <PaginationWithLimit
                 currentPage={currentPage}

@@ -1,4 +1,4 @@
-import { useResponsive } from 'ahooks'
+import { useResponsive, useSize } from 'ahooks'
 import { useMemo, useState } from 'react'
 
 import HLTraderPositionListView from 'components/@position/HLTraderPositionsListView'
@@ -13,8 +13,9 @@ import { PositionData } from 'entities/trader'
 import useGetTraderPnL from 'hooks/features/trader/useGetTraderPnL'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
-import { TableSortProps } from 'theme/Table/types'
+import { ColumnData, TableSortProps } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
+import { PROFILE_BREAKPOINT_XL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 
 import HLPositionDetailsDrawer from '../HLTraderPositionDetails/HLPositionDetailsDrawer'
@@ -47,7 +48,7 @@ export default function OpeningPositionsView({
 }) {
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
-  const { lg, xl, sm } = useResponsive()
+  const { lg, xl, md } = useResponsive()
 
   const tableData = useMemo(() => {
     if (!data?.assetPositions) return undefined
@@ -75,6 +76,7 @@ export default function OpeningPositionsView({
   )
   const externalSource: ExternalSourceHlPosition = {
     totalPositionValue,
+    isExpanded,
   }
 
   // Group the filled orders
@@ -93,6 +95,19 @@ export default function OpeningPositionsView({
   )
 
   const scrollTopDeps = useMemo(() => [currentSort], [currentSort])
+
+  const size = useSize(document.body)
+
+  let tableSettings: ColumnData<PositionData, ExternalSourceHlPosition>[]
+  if (isDrawer) {
+    tableSettings = drawerOpeningColumns
+  } else if (xl && isExpanded) {
+    tableSettings = fullOpeningColumns
+  } else if (size && size.width >= PROFILE_BREAKPOINT_XL) {
+    tableSettings = drawerOpeningColumns
+  } else {
+    tableSettings = openingColumns
+  }
 
   return (
     <>
@@ -113,18 +128,18 @@ export default function OpeningPositionsView({
         </Flex>
       )}
       {data && data?.assetPositions?.length > 0 && (
-        <Box flex="1 0 0" overflowX="auto" overflowY="hidden">
-          {sm ? (
+        <Box flex="1 0 0" overflowX="auto" overflowY="hidden" sx={{ height: isDrawer ? 152 : 'auto' }}>
+          {md ? (
             <Table
               restrictHeight={!isDrawer && lg}
               wrapperSx={{
-                minWidth: 500,
+                minWidth: 495,
               }}
               tableBodySx={{
                 '& td:last-child': { pr: 2 },
               }}
               data={tableData?.data}
-              columns={isDrawer ? drawerOpeningColumns : xl && isExpanded ? fullOpeningColumns : openingColumns}
+              columns={tableSettings}
               currentSort={currentSort}
               changeCurrentSort={changeCurrentSort}
               isLoading={isLoading}

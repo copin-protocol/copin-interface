@@ -9,6 +9,7 @@ import { BottomWrapperMobile } from 'pages/@layouts/Components'
 import { TabHeader } from 'theme/Tab'
 import { Box, Flex } from 'theme/base'
 import { FOOTER_HEIGHT } from 'utils/config/constants'
+import { ProtocolEnum } from 'utils/config/enums'
 
 import PositionMobileView from './PositionMobileView'
 import ProtocolPermissionContainer from './ProtocolPermissionContainer'
@@ -96,13 +97,13 @@ const MobileLayout = (props: LayoutProps) => {
       </Box>
       <ProtocolPermissionContainer protocol={props.protocol}>
         {tab === TabEnum.STATS &&
-          (props.apiMode ? (
+          (props.protocol === ProtocolEnum.HYPERLIQUID && props.apiMode ? (
             <Flex flexDirection="column" flex="1 0 0" sx={{ overflow: 'auto' }}>
               {props.traderStatsSummary}
               <Box flex={1}>{props.hyperliquidApiMode}</Box>
             </Flex>
           ) : (
-            <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
+            <Box flex="1 0 0" sx={{ overflowY: 'auto' }}>
               {props.traderStatsSummary}
               <Box
                 sx={{
@@ -113,7 +114,7 @@ const MobileLayout = (props: LayoutProps) => {
               >
                 {props.traderChartPnl}
               </Box>
-              <Box sx={{ position: 'relative' }}>
+              <Box sx={{ position: 'relative', overflow: 'auto' }}>
                 <Box>{props.traderStats}</Box>
               </Box>
             </Box>

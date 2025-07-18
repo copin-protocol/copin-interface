@@ -9,7 +9,7 @@ import useGlobalStore from 'hooks/store/useGlobalStore'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 import { HLDirectionFilterIcon } from '../HLTraderOpeningPositions/HLDirectionFilterIcon'
@@ -50,7 +50,7 @@ const shortTimeColumn: ColumnData<GroupedFillsData> = {
   title: 'Time',
   dataIndex: 'timestamp',
   key: 'timestamp',
-  style: { width: '60px' },
+  style: { minWidth: '60px' },
   render: (item) => (
     <Type.Caption color="neutral3">
       <RelativeShortTimeText date={item.timestamp} />
@@ -62,7 +62,7 @@ const pairColumn: ColumnData<GroupedFillsData> = {
   title: 'Pair',
   dataIndex: 'pair',
   key: 'pair',
-  style: { width: '100px' },
+  style: { minWidth: '75px' },
   render: (item) => <Type.Caption color="neutral1">{getSymbolFromPair(item.pair)}</Type.Caption>,
 }
 
@@ -70,7 +70,7 @@ const directionColumn: ColumnData<GroupedFillsData> = {
   title: 'Direction',
   dataIndex: 'direction',
   key: 'direction',
-  style: { width: '100px' },
+  style: { minWidth: '70px' },
   render: (item) => <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>,
 }
 
@@ -78,23 +78,33 @@ const sizeUsdColumn: ColumnData<GroupedFillsData> = {
   title: 'Value',
   dataIndex: 'totalSize',
   key: 'totalSize',
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">${formatNumber(item.totalSize, 0)}</Type.Caption>,
+  style: { minWidth: '80px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
+    <Type.Caption color="neutral1">
+      {`$${externalSource?.isExpanded ? formatNumber(item.totalSize, 0) : compactNumber(item.totalSize, 2)}`}
+    </Type.Caption>
+  ),
 }
 
 const sizeTokenColumn: ColumnData<GroupedFillsData> = {
   title: 'Size',
   dataIndex: 'totalSizeInToken',
   key: 'totalSizeInToken',
-  style: { minWidth: '100px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">{formatNumber(item.totalSizeInToken, 2, 2)}</Type.Caption>,
+  style: { minWidth: '85px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
+    <Type.Caption color="neutral1">
+      {`${
+        externalSource?.isExpanded ? formatNumber(item.totalSizeInToken, 2, 2) : compactNumber(item.totalSizeInToken, 2)
+      }`}
+    </Type.Caption>
+  ),
 }
 
 const fillsColumn: ColumnData<GroupedFillsData> = {
   title: 'Fill Count',
   dataIndex: 'fills',
   key: 'fills',
-  style: { width: '120px', textAlign: 'right' },
+  style: { minWidth: '80px', textAlign: 'right' },
   render: (item) => <Type.Caption color="neutral1">{item.fills.length} fills</Type.Caption>,
 }
 
@@ -102,7 +112,7 @@ const priceColumn: ColumnData<GroupedFillsData> = {
   title: 'Avg. Price',
   dataIndex: 'avgPrice',
   key: 'avgPrice',
-  style: { minWidth: '100px', textAlign: 'right' },
+  style: { minWidth: '75px', textAlign: 'right' },
   render: (item) => (
     <Type.Caption color="neutral1">{PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
   ),
@@ -112,10 +122,20 @@ const feeColumn: ColumnData<GroupedFillsData> = {
   title: 'Fee',
   dataIndex: 'totalFee',
   key: 'totalFee',
-  style: { minWidth: '80px', textAlign: 'right' },
-  render: (item) => (
+  style: { minWidth: '70px', textAlign: 'right' },
+  render: (item, _, externalSource: any) => (
     <Type.Caption color="neutral3">
-      {!!item.totalFee ? <SignedText value={item.totalFee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+      {!!item.totalFee ? (
+        <SignedText
+          isCompactNumber={!externalSource?.isExpanded}
+          value={item.totalFee * -1}
+          maxDigit={2}
+          minDigit={2}
+          prefix="$"
+        />
+      ) : (
+        '--'
+      )}
     </Type.Caption>
   ),
 }
@@ -124,10 +144,20 @@ const pnlColumn: ColumnData<GroupedFillsData> = {
   title: 'PnL',
   dataIndex: 'totalPnl',
   key: 'totalPnl',
-  style: { minWidth: '105px', textAlign: 'right', pr: 12 },
-  render: (item) => (
+  style: { minWidth: '85px', textAlign: 'right', pr: 12 },
+  render: (item, _, externalSource: any) => (
     <Type.Caption color="neutral3">
-      {!!item.totalPnl ? <SignedText value={item.totalPnl} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+      {!!item.totalPnl ? (
+        <SignedText
+          isCompactNumber={!externalSource?.isExpanded}
+          value={item.totalPnl}
+          maxDigit={2}
+          minDigit={2}
+          prefix="$"
+        />
+      ) : (
+        '--'
+      )}
     </Type.Caption>
   ),
 }

@@ -1,13 +1,21 @@
 import { ReactNode, cloneElement, useCallback, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
-import { getHlAccountInfo, getHlOpenOrders, getHlOrderFilled, getHlTwapOrderFilled } from 'apis/hyperliquid'
+import {
+  getHlAccountInfo,
+  getHlHistoricalOrders,
+  getHlOpenOrders,
+  getHlOrderFilled,
+  getHlTwapOrderFilled,
+} from 'apis/hyperliquid'
+import HistoricalOrdersView from 'components/@position/HLTraderOpeningPositions/HistoricalOrdersView'
 import OpenOrdersView from 'components/@position/HLTraderOpeningPositions/OpenOrdersView'
 import OrderFilledView from 'components/@position/HLTraderOpeningPositions/OrderFilledView'
 import OrderTwapView from 'components/@position/HLTraderOpeningPositions/OrderTwapView'
 import { TraderOpeningPositionsListViewProps } from 'components/@position/TraderOpeningPositions'
 import {
   groupHLOrderFillsByOid,
+  parseHLHistoricalOrderData,
   parseHLOrderData,
   parseHLTwapOrderFillData,
 } from 'components/@position/helpers/hyperliquid'
@@ -23,6 +31,7 @@ enum TabKeyEnum {
   CLOSED = 'closed',
   OPEN_ORDERS = 'open_orders',
   FILLS = 'fills',
+  HISTORICAL = 'historical',
   TWAP = 'twap',
 }
 const TABS = [
@@ -35,6 +44,7 @@ const HYPERLIQUID_TABS = [
   { key: TabKeyEnum.CLOSED, name: 'History' },
   { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
   { key: TabKeyEnum.FILLS, name: 'Fills' },
+  { key: TabKeyEnum.HISTORICAL, name: 'History Orders' },
   { key: TabKeyEnum.TWAP, name: 'TWAP' },
 ]
 
@@ -50,12 +60,14 @@ export default function PositionMobileView({
   protocol,
   address,
   isLite,
+  isDrawer,
 }: {
   historyPositions: ReactNode
   openingPositions: ReactNode
   protocol?: ProtocolEnum
   address?: string
   isLite?: boolean
+  isDrawer?: boolean
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
   const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
@@ -142,6 +154,29 @@ export default function PositionMobileView({
     return groupHLOrderFillsByOid(filledOrders)
   }, [filledOrders])
 
+  const [enabledRefetchHistoricalOrder, setEnabledRefetchHistoricalOrder] = useState(true)
+  const { data: historicalOrders, isLoading: isLoadingHistoricalOders } = useQuery(
+    [QUERY_KEYS.GET_HYPERLIQUID_HISTORICAL_ORDERS, address],
+    () =>
+      getHlHistoricalOrders({
+        user: address ?? '',
+      }),
+    {
+      enabled: !!address && isHyperliquid,
+      retry: 0,
+      refetchInterval: enabledRefetchHistoricalOrder ? 15_000 : undefined,
+      keepPreviousData: true,
+      select: (data) => {
+        return parseHLHistoricalOrderData({ account: address ?? '', data })
+      },
+    }
+  )
+  const onHistoricalOrderPageChange = useCallback((page: number) => {
+    if (page === 1) {
+      setEnabledRefetchHistoricalOrder(true)
+    } else setEnabledRefetchHistoricalOrder(false)
+  }, [])
+
   const [enabledRefetchTwapOrder, setEnabledRefetchTwapOrder] = useState(true)
   const { data: twapOrders, isLoading: isLoadingTwapOders } = useQuery(
     [QUERY_KEYS.GET_HYPERLIQUID_TWAP_ORDERS, address],
@@ -171,7 +206,7 @@ export default function PositionMobileView({
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
-        configs={isLite ? LITE_TABS : isHyperliquid ? HYPERLIQUID_TABS : TABS}
+        configs={isLite ? LITE_TABS : isHyperliquid ? (isDrawer ? TABS : HYPERLIQUID_TABS) : TABS}
         isActiveFn={(config) => config.key === currentTabKey}
         onClickItem={handleChangeTab}
         hasLine
@@ -195,40 +230,46 @@ export default function PositionMobileView({
           </Box>
         )}
         {currentTabKey === TabKeyEnum.FILLS && (
-          <OrderFilledView
-            toggleExpand={() => {
-              //
-            }}
-            onPageChange={onOrderFilledPageChange}
-            isLoading={isLoadingFilledOrders}
-            data={groupedFilledOrders}
-            isDrawer={false}
-            isExpanded={true}
-          />
+          <Box display="flex" flexDirection="column" height="100%">
+            <OrderFilledView
+              toggleExpand={() => {
+                //
+              }}
+              onPageChange={onOrderFilledPageChange}
+              isLoading={isLoadingFilledOrders}
+              data={groupedFilledOrders}
+              isDrawer={false}
+              isExpanded={true}
+            />
+          </Box>
         )}
-        {currentTabKey === TabKeyEnum.FILLS && (
-          <OrderFilledView
-            toggleExpand={() => {
-              //
-            }}
-            onPageChange={onOrderFilledPageChange}
-            isLoading={isLoadingFilledOrders}
-            data={groupedFilledOrders}
-            isDrawer={false}
-            isExpanded={true}
-          />
+        {currentTabKey === TabKeyEnum.HISTORICAL && (
+          <Box display="flex" flexDirection="column" height="100%">
+            <HistoricalOrdersView
+              toggleExpand={() => {
+                //
+              }}
+              onPageChange={onHistoricalOrderPageChange}
+              isLoading={isLoadingHistoricalOders}
+              data={historicalOrders}
+              isDrawer={false}
+              isExpanded={true}
+            />
+          </Box>
         )}
         {currentTabKey === TabKeyEnum.TWAP && (
-          <OrderTwapView
-            toggleExpand={() => {
-              //
-            }}
-            onPageChange={onTwapOrderPageChange}
-            isLoading={isLoadingTwapOders}
-            data={twapOrders}
-            isDrawer={false}
-            isExpanded={true}
-          />
+          <Box display="flex" flexDirection="column" height="100%">
+            <OrderTwapView
+              toggleExpand={() => {
+                //
+              }}
+              onPageChange={onTwapOrderPageChange}
+              isLoading={isLoadingTwapOders}
+              data={twapOrders}
+              isDrawer={false}
+              isExpanded={true}
+            />
+          </Box>
         )}
       </Box>
     </Flex>

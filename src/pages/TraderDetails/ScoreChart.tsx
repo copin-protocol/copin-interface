@@ -93,7 +93,7 @@ const ScoreChart = ({
           domain={[0, 100]}
           color={themeColors.neutral3}
           dataKey="subject"
-          fontSize={13}
+          fontSize={12}
           dy={4}
           tick={!hiddenAxisTitle}
         />

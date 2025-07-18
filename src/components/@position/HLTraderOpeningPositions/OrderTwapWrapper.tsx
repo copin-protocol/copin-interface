@@ -10,6 +10,7 @@ import { Button } from 'theme/Buttons'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
+import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
@@ -84,6 +85,30 @@ export default function OrderTwapWrapper({ isLoading, toggleExpand, data, isExpa
 
   const scrollDeps = useMemo(() => [currentPage, currentLimit], [currentLimit, currentPage])
 
+  const [width, setWidth] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return
+      const width = containerRef.current.getBoundingClientRect().width
+      setWidth(width)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  let tableSettings: ColumnData<HlTwapOrderData>[]
+  if (isDrawer) {
+    tableSettings = drawerTwapColumns
+  } else if (xl && isExpanded) {
+    tableSettings = fullTwapColumns
+  } else if (width >= 832) {
+    tableSettings = drawerTwapColumns
+  } else {
+    tableSettings = twapColumns
+  }
+
   return (
     <>
       {isLoading && <Loading />}
@@ -99,7 +124,7 @@ export default function OrderTwapWrapper({ isLoading, toggleExpand, data, isExpa
         <>
           {sm ? (
             <>
-              <Box flex="1 0 0" overflow="hidden">
+              <Box ref={containerRef} flex="1 0 0" overflow="hidden">
                 <Table
                   restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
                   wrapperSx={{
@@ -110,7 +135,8 @@ export default function OrderTwapWrapper({ isLoading, toggleExpand, data, isExpa
                     '& td:last-child': { pr: 2 },
                   }}
                   data={paginatedData.data}
-                  columns={isDrawer ? drawerTwapColumns : xl && isExpanded ? fullTwapColumns : twapColumns}
+                  columns={tableSettings}
+                  externalSource={{ isExpanded }}
                   isLoading={isLoading}
                   scrollToTopDependencies={scrollDeps}
                   noDataComponent={

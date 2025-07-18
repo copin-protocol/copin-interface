@@ -128,7 +128,7 @@ const openTimeShortColumn: ColumnData<PositionData> = {
   title: 'Time',
   dataIndex: 'openBlockTime',
   key: 'openBlockTime',
-  style: { width: '45px' },
+  style: { minWidth: '45px' },
   render: (item) => (
     <Type.Caption color="neutral3">
       <RelativeShortTimeText date={item.openBlockTime} />
@@ -206,7 +206,7 @@ export function getEntryColumn(
     dataIndex: 'averagePrice',
     key: 'averagePrice',
     sortBy: 'averagePrice',
-    style: { flex: 1 },
+    style: { flex: 1, minWidth: 170 },
     render: (item) => renderEntry(item),
     filterComponent: <PairFilterIcon pairs={pairs} excludedPairs={excludedPairs} changePairs={changePairs} />,
   }
@@ -461,21 +461,17 @@ const mixPnLColumn: ColumnData<PositionData> = {
 }
 
 export const historyColumns: ColumnData<PositionData>[] = [
-  { ...timeColumn, style: { flex: 1 } },
-  { ...entryColumn, style: { flex: 1.8, minWidth: 185 } },
+  { ...timeColumn, style: { minWidth: 80, flex: 1 } },
+  { ...entryColumn, style: { flex: 1.8, minWidth: 170 } },
   {
     ...sizeColumn,
-    style: { flex: 1, textAlign: 'right', justifyContent: 'end' },
+    style: { minWidth: 60, flex: 1, textAlign: 'right', justifyContent: 'end' },
     render: (item) => renderPositionSize({ item, isCompactNumber: true }),
   },
-  { ...leverageColumn, style: { flex: 0.8, textAlign: 'right', justifyContent: 'end' } },
+  { ...leverageColumn, style: { minWidth: 60, flex: 0.8, textAlign: 'right', justifyContent: 'end' } },
   {
     ...pnlColumn,
-    style: {
-      flex: 1.4,
-      textAlign: 'right',
-      justifyContent: 'end',
-    },
+    style: { minWidth: 70, flex: 1.4, textAlign: 'right', justifyContent: 'end' },
     render: (item) => <PnlValueCell item={item} isCompactNumber={true} />,
   },
   { ...actionColumn, style: { width: 24, pr: 1, textAlign: 'right', justifyContent: 'end', flex: '0 0 24px' } },
@@ -679,7 +675,7 @@ export const dailyPositionColumns: ColumnData<PositionData>[] = [
 
 export const fullOpeningColumns: ColumnData<PositionData>[] = [
   openTimeColumn,
-  { ...entryColumn, style: { minWidth: 150 } },
+  { ...entryColumn, style: { minWidth: 170 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
   collateralColumn,
   avgDurationColumn,
@@ -692,9 +688,9 @@ export const fullOpeningColumns: ColumnData<PositionData>[] = [
 
 export const openingColumns: ColumnData<PositionData>[] = [
   openTimeShortColumn,
-  { ...entryColumn, style: { minWidth: 185 } },
-  sizeOpeningColumn,
-  pnlOpeningColumn,
+  { ...entryColumn, style: { minWidth: 180 } },
+  { ...sizeOpeningColumn, style: { minWidth: 190 } },
+  { ...pnlOpeningColumn, style: { minWidth: 80, textAlign: 'right' } },
   actionColumn,
 ]
 
@@ -718,6 +714,26 @@ export const drawerHistoryColumns: ColumnData<PositionData>[] = [
     render: (item) => renderPositionPnL({ item, isCompactNumber: true }),
   },
   { ...actionColumn, style: { width: 40, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
+]
+
+export const xlHistoryColumns: ColumnData<PositionData>[] = [
+  { ...openTimeColumn, style: { minWidth: 140, flex: 1.5 } },
+  { ...closeTimeColumn, style: { minWidth: 140, flex: 1.5, pl: 2 } },
+  { ...entryColumn, style: { minWidth: 170, flex: 1.5, pl: 2 } },
+  {
+    ...sizeColumn,
+    style: { minWidth: 80, flex: 1, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionSize({ item, isCompactNumber: true }),
+  },
+  { ...leverageColumn, style: { minWidth: 80, flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  { ...collateralColumn, style: { minWidth: 80, flex: 1.2, textAlign: 'right', justifyContent: 'end' } },
+  { ...avgDurationColumn, style: { minWidth: 60, flex: 1, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...pnlColumn,
+    style: { minWidth: 80, flex: 1.3, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionPnL({ item, isCompactNumber: true }),
+  },
+  { ...actionColumn, style: { width: 24, pr: 2, textAlign: 'right', justifyContent: 'end', flex: '0 0 40px' } },
 ]
 
 export const drawerOpeningColumns: ColumnData<PositionData>[] = [

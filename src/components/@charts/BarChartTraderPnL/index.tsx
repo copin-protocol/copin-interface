@@ -90,22 +90,25 @@ export default function BarChartTraderPnL({
                 domain={[-stats.maxAbsPnl * 1.2, stats.maxAbsPnl * 1.2]}
                 stroke={themeColors.neutral4}
                 tickFormatter={(value) => `$${compactNumber(value, 1)}`}
-                ticks={[-stats.maxAbsPnl * 1.2, 0, stats.maxAbsPnl * 1.2]}
+                ticks={[-stats.maxAbsPnl * 1.1, stats.maxAbsPnl * 1.1]}
+                axisLine={false}
+                tickLine={false}
+                mirror={true}
               />
               <YAxis
                 domain={[-stats.maxAbsCumulativePnl * 1.2, stats.maxAbsCumulativePnl * 1.2]}
                 orientation="right"
                 yAxisId="right"
                 stroke={themeColors.neutral4}
-                ticks={[-stats.maxAbsCumulativePnl * 1.2, 0, stats.maxAbsCumulativePnl * 1.2]}
+                ticks={[-stats.maxAbsCumulativePnl * 1.1, stats.maxAbsCumulativePnl * 1.1]}
                 tickFormatter={(value) => `$${compactNumber(value, 1)}`}
-                mirror
+                mirror={true}
                 type="number"
                 allowDecimals={false}
                 markerWidth={0}
-                tickMargin={-6}
                 axisLine={false}
                 tickLine={false}
+                tickMargin={-6}
               />
               <Bar
                 type="monotone"

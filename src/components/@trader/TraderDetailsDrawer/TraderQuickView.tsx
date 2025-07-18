@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
+import { useResponsive, useSize } from 'ahooks'
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { createGlobalStyle } from 'styled-components/macro'
@@ -21,6 +21,7 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { ResponseTraderExchangeStatistic } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { HyperliquidTraderProvider } from 'hooks/features/trader/useHyperliquidTraderContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
@@ -87,13 +88,25 @@ export default function TraderQuickView({
   return (
     <>
       {address && <GlobalStyle />}
-      <TraderDetailsComponent
-        address={address}
-        protocol={protocol}
-        type={type}
-        disabledActions={disabledActions}
-        disabledLinkAccount={disabledLinkAccount}
-      />
+      {protocol === ProtocolEnum.HYPERLIQUID ? (
+        <HyperliquidTraderProvider address={address} protocol={protocol}>
+          <TraderDetailsComponent
+            address={address}
+            protocol={protocol}
+            type={type}
+            disabledActions={disabledActions}
+            disabledLinkAccount={disabledLinkAccount}
+          />
+        </HyperliquidTraderProvider>
+      ) : (
+        <TraderDetailsComponent
+          address={address}
+          protocol={protocol}
+          type={type}
+          disabledActions={disabledActions}
+          disabledLinkAccount={disabledLinkAccount}
+        />
+      )}
     </>
   )
 }
@@ -121,6 +134,7 @@ function TraderDetailsComponent({
   eventCategory?: EventCategory
 }) {
   const { sm, md, lg } = useResponsive()
+  const size = useSize(document.body)
   const { timeFilterOptions } = useGetTimeFilterOptions()
   const { timeFramesAllowed, isEnablePosition, requiredPlanToViewPosition, isAllowedProtocol } =
     useTraderProfilePermission({ protocol })
@@ -325,19 +339,20 @@ function TraderDetailsComponent({
                 requiredLogin
               />
             </BlurMask>
-            {lg ? (
-              <Flex flex={1} flexDirection="column">
-                <Box>
+            {lg && (!size || size?.height > 800) ? (
+              <Flex flexDirection="column" height="100%">
+                <Box height={200}>
                   {protocol === ProtocolEnum.HYPERLIQUID ? (
                     <HLTraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
                   ) : (
                     <TraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
                   )}
                 </Box>
+
                 <Box
                   sx={{
                     position: 'relative',
-                    minHeight: 400,
+                    flex: 1,
                     '& .currency_option .select__menu': { transform: 'translateX(-30px)' },
                   }}
                 >
@@ -347,6 +362,7 @@ function TraderDetailsComponent({
             ) : (
               <Flex sx={{ flex: 1 }}>
                 <PositionMobileView
+                  isDrawer
                   openingPositions={
                     protocol === ProtocolEnum.HYPERLIQUID ? (
                       <HLTraderOpeningPositionsListView address={address} protocol={protocol} isDrawer />

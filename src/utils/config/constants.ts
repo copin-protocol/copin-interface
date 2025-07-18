@@ -1,6 +1,12 @@
 import { isMobile } from 'hooks/helpers/useIsMobile'
 
-import { CopyTradePlatformEnum, PerpChartTypeEnum, ProtocolEnum, SubscriptionPlanEnum } from './enums'
+import {
+  CopyTradePlatformEnum,
+  HlOrderStatusEnum,
+  PerpChartTypeEnum,
+  ProtocolEnum,
+  SubscriptionPlanEnum,
+} from './enums'
 
 export const SUPPORTED_LOCALES = ['en']
 export const DEFAULT_LOCALE = 'en'
@@ -14,6 +20,8 @@ export const PRIVY_APP_ID = import.meta.env.VITE_PRIVY_APP_ID!
 
 export const TELEGRAM_BOT_ALERT = import.meta.env.VITE_TELEGRAM_BOT_ALERT
 export const SYMBOL_ALLOWED_ALL = '*'
+
+export const PROFILE_BREAKPOINT_XL = 1785
 
 export const LINKS = {
   website: 'https://copin.io',
@@ -377,3 +385,11 @@ export const SUBSCRIPTION_PLAN_ORDER = [
 ]
 
 export const IGNORE_SUBSCRIPTION_ICON = [SubscriptionPlanEnum.NON_LOGIN, SubscriptionPlanEnum.FREE]
+
+export const IGNORED_REASON_HL_ORDER_STATUS = [
+  HlOrderStatusEnum.OPEN,
+  HlOrderStatusEnum.FILLED,
+  HlOrderStatusEnum.TRIGGERED,
+  HlOrderStatusEnum.CANCELED,
+  HlOrderStatusEnum.REJECTED,
+]

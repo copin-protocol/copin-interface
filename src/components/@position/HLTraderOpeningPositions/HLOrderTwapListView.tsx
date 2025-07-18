@@ -5,12 +5,11 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { HlTwapOrderData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
@@ -65,54 +64,53 @@ export default function HLOrderTwapListView({ data, isLoading, scrollDep }: Prop
             key={index + symbol + item.orderId + item.twapOrderId + item.twapFillId + item.timestamp}
           >
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
-              <Type.Caption color="neutral3">
+              <Type.Caption flex={3} color="neutral3">
                 <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
               </Type.Caption>
-              <Type.Caption color="neutral3">-</Type.Caption>
-              <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
-              <VerticalDivider />
-              <Type.Caption color="neutral1">
-                {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : 'N/A'}
-              </Type.Caption>
-            </Flex>
-            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Value:
-                    </Box>
-                    ${formatNumber(item.sizeNumber, 0, 0)}
-                  </Type.Caption>
+              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Flex flex={2} sx={{ alignItems: 'center', gap: '1ch' }}>
+                  <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>
+                  <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
                 </Flex>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Size:
-                    </Box>
-                    {formatNumber(item.sizeInTokenNumber, 0, 0)}
-                  </Type.Caption>
-                </Flex>
+                <Type.Caption flex={1} color="neutral3" textAlign="right">
+                  {!!item.twapOrderId ? `#${item.twapOrderId}` : '--'}
+                </Type.Caption>
               </Flex>
             </Flex>
-            <Flex mt={2} sx={{ alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    Fees:
-                  </Type.Caption>
-                  <Type.Caption color="neutral3">
-                    {!!item.fee ? <SignedText value={item.fee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
-                  </Type.Caption>
-                </Flex>
-                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    TWAP ID:
-                  </Type.Caption>
-                  <Type.Caption color="neutral1">{!!item.twapOrderId ? `#${item.twapOrderId}` : '--'}</Type.Caption>
-                </Flex>
+            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch' }}>
+              <Flex flex={3} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Fees:
+                </Type.Caption>
+                <Type.Caption color="neutral3">
+                  {!!item.fee ? <SignedText value={item.fee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+                </Type.Caption>
+              </Flex>
+              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Price:
+                </Type.Caption>
+                <Type.Caption color="neutral1">
+                  {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : 'N/A'}
+                </Type.Caption>
+              </Flex>
+            </Flex>
+            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch', justifyContent: 'space-between' }}>
+              <Flex flex={3} alignItems="center">
+                <Type.Caption color="neutral1">
+                  <Box as="span" color="neutral3" mr="1ch">
+                    Size:
+                  </Box>
+                  {formatNumber(item.sizeInTokenNumber)}
+                </Type.Caption>
+              </Flex>
+              <Flex flex={5} alignItems="center">
+                <Type.Caption color="neutral1">
+                  <Box as="span" color="neutral3" mr="1ch">
+                    Value:
+                  </Box>
+                  ${compactNumber(item.sizeNumber, 2)}
+                </Type.Caption>
               </Flex>
             </Flex>
           </Box>

@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 
-import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { HlOrderData } from 'entities/hyperliquid'
@@ -119,9 +118,14 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
 export const renderOrderTriggerCondition = (item: HlOrderData) => (
   <Type.Caption color="neutral1">{item.triggerCondition ?? '--'}</Type.Caption>
 )
-export const renderOrderSize = (item: HlOrderData) => (
-  <SignedText value={item.sizeNumber} minDigit={2} maxDigit={2} prefix="$" fontInherit sx={{ fontSize: '12px' }} />
-)
+export const renderOrderSize = (item: HlOrderData) => {
+  const isNegative = item.sizeNumber < 0
+  return (
+    <Type.Caption color="neutral1">
+      {isNegative ? '-' : ''}${formatNumber(Math.abs(item.sizeNumber), 2, 2)}
+    </Type.Caption>
+  )
+}
 
 export const renderOrderSizeInToken = (item: HlOrderData) => (
   <Type.Caption color="neutral1">

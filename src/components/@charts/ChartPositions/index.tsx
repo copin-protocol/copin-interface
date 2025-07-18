@@ -31,7 +31,7 @@ export interface TimeScaleRange {
   to: number
 }
 
-const THE_REST_HEIGHT = 200
+const THE_REST_HEIGHT = 160
 
 /**
  *

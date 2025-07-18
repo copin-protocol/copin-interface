@@ -30,12 +30,14 @@ export default function GeneralStats({
   handleApiMode?: () => void
 } & SxProps) {
   const { xl } = useResponsive()
+
   return (
     <Flex
       alignItems={['flex-start', 'center']}
       sx={{
         py: [1, 1],
         width: '100%',
+        minHeight: xl ? 40 : undefined,
         // overflow: 'auto hidden',
         borderBottom: 'small',
         borderColor: 'neutral4',
@@ -49,11 +51,11 @@ export default function GeneralStats({
           width: '100%',
           height: '100%',
           alignItems: 'center',
-          gap: xl ? 24 : 2,
+          gap: xl ? 12 : 2,
           // mt: [0, 40, 40, 0],
         }}
       >
-        {protocol === ProtocolEnum.HYPERLIQUID ? (
+        {!isDrawer && protocol === ProtocolEnum.HYPERLIQUID ? (
           apiMode ? (
             <HyperliquidStats />
           ) : (
@@ -69,7 +71,7 @@ export default function GeneralStats({
           sx={{
             gap: 1,
             minWidth: 'max-content',
-            px: 12,
+            pr: 12,
             py: 1,
             position: ['absolute', 'relative'],
             top: [1, 0],
@@ -129,6 +131,7 @@ const CommonStats = ({
         alignItems: 'center',
         gap: [1, 2, 2, 2, 24],
         flexWrap: 'wrap',
+        justifyContent: 'flex-end',
       }}
     >
       <Box minWidth="fit-content" textAlign="left" color="neutral3" flex={['1', 'none']}>
@@ -201,6 +204,7 @@ const HyperliquidCommonStats = ({
           <BalanceText protocol={protocol} account={account} smartAccount={smartAccount} maxDigit={0} minDigit={0} />
         </Type.Caption>
       </Flex>
+
       <Flex
         width={['50%', 'auto']}
         flexDirection={['column', 'row']}
@@ -240,103 +244,109 @@ const HyperliquidStats = () => {
     bgColor = `${themeColors.orange1}20`
   }
   return (
-    <Flex
-      sx={{
-        width: '100%',
-        alignItems: 'center',
-        gap: xl ? 24 : 1,
-        flexWrap: 'wrap',
-      }}
-    >
+    <Box sx={{ overflowX: 'auto' }}>
       <Flex
-        width={['100%', 'auto']}
-        flexDirection={['column', 'row']}
-        alignItems={['flex-start', 'center']}
-        sx={{ gap: [0, 2] }}
+        sx={{
+          width: ['100%', '100%', '100%', '100%', 'max-content'],
+          alignItems: 'center',
+          my: [0, 0, 0, 0, 1],
+          gap: [1, 1, 1, 1, 0],
+          flexWrap: ['wrap', 'wrap', 'wrap', 'wrap', undefined],
+        }}
       >
-        <LabelWithTooltip
-          id="tt_total_value"
-          sx={{
-            color: 'neutral3',
-          }}
-          tooltip={
-            <Flex flexDirection="column" sx={{ gap: 1 }}>
-              <Flex alignItems="center" sx={{ gap: 1 }}>
-                <Type.Caption color="neutral3">Perp:</Type.Caption>
-                <Type.Caption>${formatNumber(accountValue, 0)}</Type.Caption>
-              </Flex>
-              <Flex alignItems="center" sx={{ gap: 1 }}>
-                <Type.Caption color="neutral3">Spot:</Type.Caption>
-                <Type.Caption>${formatNumber(spotValue, 0)}</Type.Caption>
-              </Flex>
-            </Flex>
-          }
+        <Flex
+          width={['100%', 'auto']}
+          flexDirection={['column', 'row']}
+          alignItems={['flex-start', 'center']}
+          sx={{ gap: [0, 2] }}
+          mr={[0, 12, 12, 12, 16]}
         >
-          Total Value:
-        </LabelWithTooltip>
-        <Type.Caption color="neutral1">{totalValue ? `$${formatNumber(totalValue, 0)}` : '--'}</Type.Caption>
-      </Flex>
-      <Flex
-        width={['50%', 'auto']}
-        flexDirection={['column', 'row']}
-        alignItems={['flex-start', 'center']}
-        sx={{ gap: [0, 2] }}
-      >
-        <LabelWithTooltip
-          id="tt_withdrawable"
-          sx={{
-            color: 'neutral3',
-          }}
-          tooltip={<Type.Caption color="neutral1">Free margin available</Type.Caption>}
+          <LabelWithTooltip
+            id="tt_total_value"
+            sx={{
+              color: 'neutral3',
+            }}
+            tooltip={
+              <Flex flexDirection="column" sx={{ gap: 1 }}>
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <Type.Caption color="neutral3">Perp:</Type.Caption>
+                  <Type.Caption>${formatNumber(accountValue, 0)}</Type.Caption>
+                </Flex>
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <Type.Caption color="neutral3">Spot:</Type.Caption>
+                  <Type.Caption>${formatNumber(spotValue, 0)}</Type.Caption>
+                </Flex>
+              </Flex>
+            }
+          >
+            Total Value:
+          </LabelWithTooltip>
+          <Type.Caption color="neutral1">{totalValue ? `$${formatNumber(totalValue, 0)}` : '--'}</Type.Caption>
+        </Flex>
+        <Flex
+          width={['50%', 'auto']}
+          flexDirection={['column', 'row']}
+          alignItems={['flex-start', 'center']}
+          sx={{ gap: [0, 2] }}
+          mr={[0, 12, 12, 12, 16]}
         >
-          Withdrawable:
-        </LabelWithTooltip>
-        <Flex alignItems="center" sx={{ gap: 1 }}>
-          <Type.Caption>{withdrawable ? `$${formatNumber(withdrawable, 0)}` : '--'}</Type.Caption>
-          {!!withdrawablePercent && (
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                px: 1,
-                borderRadius: '4px',
-                bg: 'neutral5',
-                color: 'neutral2',
-              }}
-            >
-              <Type.Caption>{formatNumber(withdrawablePercent, 2, 2)}%</Type.Caption>
-            </Flex>
-          )}
+          <LabelWithTooltip
+            id="tt_withdrawable"
+            sx={{
+              color: 'neutral3',
+            }}
+            tooltip={<Type.Caption color="neutral1">Free margin available</Type.Caption>}
+          >
+            Withdrawable:
+          </LabelWithTooltip>
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <Type.Caption>{withdrawable ? `$${formatNumber(withdrawable, 0)}` : '--'}</Type.Caption>
+            {!!withdrawablePercent && (
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                  px: 1,
+                  borderRadius: '4px',
+                  bg: 'neutral5',
+                  color: 'neutral2',
+                }}
+              >
+                <Type.Caption>{formatNumber(withdrawablePercent, 2, 2)}%</Type.Caption>
+              </Flex>
+            )}
+          </Flex>
+        </Flex>
+
+        <Flex flexDirection={['column', 'row']} alignItems={['flex-start', 'center']} sx={{ gap: [0, 2] }}>
+          <LabelWithTooltip
+            id="tt_leverage"
+            sx={{
+              color: 'neutral3',
+            }}
+            tooltip={<Type.Caption color="neutral1">Total position value</Type.Caption>}
+          >
+            Leverage:
+          </LabelWithTooltip>
+          <Flex alignItems="center" sx={{ gap: 1 }}>
+            <Type.Caption>{totalPosValue ? `$${formatNumber(totalPosValue, 0)}` : '--'}</Type.Caption>
+            {!!leverage && (
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                  px: 1,
+                  borderRadius: '4px',
+                  bg: bgColor,
+                  color: textColor,
+                }}
+              >
+                <Type.Caption>{formatLeverage(MarginModeEnum.ISOLATED, leverage)}</Type.Caption>
+              </Flex>
+            )}
+          </Flex>
         </Flex>
       </Flex>
-      <Flex flexDirection={['column', 'row']} alignItems={['flex-start', 'center']} sx={{ gap: [0, 2] }}>
-        <LabelWithTooltip
-          id="tt_leverage"
-          sx={{
-            color: 'neutral3',
-          }}
-          tooltip={<Type.Caption color="neutral1">Total position value</Type.Caption>}
-        >
-          Leverage:
-        </LabelWithTooltip>
-        <Flex alignItems="center" sx={{ gap: 1 }}>
-          <Type.Caption>{totalPosValue ? `$${formatNumber(totalPosValue, 0)}` : '--'}</Type.Caption>
-          {!!leverage && (
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                px: 1,
-                borderRadius: '4px',
-                bg: bgColor,
-                color: textColor,
-              }}
-            >
-              <Type.Caption>{formatLeverage(MarginModeEnum.ISOLATED, leverage)}</Type.Caption>
-            </Flex>
-          )}
-        </Flex>
-      </Flex>
-    </Flex>
+    </Box>
   )
 }

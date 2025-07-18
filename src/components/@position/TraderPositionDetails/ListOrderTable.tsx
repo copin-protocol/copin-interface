@@ -68,13 +68,13 @@ export default function ListOrderTable({
                 ? ORDER_TYPES[OrderTypeEnum.OPEN].icon
                 : item.isClose && item.type !== OrderTypeEnum.LIQUIDATE
                 ? ORDER_TYPES[OrderTypeEnum.CLOSE].icon
-                : ORDER_TYPES[item.type].icon}
+                : ORDER_TYPES[item.type]?.icon}
               <Type.Caption color="neutral1">
                 {isOpen
                   ? ORDER_TYPES[OrderTypeEnum.OPEN].text
                   : item.isClose && item.type !== OrderTypeEnum.LIQUIDATE
                   ? ORDER_TYPES[OrderTypeEnum.CLOSE].text
-                  : ORDER_TYPES[item.type].text}
+                  : ORDER_TYPES[item.type]?.text}
               </Type.Caption>
             </Flex>
           )
@@ -91,7 +91,7 @@ export default function ListOrderTable({
         title: 'Value Delta',
         dataIndex: 'sizeDeltaNumber',
         key: 'sizeDeltaNumber',
-        style: { minWidth: '100px', textAlign: 'right' },
+        style: { minWidth: '120px', textAlign: 'right' },
         render: (item) => renderOrderSize(item),
       },
       {

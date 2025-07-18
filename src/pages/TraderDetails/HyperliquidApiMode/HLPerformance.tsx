@@ -1,18 +1,21 @@
-import { ArrowDown, ArrowUp, TrendDown, TrendUp } from '@phosphor-icons/react'
+import { Trans } from '@lingui/macro'
+import { ArrowDown, ArrowUp, Gauge, TrendDown, TrendUp } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React from 'react'
 
 import ActiveDot from 'components/@ui/ActiveDot'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { AmountText } from 'components/@ui/DecoratedText/ValueText'
-import { HlAccountData } from 'entities/hyperliquid'
+import SectionTitle from 'components/@ui/SectionTitle'
 import useHyperliquidAccountSummary from 'hooks/features/trader/useHyperliquidAccountSummary'
+import { useHyperliquidTraderContext } from 'hooks/features/trader/useHyperliquidTraderContext'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 
-export default function HLPerformance({ hlAccountData }: { hlAccountData?: HlAccountData }) {
+export default function HLPerformance() {
+  const { hlAccountData } = useHyperliquidTraderContext()
   const {
     accountValue,
     marginUsage,
@@ -28,7 +31,8 @@ export default function HLPerformance({ hlAccountData }: { hlAccountData?: HlAcc
   const isEmptyPos = !longValue && !shortValue
 
   return (
-    <Box width="100%" height="100%">
+    <Box width="100%" height="100%" p={xl ? 12 : 0}>
+      {xl && <SectionTitle icon={Gauge} title={<Trans>PERFORMANCE</Trans>} />}
       <Flex
         width="100%"
         flexDirection="column"
@@ -39,10 +43,43 @@ export default function HLPerformance({ hlAccountData }: { hlAccountData?: HlAcc
       >
         {/* Perp Equity & Margin Usage */}
         <Flex flex={xl ? 1 : 2} width="100%" minWidth="fit-content" flexDirection="column">
-          <Type.Caption color="neutral3">Perp Equity</Type.Caption>
-          <Type.BodyBold color="neutral1" mb={2}>
-            <AmountText amount={accountValue} maxDigit={0} prefix="$" />
-          </Type.BodyBold>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex flexDirection="column">
+              <Type.Caption color="neutral3">Perp Equity</Type.Caption>
+              <Type.BodyBold color="neutral1" mb={2}>
+                <AmountText amount={accountValue} maxDigit={0} prefix="$" />
+              </Type.BodyBold>
+            </Flex>
+            <Flex flexDirection="column">
+              <Type.Caption color="neutral3">Unrealized PnL</Type.Caption>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <Type.BodyBold color={isEmptyPos ? 'neutral3' : unrealizedPnl >= 0 ? 'green1' : 'red2'}>
+                  {isEmptyPos ? (
+                    'N/A'
+                  ) : (
+                    <SignedText value={unrealizedPnl} fontInherit minDigit={0} maxDigit={0} prefix="$" />
+                  )}
+                </Type.BodyBold>
+                {!isEmptyPos && (
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{
+                      width: 'fit-content',
+                      px: 1,
+                      bg: roe >= 0 ? `${themeColors.green1}20` : `${themeColors.red2}20`,
+                      color: roe >= 0 ? 'green1' : 'red2',
+                      borderRadius: '2px',
+                      gap: 1,
+                    }}
+                  >
+                    <IconBox icon={roe >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} />
+                    <Type.Small>{formatNumber(roe, 2, 2)}% ROE</Type.Small>
+                  </Flex>
+                )}
+              </Flex>
+            </Flex>
+          </Flex>
           <Box alignItems="center">
             <Flex alignItems="center" justifyContent="space-between" sx={{ gap: 2, mb: 1 }}>
               <Type.Caption color="neutral3">Margin Usage</Type.Caption>
@@ -76,80 +113,56 @@ export default function HLPerformance({ hlAccountData }: { hlAccountData?: HlAcc
                 <Type.Caption color="neutral3">N/A</Type.Caption>
               ) : (
                 <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <ActiveDot size={4} color={directionBias === 'LONG' ? 'green1' : 'red2'} />
-                  <Type.Caption color={directionBias === 'LONG' ? 'green1' : 'red2'}>
-                    {formatNumber(directionBias === 'LONG' ? longPercent : shortPercent, 2, 2)}%
-                  </Type.Caption>
+                  <ActiveDot size={4} color="green1" />
+                  <Type.Caption color="green1">{formatNumber(longPercent, 2, 2)}%</Type.Caption>
+                  <Box />
+                  <ActiveDot size={4} color="red2" />
+                  <Type.Caption color="red2">{formatNumber(shortPercent, 2, 2)}%</Type.Caption>
                 </Flex>
               )}
             </Flex>
           </Box>
-          <Flex alignItems="center">
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                px: 1,
-                bg: `${themeColors.green1}20`,
-                color: 'green1',
-                width: !longValue && !shortValue ? '50%' : `${longPercent}%`,
-                height: 24,
-                borderRadius: '4px 0 0 4px',
-              }}
-            >
-              <Type.Caption sx={{ overflow: 'visible', whiteSpace: 'nowrap' }}>
-                {longValue ? compactNumber(longValue, 2) : ''}
-              </Type.Caption>
-            </Flex>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                px: 1,
-                bg: `${themeColors.red2}20`,
-                color: 'red2',
-                width: !longValue && !shortValue ? '50%' : `${shortPercent}%`,
-                height: 24,
-                borderRadius: '0 4px 4px 0',
-              }}
-            >
-              <Type.Caption sx={{ overflow: 'visible', whiteSpace: 'nowrap' }}>
-                {shortValue ? compactNumber(shortValue, 2) : ''}
-              </Type.Caption>
-            </Flex>
-          </Flex>
-        </Flex>
-
-        {/* Unrealized PnL & ROE */}
-        <Flex flex={1} width="100%" minWidth="fit-content" flexDirection="column" sx={{ gap: 1 }}>
-          <Type.Caption color="neutral3">Unrealized PnL</Type.Caption>
-          <Flex alignItems="center" sx={{ gap: 2 }}>
-            <Type.BodyBold color={isEmptyPos ? 'neutral3' : unrealizedPnl >= 0 ? 'green1' : 'red2'}>
-              {isEmptyPos ? (
-                'N/A'
-              ) : (
-                <SignedText value={unrealizedPnl} fontInherit minDigit={0} maxDigit={0} prefix="$" />
+          {!isEmptyPos && (
+            <Flex alignItems="center">
+              {!!longValue && (
+                <Flex
+                  alignItems="center"
+                  justifyContent="center"
+                  sx={{
+                    px: 1,
+                    bg: `${themeColors.green1}20`,
+                    color: 'green1',
+                    width: !longValue && !shortValue ? '50%' : `${longPercent}%`,
+                    height: 24,
+                    borderRadius: !shortValue ? '4px' : '4px 0 0 4px',
+                  }}
+                >
+                  <Type.Caption sx={{ overflow: 'visible', whiteSpace: 'nowrap' }}>
+                    {longValue ? compactNumber(longValue, 2) : ''}
+                  </Type.Caption>
+                </Flex>
               )}
-            </Type.BodyBold>
-            {!isEmptyPos && (
-              <Flex
-                alignItems="center"
-                justifyContent="center"
-                sx={{
-                  width: 'fit-content',
-                  height: 24,
-                  px: 1,
-                  bg: roe >= 0 ? `${themeColors.green1}20` : `${themeColors.red2}20`,
-                  color: roe >= 0 ? 'green1' : 'red2',
-                  borderRadius: '4px',
-                  gap: 1,
-                }}
-              >
-                <IconBox icon={roe >= 0 ? <ArrowUp /> : <ArrowDown />} size={16} />
-                <Type.Caption>{formatNumber(roe, 2, 2)}% ROE</Type.Caption>
-              </Flex>
-            )}
-          </Flex>
+              {!!shortValue && (
+                <Flex
+                  alignItems="center"
+                  justifyContent="center"
+                  sx={{
+                    px: 1,
+                    bg: `${themeColors.red2}20`,
+                    color: 'red2',
+                    width: !longValue && !shortValue ? '50%' : `${shortPercent}%`,
+                    height: 24,
+                    borderRadius: !longValue ? '4px' : '0 4px 4px 0',
+                    position: 'relative',
+                  }}
+                >
+                  <Type.Caption sx={{ overflow: 'visible', whiteSpace: 'nowrap', position: 'absolute' }}>
+                    {shortValue ? compactNumber(shortValue, 2) : ''}
+                  </Type.Caption>
+                </Flex>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Box>

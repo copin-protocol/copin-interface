@@ -136,7 +136,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex minWidth={190} sx={{ gap: '2px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <Flex flex={dynamicWidth ? undefined : '1.15'} sx={{ flexShrink: 0 }}>
+        <Flex flex={dynamicWidth ? undefined : '1'} sx={{ flexShrink: 0 }}>
           <Type.Caption>
             {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
               <ValueOrToken
@@ -158,7 +158,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
         </Flex>
         <VerticalDivider />
         <Flex
-          flex={dynamicWidth ? undefined : '1.15'}
+          flex={dynamicWidth ? undefined : '1.5'}
           justifyContent="flex-end"
           sx={{ flexShrink: 0, gap: 1, alignItems: 'center', height: 22 }}
         >
@@ -221,7 +221,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '2px' }}>
-        <Flex flex={dynamicWidth ? undefined : '1.15'} minWidth={40} sx={{ flexShrink: 0 }}>
+        <Flex flex={dynamicWidth ? undefined : '1'} minWidth={40} sx={{ flexShrink: 0 }}>
           <Type.Caption {..._textProps}>
             {PROTOCOLS_IN_TOKEN.includes(data.protocol) ? (
               <ValueOrToken
@@ -246,7 +246,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
         </Flex>
         <VerticalDivider sx={{ opacity: 0.2 }} />
         <Flex
-          flex={dynamicWidth ? undefined : '1.15'}
+          flex={dynamicWidth ? undefined : '1.5'}
           justifyContent="flex-end"
           sx={{ flexShrink: 0, gap: 1, alignItems: 'center', height: 22 }}
         >

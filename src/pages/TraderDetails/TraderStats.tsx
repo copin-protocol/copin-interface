@@ -24,7 +24,7 @@ const GridWrapper = styled(Grid)`
     grid-template-columns: 1fr 1fr 1fr;
   }
   @media screen and (min-width: 1680px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 `
 
@@ -107,7 +107,7 @@ const AccountStats = memo(function AccountStatsMemo({
   }, [data, isEnableLast24H, isEnableYesterday])
 
   return (
-    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 765 : undefined} pb={[3, 4, 4, 4, 3]}>
+    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 965 : undefined}>
       <Box
         sx={{
           mr: '1px',
@@ -128,9 +128,8 @@ const AccountStats = memo(function AccountStatsMemo({
               position: 'sticky',
               left: 0,
               top: 0,
-
               bg: 'neutral7',
-              flex: '10%',
+              width: 160,
               alignItems: 'center',
             }}
           >
@@ -396,6 +395,7 @@ const AccountStats = memo(function AccountStatsMemo({
                             </Flex>
                             <Box
                               key={i}
+                              flex={key === 'indexTokens' ? undefined : '1'}
                               textAlign="right"
                               sx={{
                                 filter: isNotAllowed ? 'blur(6px)' : 'none',
@@ -432,7 +432,7 @@ const AccountStats = memo(function AccountStatsMemo({
                         pl: 0,
                         position: 'sticky',
                         left: 0,
-                        flex: '10%',
+                        width: 160,
                         py: 2,
                         zIndex: 3,
                       }}

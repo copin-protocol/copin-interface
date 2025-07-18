@@ -1,4 +1,3 @@
-import { useResponsive } from 'ahooks'
 import React, { useMemo } from 'react'
 
 import TraderLabels from 'components/@ui/TraderLabels'
@@ -13,7 +12,6 @@ const TradeLabelsFrame = ({
   sx,
   showedItems,
 }: { traderStats?: TraderData[]; showedItems?: number } & SxProps) => {
-  const { sm } = useResponsive()
   const labels: { key: string; title: React.ReactNode; tooltip: React.ReactNode }[] = useMemo(() => {
     const allTimeLabels = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)?.labels
     return (traderStats
@@ -38,7 +36,7 @@ const TradeLabelsFrame = ({
       .flat()
       .filter((label) => label != null) ?? []) as { key: string; title: React.ReactNode; tooltip: React.ReactNode }[]
   }, [traderStats])
-  return labels ? (
+  return !!labels?.length ? (
     // eslint-disable-next-line react/jsx-no-undef
     <Box sx={{ alignItems: 'center', gap: 2, display: 'flex', ...(sx ?? {}) }}>
       <TraderLabels labels={labels} tooltipPlacement="bottom" showedItems={showedItems} />

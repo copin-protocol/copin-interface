@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TraderLabels from 'components/@ui/TraderLabels'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { TraderData } from 'entities/trader'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
@@ -46,6 +47,8 @@ const TraderInfo = ({
   const { notes } = useTraderFavorites()
   const { ensName } = useEnsName(address)
   const { lg } = useResponsive()
+
+  const ifLabels = traderStats?.find((data) => data && !!data.ifLabels)?.ifLabels
 
   const onViewTrader = (e: any) => {
     e.stopPropagation()
@@ -103,6 +106,20 @@ const TraderInfo = ({
           </Box>
           {!!traderStats && lg && hasLabels && (
             <Box sx={{ width: 'fit-content' }}>
+              {!!ifLabels && (
+                <Flex sx={{ flexWrap: 'wrap', gap: 2, mb: 1, px: 2 }}>
+                  <TraderLabels
+                    labels={
+                      ifLabels?.map((label) => ({
+                        key: label,
+                        title: label,
+                      })) ?? []
+                    }
+                    showedItems={3}
+                    shouldShowTooltip={false}
+                  />
+                </Flex>
+              )}
               <TradeLabelsFrame
                 traderStats={traderStats as unknown as TraderData[]}
                 showedItems={3}
