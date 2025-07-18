@@ -19,7 +19,13 @@ import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { AlertCategoryEnum, AlertSettingsEnum, AlertTypeEnum, ChannelTypeEnum } from 'utils/config/enums'
+import {
+  AlertCategoryEnum,
+  AlertCustomType,
+  AlertSettingsEnum,
+  AlertTypeEnum,
+  ChannelTypeEnum,
+} from 'utils/config/enums'
 import { ALERT_CUSTOM_TYPE_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatLocalRelativeDate } from 'utils/helpers/format'
@@ -178,24 +184,26 @@ const CustomAlertActions = ({ data }: { data: BotAlertData }) => {
         }}
         menu={
           <>
-            {configs.map((v, index) => {
-              const { title, icon: Icon, type } = v
-              return (
-                <Fragment key={index}>
-                  {type === 'edit' ? (
-                    <ActionItem title={title} icon={<Icon size={18} />} onSelect={() => handleSubmit(type)} />
-                  ) : (
-                    <Popconfirm
-                      action={<ActionItem title={title} icon={<Icon size={18} />} />}
-                      title="Are you sure you want to delete this alert?"
-                      onConfirm={() => handleSubmit(type)}
-                      confirmButtonProps={{ variant: 'ghostDanger' }}
-                    />
-                  )}
-                  {index === 0 && <Divider />}
-                </Fragment>
-              )
-            })}
+            {configs
+              .filter((v) => v.type !== 'delete' || data.type !== AlertCustomType.TRADER_BOOKMARK)
+              .map((v, index) => {
+                const { title, icon: Icon, type } = v
+                return (
+                  <Fragment key={index}>
+                    {type === 'edit' ? (
+                      <ActionItem title={title} icon={<Icon size={18} />} onSelect={() => handleSubmit(type)} />
+                    ) : (
+                      <Popconfirm
+                        action={<ActionItem title={title} icon={<Icon size={18} />} />}
+                        title="Are you sure you want to delete this alert?"
+                        onConfirm={() => handleSubmit(type)}
+                        confirmButtonProps={{ variant: 'ghostDanger' }}
+                      />
+                    )}
+                    {index === 0 && <Divider />}
+                  </Fragment>
+                )
+              })}
           </>
         }
         sx={{}}

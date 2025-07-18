@@ -24,6 +24,7 @@ export default function TextWithEdit({
   defaultValue,
   onSave,
   onValidate,
+  onEditMode,
   formatDisplayText,
   disabled,
   allowEmpty = false,
@@ -36,6 +37,7 @@ export default function TextWithEdit({
   defaultValue: string | number
   onSave: (value: string) => void
   onValidate?: (value: string) => Promise<boolean | undefined> | boolean | undefined
+  onEditMode?: (isEditMode: boolean) => void
   formatDisplayText?: (value: string) => string
   disabled?: boolean
   allowEmpty?: boolean
@@ -132,16 +134,21 @@ export default function TextWithEdit({
         }}
         formatDisplayText={formatDisplayText}
         onChange={onChange}
-        onSave={handleSave}
+        onSave={(value) => {
+          handleSave(value)
+          onEditMode?.(false)
+        }}
         onBlur={() => {
           if (allowEmpty && value === '') {
             setValue('--')
           }
+          onEditMode?.(false)
         }}
         onEditMode={() => {
           if (allowEmpty && value === '--') {
             setValue('')
           }
+          onEditMode?.(true)
         }}
       />
     </Box>

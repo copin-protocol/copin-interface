@@ -20,8 +20,10 @@ import { useTraderGroupTable } from './useTraderGroupTable'
  * Allows users to manage a group of traders for custom alerts.
  */
 const TraderGroup = ({
+  id,
   defaultValues,
   groupTraders,
+  customType = AlertCustomType.TRADER_GROUP,
   onBack,
   onApply,
   setMatchingTraderCount,
@@ -57,6 +59,7 @@ const TraderGroup = ({
     handleApply,
     handleReset,
   } = useTraderGroupState({
+    customType,
     defaultValues,
     groupTraders,
     onApply,
@@ -75,7 +78,7 @@ const TraderGroup = ({
         <EditAlertHeader
           isNew={isNew}
           hasChange={hasChange}
-          customType={AlertCustomType.TRADER_GROUP}
+          customType={customType}
           name={name}
           description={description}
           setName={onChangeName}
@@ -88,6 +91,8 @@ const TraderGroup = ({
 
         {/* Search section */}
         <TraderGroupSearch
+          id={id}
+          customType={customType}
           totalTrader={totalActiveTrader}
           maxTraderAlert={maxTraderAlert}
           isEliteUser={isEliteUser}
@@ -110,6 +115,7 @@ const TraderGroup = ({
 
       {/* Trader list section */}
       <TraderGroupList
+        customType={customType}
         isMobile={isMobile}
         paginatedTraders={paginatedTraders}
         columns={columns}

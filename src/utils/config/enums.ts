@@ -394,6 +394,7 @@ export enum AlertCustomType {
   'TRADER_FILTER' = 'TRADER_FILTER',
   'TRADER_GROUP' = 'TRADER_GROUP',
   'TRADER_POSITION' = 'TRADER_POSITION',
+  'TRADER_BOOKMARK' = 'TRADER_BOOKMARK',
 }
 
 export enum AlertCategoryEnum {

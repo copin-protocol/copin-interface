@@ -16,7 +16,7 @@ import QSReader from './@helpers/QSReader'
 import ScrollToTop from './@helpers/ScrollToTop'
 import AppWrapper from './AppWrapper'
 
-const FavoritesPage = lazy(() => import('./MyProfile/Favorites'))
+const BookmarksPage = lazy(() => import('./MyProfile/Bookmarks'))
 const VaultDetailsPage = lazy(() => import('./VaultDetails'))
 const PerpDEXsExplorerPage = lazy(() => import('./PerpDEXsExplorer'))
 const HomePage = lazy(() => import('./Home'))
@@ -103,7 +103,7 @@ function App() {
               path={ROUTES.ALERT_SETTING_DETAILS.path}
               component={AlertSettingDetailsPage}
             ></AuthedRoute>
-            <AuthedRoute path={ROUTES.FAVORITES.path} component={FavoritesPage}></AuthedRoute>
+            <AuthedRoute path={ROUTES.BOOKMARKS.path} component={BookmarksPage}></AuthedRoute>
             <Route exact path={ROUTES.SEARCH.path} component={SearchPage}></Route>
             <Route exact path={ROUTES.SEARCH_TX_HASH.path} component={SearchTxHashPage}></Route>
             <Route path={ROUTES.LEADERBOARD.path} component={LeaderboardPage}></Route>

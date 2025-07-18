@@ -118,7 +118,8 @@ function AlertSettingDetailsComponent() {
                     botAlert.category === AlertCategoryEnum.CUSTOM ? (
                       isCreatingCustomAlert ? (
                         <Type.Caption color="orange1">No Traders</Type.Caption>
-                      ) : botAlert.type === AlertCustomType.TRADER_GROUP ? (
+                      ) : botAlert.type === AlertCustomType.TRADER_GROUP ||
+                        botAlert.type === AlertCustomType.TRADER_BOOKMARK ? (
                         <ListTradersContent
                           traders={groupTraders?.data?.map((e) => e.address)}
                           total={groupTraders?.meta?.total}
@@ -202,7 +203,8 @@ function AlertSettingDetailsComponent() {
                     my: '24px',
                     mr: '24px',
                     width: 600,
-                    height: 'max-content',
+                    height: 'fit-content',
+                    maxHeight: 'calc(100% - 48px)',
                     backgroundColor: 'neutral6',
                     border: 'small',
                     borderColor: 'neutral4',

@@ -34,6 +34,7 @@ export interface PaymentDetailsData {
 }
 
 export interface SubscriptionUsageData {
+  bookmarkGroups: number
   watchedListAlerts: number
   webhookAlerts: number
   groupAlerts: number

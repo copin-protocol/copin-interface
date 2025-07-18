@@ -1,11 +1,12 @@
 import { ApiListResponse } from 'apis/api'
 import { TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
-import { ProtocolEnum } from 'utils/config/enums'
+import { AlertCustomType, ProtocolEnum } from 'utils/config/enums'
 
 import { CustomAlertFormValues } from '../types'
 
 export interface TraderGroupProps {
+  id?: string
   defaultValues?: CustomAlertFormValues
   groupTraders?: ApiListResponse<TraderAlertData>
   onBack: () => void
@@ -14,12 +15,14 @@ export interface TraderGroupProps {
   setMatchingTraderCount: (value: number) => void
   submitting?: boolean
   isNew?: boolean
+  customType?: AlertCustomType
 }
 
 export interface MobileTraderItemProps {
   data: TraderAlertData
   onUpdateWatchlist: (data: TraderAlertData) => void
   onRemoveWatchlist: (data: TraderAlertData) => void
+  customType: AlertCustomType
 }
 
 export interface TraderGroupHeaderProps {
@@ -32,6 +35,8 @@ export interface TraderGroupHeaderProps {
 }
 
 export interface TraderGroupSearchProps {
+  id?: string
+  customType: AlertCustomType
   totalTrader: number
   maxTraderAlert: number | undefined
   isEliteUser: boolean | null | undefined
@@ -43,6 +48,7 @@ export interface TraderGroupSearchProps {
 }
 
 export interface TraderGroupListProps {
+  customType: AlertCustomType
   isMobile: boolean
   paginatedTraders: ApiListResponse<TraderAlertData>
   columns: any[]

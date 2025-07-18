@@ -10,13 +10,14 @@ import {
 import IconButton from 'theme/Buttons/IconButton'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Flex } from 'theme/base'
+import { AlertCustomType } from 'utils/config/enums'
 
 import { MobileTraderItemProps } from './types'
 
 /**
  * Mobile view component for rendering individual trader items
  */
-const MobileTraderItem = memo(({ data, onUpdateWatchlist, onRemoveWatchlist }: MobileTraderItemProps) => {
+const MobileTraderItem = memo(({ data, onUpdateWatchlist, onRemoveWatchlist, customType }: MobileTraderItemProps) => {
   const handleUpdateWatchlist = useCallback(() => {
     onUpdateWatchlist(data)
   }, [data, onUpdateWatchlist])
@@ -35,18 +36,20 @@ const MobileTraderItem = memo(({ data, onUpdateWatchlist, onRemoveWatchlist }: M
         <TraderAddress data={data} />
         <Flex alignItems="center" sx={{ gap: 3 }}>
           <SwitchInput checked={data.enableAlert} onClick={handleUpdateWatchlist} />
-          <IconButton
-            variant="ghost"
-            icon={<Trash size={16} />}
-            size={16}
-            sx={{
-              color: 'neutral3',
-              '&:hover:not(:disabled),&:active:not(:disabled)': {
-                color: 'red1',
-              },
-            }}
-            onClick={handleRemoveWatchlist}
-          />
+          {customType !== AlertCustomType.TRADER_BOOKMARK && (
+            <IconButton
+              variant="ghost"
+              icon={<Trash size={16} />}
+              size={16}
+              sx={{
+                color: 'neutral3',
+                '&:hover:not(:disabled),&:active:not(:disabled)': {
+                  color: 'red1',
+                },
+              }}
+              onClick={handleRemoveWatchlist}
+            />
+          )}
         </Flex>
       </Flex>
       <MobileRowItem label="Latest Added" value={<TraderCreatedAt data={data} />} />

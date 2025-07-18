@@ -5,6 +5,8 @@ import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import MarketGroup from 'components/@ui/MarketGroup'
 import TraderLabels from 'components/@ui/TraderLabels'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
+import FavoriteEditButton from 'components/@widgets/FavoriteButton/FavoriteEditButton'
+import FavoriteRemoveButton from 'components/@widgets/FavoriteButton/FavoriteRemoveButton'
 import { PnlTitle, PnlTitleWithTooltip } from 'components/@widgets/SwitchPnlButton'
 import { MyCopyTraderData, TraderData } from 'entities/trader.d'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -47,27 +49,37 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     id: 'account',
     freezeLeft: 216,
     freezeIndex: 3,
-    render: (item) => (
-      <Box pl={3}>
-        <AccountCell
-          data={item}
-          additionalComponent={
-            <Flex alignItems="center" sx={{ gap: 2 }}>
-              <CopyButton
-                type="button"
-                variant="ghost"
-                value={item.account}
-                size={16}
-                sx={{ color: 'neutral3', p: 0 }}
-                iconSize={16}
-                className={'hiding-btn'}
-              ></CopyButton>
-              <FavoriteButton address={item.account} protocol={item.protocol} size={16} />
-            </Flex>
-          }
-        />
-      </Box>
-    ),
+    render: (item, _, externalSource) => {
+      let additionalComponent = null
+      if (externalSource?.dataView === 'BOOKMARK') {
+        additionalComponent = (
+          <Flex alignItems="center" sx={{ gap: 2, ml: 2 }}>
+            <FavoriteEditButton address={item.account} protocol={item.protocol} size={16} isEditInGroup />
+            <FavoriteRemoveButton address={item.account} protocol={item.protocol} size={16} />
+          </Flex>
+        )
+      } else {
+        additionalComponent = (
+          <Flex alignItems="center" sx={{ gap: 2, ml: 2 }}>
+            <CopyButton
+              type="button"
+              variant="ghost"
+              value={item.account}
+              size={16}
+              sx={{ color: 'neutral3', p: 0 }}
+              iconSize={16}
+              className={'hiding-btn'}
+            ></CopyButton>
+            <FavoriteButton address={item.account} protocol={item.protocol} size={16} />
+          </Flex>
+        )
+      }
+      return (
+        <Box pl={3}>
+          <AccountCell data={item} additionalComponent={additionalComponent} />
+        </Box>
+      )
+    },
   },
   runTimeDays: {
     style: { minWidth: ['140px', '150px'] },

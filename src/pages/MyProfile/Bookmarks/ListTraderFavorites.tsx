@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
-import { ReactNode, memo, useState } from 'react'
+import { ReactNode, memo, useEffect, useState } from 'react'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import { mobileTableSettings, tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
+import NoFavoriteFound from 'components/@ui/NoDataFound/NoFavoriteFound'
 import { TraderData } from 'entities/trader.d'
 import useExplorerPermission from 'hooks/features/subscription/useExplorerPermission'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
+import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import { Box, Flex } from 'theme/base'
 import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
@@ -21,10 +23,13 @@ import { getPaginationDataFromList } from 'utils/helpers/transform'
 
 const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   contextValues,
-  notes,
+  bookmarks,
+  totalAccounts,
 }: {
   contextValues: TradersContextData
-  notes: { [key: string]: string }
+  bookmarks: { [key: string]: { note?: string; customAlertIds?: string[] } }
+  groupId?: string
+  totalAccounts: number
 }) {
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { traderFavorites } = useTraderFavorites()
@@ -52,7 +57,7 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
 
   // Permission
   const { userPermission, pagePermission } = useExplorerPermission()
-  let noDataMessage: ReactNode | undefined = undefined
+  let noDataMessage: ReactNode | undefined
   {
     const hasFilterTimeFromHigherPlan = !userPermission?.timeFramesAllowed?.includes(timeOption.id)
     let requiredPlan: SubscriptionPlanEnum | undefined = undefined
@@ -119,7 +124,8 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
   const formattedData = data?.data
     .map((item) => ({
       ...item,
-      note: notes ? notes[`${item.account}-${item.protocol}`] : undefined,
+      note: bookmarks ? bookmarks[`${item.account}-${item.protocol}`]?.note : undefined,
+      customAlertIds: bookmarks ? bookmarks[`${item.account}-${item.protocol}`]?.customAlertIds : undefined,
     }))
     .filter(({ account, protocol }) => {
       const traderFavorite = getTraderFavoriteValue({ address: account, protocol })
@@ -127,6 +133,29 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     })
 
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: formattedData })
+
+  // if (paginatedData.data?.length === 0 && !isLoading && totalAccounts > 0) {
+  //   const title = <Trans>All traders from higher plan are not shown</Trans>
+  //   const description = <Trans>Please upgrade to explore all traders</Trans>
+  //   noDataMessage = (
+  //     <Box pt={4}>
+  //       <PlanUpgradePrompt
+  //         title={title}
+  //         description={description}
+  //         requiredPlan={SubscriptionPlanEnum.ELITE}
+  //         learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE}
+  //         useLockIcon
+  //         showTitleIcon
+  //       />
+  //     </Box>
+  //   )
+  // }
+
+  useEffect(() => {
+    if (paginatedData.data?.length === 0 && !isLoading && currentPage > 1) {
+      changeCurrentPage(1)
+    }
+  }, [paginatedData, isLoading, currentPage, changeCurrentPage])
 
   return (
     <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -141,27 +170,39 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
         }}
       >
         {md ? (
-          <TraderListTable
-            data={paginatedData.data}
-            isLoading={isLoading}
-            currentSort={currentSort}
-            changeCurrentSort={changeCurrentSort}
-            handleSelectAll={null}
-            tableSettings={settings}
-            checkIsSelected={checkIsSelected}
-            handleSelect={handleSelect}
-            hiddenSelectAllBox
-            hiddenSelectItemBox
-            lefts={[0, 0]}
-            noDataMessage={noDataMessage}
-            learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE}
-          />
+          noDataMessage == null && paginatedData.data?.length === 0 ? (
+            isLoading ? (
+              <Loading />
+            ) : (
+              <NoFavoriteFound message={<Trans>No traders match your protocol filters</Trans>} />
+              // <NoDataFound/>
+            )
+          ) : (
+            <TraderListTable
+              freezeBg="neutral8"
+              data={paginatedData.data}
+              isLoading={isLoading}
+              currentSort={currentSort}
+              changeCurrentSort={changeCurrentSort}
+              handleSelectAll={null}
+              tableSettings={settings}
+              checkIsSelected={checkIsSelected}
+              handleSelect={handleSelect}
+              hiddenSelectAllBox
+              hiddenSelectItemBox
+              lefts={[0, 0]}
+              noDataMessage={noDataMessage}
+              learnMoreSection={SubscriptionFeatureEnum.TRADER_FAVORITE}
+              dataView="BOOKMARK"
+            />
+          )
         ) : (
           <TraderListCard
             data={paginatedData.data}
             isLoading={isLoading}
             isFavoritePage
             noDataMessage={noDataMessage}
+            dataView="BOOKMARK"
           />
         )}
       </Box>

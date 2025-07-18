@@ -152,29 +152,34 @@ export default function useQueryTraders({
   let data = timeTradersData
 
   if (accounts && data) {
-    const protocolAccounts = traderFavorites ?? accounts
+    const traderData =
+      data?.data.filter((trader) => traderFavorites?.includes(`${trader.account}-${trader.protocol}`)) || []
+    const accountsWithInfo = traderData.map((trader) => `${trader.account}-${trader.protocol}`)
 
-    const accountsWithInfo = data.data.map((trader) => trader.account)
-
-    const extraAccounts = protocolAccounts
-      .filter((account) => {
-        const [address, protocol] = account.split('-')
-        return !accountsWithInfo.includes(address) && selectedProtocols?.includes(protocol as ProtocolEnum)
-      })
-      .map((account) => {
-        const [address, protocol] = account.split('-')
-        return {
-          account: address,
-          protocol: protocol as ProtocolEnum,
-        } as ResponseTraderData
-      })
+    const extraAccounts =
+      traderFavorites
+        ?.filter((traderFavorite) => {
+          const [address, protocol] = traderFavorite.split('-')
+          return (
+            !accountsWithInfo.includes(traderFavorite) &&
+            accounts.includes(address) &&
+            selectedProtocols?.includes(protocol as ProtocolEnum)
+          )
+        })
+        .map((traderFavorite) => {
+          const [address, protocol] = traderFavorite.split('-')
+          return {
+            account: address,
+            protocol: protocol as ProtocolEnum,
+          } as ResponseTraderData
+        }) || []
 
     data = {
-      data: [...data.data, ...extraAccounts],
+      data: [...traderData, ...extraAccounts] as ResponseTraderData[],
       meta: {
         limit: isFavTraders ? MAX_LIMIT : accounts.length,
         offset: 0,
-        total: isFavTraders ? data.data.length + extraAccounts.length : accounts.length,
+        total: isFavTraders ? traderData.length + extraAccounts.length : accounts.length,
         totalPages: 1,
       },
     }

@@ -18,6 +18,7 @@ export default function TableBody<T>({
   hiddenSelectBox = false,
   lefts: _lefts = [36, 48],
   columnTooltipIdFn,
+  dataView,
 }: {
   data: T[] | undefined
   isLoading: boolean
@@ -29,6 +30,7 @@ export default function TableBody<T>({
   hiddenSelectBox?: boolean
   lefts?: [number, number]
   columnTooltipIdFn?: (data: TableSettings<T, ExternalTraderListSource>) => string
+  dataView?: 'BOOKMARK'
 }) {
   const lefts = useMemo(
     () =>
@@ -105,7 +107,10 @@ export default function TableBody<T>({
                     ...column.style,
                   }}
                 >
-                  {column?.render && column.render(data, index)}
+                  {column?.render &&
+                    column.render(data, index, {
+                      dataView,
+                    })}
                 </Box>
               )
             })}

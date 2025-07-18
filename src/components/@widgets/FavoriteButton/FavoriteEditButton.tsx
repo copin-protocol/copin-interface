@@ -1,4 +1,4 @@
-import { Star } from '@phosphor-icons/react'
+import { Pencil } from '@phosphor-icons/react'
 
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import useTraderFavorites, { getTraderFavoriteValue } from 'hooks/store/useTraderFavorites'
@@ -8,24 +8,20 @@ import { ProtocolEnum } from 'utils/config/enums'
 import { getUserForTracking, logEvent } from 'utils/tracking/event'
 import { EVENT_ACTIONS, EventCategory, EventSource } from 'utils/tracking/types'
 
-export default function FavoriteButton({
+export default function FavoriteEditButton({
   source,
   address,
   protocol,
   size = 24,
-  color = 'neutral3',
-  hoverColor = 'primary1',
-  activeColor = 'primary1',
   sx = {},
+  isEditInGroup,
 }: {
   address: string
   protocol: ProtocolEnum
   size?: number
-  color?: string
-  hoverColor?: string
-  activeColor?: string
   source?: EventSource
   sx?: any
+  isEditInGroup?: boolean
 }) {
   const {
     traderFavorites,
@@ -74,24 +70,28 @@ export default function FavoriteButton({
     <div className="favorite-btn">
       <IconButton
         type="button"
-        variant="ghost"
+        variant="ghostInactive"
         onClick={(e: any) => {
           e.preventDefault()
           e.stopPropagation()
-
           if (!isAuthenticated) {
             handleClickLogin()
             return
           }
-          setTooltip({ address, protocol, position: e.currentTarget.getBoundingClientRect(), isEdit: hasFavorite })
+          setTooltip({
+            address,
+            protocol,
+            position: e.currentTarget.getBoundingClientRect(),
+            isEdit: true,
+            isEditInGroup,
+          })
         }}
         disabled={favoriteSubmitting}
-        className={hasFavorite ? '' : 'hiding-btn'}
-        icon={<Star weight={hasFavorite ? 'fill' : 'regular'} size={size} />}
+        className="hiding-btn"
+        icon={<Pencil size={size} />}
         size={size}
         sx={{
           p: 0,
-          color: hasFavorite ? activeColor : color,
           ...sx,
         }}
         // onClick={handleAddFavorite}

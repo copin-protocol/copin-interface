@@ -84,6 +84,7 @@ const useTimeFilterData = ({
 
     return { index, body }
   }, [requestData, selectedProtocols, timeOption])
+
   const {
     data: traders,
     loading,

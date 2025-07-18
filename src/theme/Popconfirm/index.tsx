@@ -1,10 +1,13 @@
 import { Info } from '@phosphor-icons/react'
 import { ReactNode, useState } from 'react'
+import OutsideClickHandler from 'react-outside-click-handler'
 import { v4 as uuidv4 } from 'uuid'
 
+import KeyListener from 'components/@ui/KeyListener'
 import { Button, ButtonProps } from 'theme/Buttons'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Type } from 'theme/base'
+import { KeyNameEnum } from 'utils/config/enums'
 
 interface PopconfirmProps {
   action: ReactNode
@@ -47,32 +50,35 @@ const Popconfirm = ({
   }
 
   return (
-    <>
+    <Box>
       <Box data-tip="React-tooltip" data-tooltip-id={tooltipId}>
         {action}
       </Box>
-      <Tooltip
-        id={tooltipId}
-        openEvents={{ click: true }}
-        closeEvents={{ click: true }}
-        isOpen={visible}
-        setIsOpen={setVisible}
-        afterHide={cancelAfterHide ? onCancel : undefined}
-        clickable
-      >
-        <Content
-          title={title}
-          icon={icon}
-          description={description}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-          confirmText={confirmText}
-          cancelText={cancelText}
-          confirmButtonProps={confirmButtonProps}
-          cancelButtonProps={cancelButtonProps}
-        />
-      </Tooltip>
-    </>
+      <KeyListener keyName={KeyNameEnum.ESCAPE} onFire={handleCancel} />
+      <OutsideClickHandler onOutsideClick={handleCancel}>
+        <Tooltip
+          id={tooltipId}
+          openEvents={{ click: true }}
+          closeEvents={{ click: true }}
+          isOpen={visible}
+          setIsOpen={setVisible}
+          afterHide={cancelAfterHide ? onCancel : undefined}
+          clickable
+        >
+          <Content
+            title={title}
+            icon={icon}
+            description={description}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+            confirmText={confirmText}
+            cancelText={cancelText}
+            confirmButtonProps={confirmButtonProps}
+            cancelButtonProps={cancelButtonProps}
+          />
+        </Tooltip>
+      </OutsideClickHandler>
+    </Box>
   )
 }
 

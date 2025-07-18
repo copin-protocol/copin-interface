@@ -14,7 +14,7 @@ import { useIsElite, useIsPro } from 'hooks/features/subscription/useSubscriptio
 import useUserUsage from 'hooks/features/subscription/useUserUsage'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import usePageChange from 'hooks/helpers/usePageChange'
-import { AlertCategoryEnum, AlertTypeEnum, SubscriptionPermission } from 'utils/config/enums'
+import { AlertCategoryEnum, AlertCustomType, AlertTypeEnum, SubscriptionPermission } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { pageToOffset } from 'utils/helpers/transform'
 
@@ -25,9 +25,11 @@ export interface BotAlertContextValues {
   maxTraderAlert?: number
   systemAlerts?: BotAlertData[]
   customAlerts?: ApiListResponse<BotAlertData>
+  bookmarkGroups?: BotAlertData[]
   traderAlerts?: ApiListResponse<TraderAlertData>
   loadingAlerts?: boolean
   loadingTraders?: boolean
+  loadingBookmarkGroups?: boolean
   isPremiumUser?: boolean | null
   isEliteUser?: boolean | null
   hasCopiedChannel?: boolean
@@ -111,7 +113,7 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
     refetch: refetchCustomAlerts,
   } = useQuery(
     [QUERY_KEYS.GET_CUSTOM_ALERTS, myProfile?.id, currentPage, searchText],
-    () => getCustomAlertsApi({ name: searchText, limit: 20, offset: pageToOffset(currentPage, 20) }),
+    () => getCustomAlertsApi({ name: searchText, limit: 20, offset: pageToOffset(currentPage, 20), showAlert: true }),
     {
       keepPreviousData: true,
       enabled: !!myProfile?.id,
@@ -126,6 +128,28 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
           }),
           meta: data.meta,
         }
+      },
+    }
+  )
+
+  const {
+    data: bookmarkGroups,
+    isLoading: loadingBookmarkGroups,
+    refetch: refetchBookmarkGroups,
+  } = useQuery(
+    [QUERY_KEYS.GET_CUSTOM_ALERTS, myProfile?.id, AlertCustomType.TRADER_BOOKMARK],
+    () => getCustomAlertsApi({ type: AlertCustomType.TRADER_BOOKMARK, limit: 500, offset: 0 }),
+    {
+      keepPreviousData: true,
+      enabled: !!myProfile?.id,
+      retry: 0,
+      select: (data) => {
+        return data?.data?.map((e) => {
+          return {
+            ...e,
+            category: AlertCategoryEnum.CUSTOM,
+          } as BotAlertData
+        })
       },
     }
   )
@@ -195,8 +219,10 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
       traderAlerts,
       systemAlerts,
       customAlerts,
+      bookmarkGroups,
       loadingAlerts,
       loadingTraders,
+      loadingBookmarkGroups,
       isProUser,
       isEliteUser,
       hasCopiedChannel,
@@ -224,8 +250,10 @@ export const BotAlertInitializer = memo(function BotAlertProvider() {
       traderAlerts,
       systemAlerts,
       customAlerts,
+      bookmarkGroups,
       loadingAlerts,
       loadingTraders,
+      loadingBookmarkGroups,
       isProUser,
       isEliteUser,
       hasCopiedChannel,

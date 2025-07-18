@@ -41,20 +41,20 @@ export default function TimeFilterSection({
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          px: [1, 1, 1, 3],
+          px: [1, 1, 3],
           flexShrink: 0,
           // borderBottom: 'small',
           // borderColor: 'neutral4',
-          height: ['auto', 'auto', 'auto', 40],
+          height: ['auto', 'auto', 40],
         }}
       >
         <Flex
           justifyContent="start"
           alignItems="center"
-          sx={{ gap: [1, 1, 1, 2] }}
-          mb={[2, 2, 2, 0]}
+          sx={{ gap: [1, 1, 2] }}
+          mb={[2, 2, 0]}
           // mt={isPremiumUser ? 0 : ['6px', '6px', '6px', 0]}
-          mt={['6px', '6px', '6px', 0]}
+          mt={['6px', '6px', 0]}
         >
           <TimeFilter
             currentFilter={timeOption}

@@ -26,6 +26,9 @@ export function getDefaultValues(botAlert?: BotAlertData) {
     case AlertCustomType.TRADER_GROUP:
       defaultValues.customType = AlertCustomType.TRADER_GROUP
       break
+    case AlertCustomType.TRADER_BOOKMARK:
+      defaultValues.customType = AlertCustomType.TRADER_BOOKMARK
+      break
   }
 
   return defaultValues

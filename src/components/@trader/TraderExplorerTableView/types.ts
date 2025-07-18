@@ -20,6 +20,7 @@ export type TableSettings<T, K = unknown> = {
 
 export type ExternalTraderListSource = {
   traderFavorites?: string[]
+  dataView?: 'BOOKMARK'
   onToggleFavorite?: (account: string) => void
   isMarketsLeft?: boolean
 }

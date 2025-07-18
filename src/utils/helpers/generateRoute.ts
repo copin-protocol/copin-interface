@@ -119,7 +119,7 @@ export function generateFavoriteTradersRoute(data: {
   params?: Record<string, any>
 }) {
   return createUrlWithParams({
-    url: ROUTES.FAVORITES.path,
+    url: ROUTES.BOOKMARKS.path,
     params: data.params,
   })
 }

@@ -26,11 +26,13 @@ export default function TraderExplorerListView({
   isLoading,
   isFavoritePage = false,
   noDataMessage,
+  dataView,
 }: {
   data: TraderData[] | undefined
   isLoading: boolean
   isFavoritePage?: boolean
   noDataMessage?: ReactNode
+  dataView?: 'BOOKMARK'
 }) {
   const { columnKeys: visibleColumns } = useTraderExplorerListColumns()
 
@@ -55,6 +57,7 @@ export default function TraderExplorerListView({
 
   const externalSource: ExternalTraderListSource = {
     isMarketsLeft: true,
+    dataView,
   }
 
   return (
@@ -82,9 +85,14 @@ export default function TraderExplorerListView({
       <Box sx={{ position: 'relative' }}>
         {!isLoading &&
           !data?.length &&
-          (noDataMessage ?? (isFavoritePage ? <NoFavoriteFound sx={{ pt: 5 }} /> : <NoDataFound />))}
+          (noDataMessage ??
+            (isFavoritePage ? (
+              <NoFavoriteFound message={<Trans>No traders match your protocol filters</Trans>} sx={{ pt: 5 }} />
+            ) : (
+              <NoDataFound />
+            )))}
 
-        {data?.map((_data) => {
+        {data?.map((_data, dataIndex) => {
           const labels = _data.labels
             ?.sort((a, b) => {
               if (a.includes('TIER')) return -1
@@ -101,7 +109,9 @@ export default function TraderExplorerListView({
           return (
             <Accordion
               key={_data.account + _data.protocol}
-              header={_tableSettings[0].render?.(_data)}
+              header={_tableSettings[0].render?.(_data, dataIndex, {
+                dataView,
+              })}
               subHeader={
                 <Box>
                   {labels != null && !!_tableSettings.find((v) => v.id === 'labels') && (
@@ -133,7 +143,9 @@ export default function TraderExplorerListView({
                         <Fragment key={setting.id}>
                           <StatsItem
                             label={setting.text}
-                            value={setting.render?.(_data)}
+                            value={setting.render?.(_data, dataIndex, {
+                              dataView,
+                            })}
                             isAvailable={isAvailable}
                             tooltipId={tooltipId}
                           />
