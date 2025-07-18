@@ -19,6 +19,7 @@ import NotFound from 'components/@ui/NotFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TraderLabels from 'components/@ui/TraderLabels'
 import { PositionData, ResponseTraderExchangeStatistic } from 'entities/trader.d'
+import { useIsIF } from 'hooks/features/subscription/useSubscriptionRestrict'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { HyperliquidTraderProvider } from 'hooks/features/trader/useHyperliquidTraderContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
@@ -47,6 +48,7 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
+import NoteAction from './NoteAction'
 import ProtocolStats from './ProtocolStats'
 import TradeLabelsFrame from './TradeLabelsFrame'
 import TraderActionButtons from './TraderActionButtons'
@@ -180,6 +182,7 @@ export function TraderDetailsComponent({
     apiMode,
     handleApiMode,
   } = useHandleLayout()
+  const isIF = useIsIF()
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   if (!protocolOptionsMapping[protocol]) {
     return <NotFound title="Protocol not support" message="" />
@@ -222,22 +225,44 @@ export function TraderDetailsComponent({
                 />
               </Flex>
               {!!traderData && !lg && (
-                <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
-                  {!!ifLabels && (
-                    <Flex sx={{ flexWrap: 'wrap', gap: 2, mb: 2 }}>
-                      <TraderLabels
-                        labels={
-                          ifLabels?.map((label) => ({
-                            key: label,
-                            title: label,
-                          })) ?? []
-                        }
-                        showedItems={3}
-                        shouldShowTooltip={false}
-                      />
+                <Box>
+                  {isIF && (
+                    <Flex
+                      sx={{
+                        gap: 2,
+                        pl: 12,
+                        py: 2,
+                        alignItems: 'center',
+                        overflow: 'auto',
+                        justifyContent: 'space-between',
+                        borderTop: 'small',
+                        borderBottom: 'small',
+                        borderColor: 'neutral4',
+                      }}
+                    >
+                      {!!ifLabels && (
+                        <Flex sx={{ flexWrap: 'wrap', gap: 2, flex: 1 }}>
+                          <TraderLabels
+                            labels={
+                              ifLabels?.map((label) => ({
+                                key: label,
+                                title: label,
+                              })) ?? []
+                            }
+                            isIF
+                            showedItems={3}
+                            shouldShowTooltip={false}
+                          />
+                        </Flex>
+                      )}
+                      <NoteAction account={address} protocol={protocol} />
                     </Flex>
                   )}
-                  <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
+                  {traderData?.some((data) => data?.labels?.length) && (
+                    <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
+                      <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
+                    </Box>
+                  )}
                 </Box>
               )}
             </Box>

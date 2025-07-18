@@ -1045,7 +1045,7 @@ msgstr "Change password successful!"
 msgid "Channel Alerts"
 msgstr "Channel Alerts"
 
-#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+#: src/pages/TraderDetails/Layouts/tabConfigs.tsx
 msgid "Charts"
 msgstr "Charts"
 
@@ -2195,8 +2195,8 @@ msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
 #: src/pages/Explorer/ConditionFilter/index.tsx
-msgid "IF LABELS"
-msgstr "IF LABELS"
+msgid "IF TAGS"
+msgstr "IF TAGS"
 
 #: src/pages/MyProfile/index.tsx
 msgid "IF WALLET"
@@ -3176,6 +3176,7 @@ msgstr "No trader data was found to compare in the past {0}"
 msgid "No trader matched"
 msgstr "No trader matched"
 
+#: src/components/@trader/TraderExplorerListView/index.tsx
 #: src/pages/MyProfile/Bookmarks/ListTraderFavorites.tsx
 msgid "No traders match your protocol filters"
 msgstr "No traders match your protocol filters"
@@ -3717,8 +3718,7 @@ msgstr "Position average duration more than 7 days."
 msgid "Position not yet synced"
 msgstr "Position not yet synced"
 
-#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
-#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+#: src/pages/TraderDetails/Layouts/tabConfigs.tsx
 msgid "Positions"
 msgstr "Positions"
 
@@ -4371,8 +4371,7 @@ msgstr "Starter"
 msgid "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 msgstr "Starting from <0>5/2/2024</0>, your order will not be executed because this trader is being copied by 10 or more copiers. Upgrade to Premium to be able to follow this trader. <1>Upgrade</1>"
 
-#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
-#: src/pages/TraderDetails/Layouts/MobileLayout.tsx
+#: src/pages/TraderDetails/Layouts/tabConfigs.tsx
 msgid "Stats"
 msgstr "Stats"
 

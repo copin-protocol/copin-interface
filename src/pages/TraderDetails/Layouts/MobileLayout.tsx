@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { BookOpenText, ChartLine, Notebook } from '@phosphor-icons/react'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import BlurMask from 'components/@ui/BlurMask'
@@ -13,49 +12,8 @@ import { ProtocolEnum } from 'utils/config/enums'
 
 import PositionMobileView from './PositionMobileView'
 import ProtocolPermissionContainer from './ProtocolPermissionContainer'
+import { TabEnum, noChartsTabConfigs, tabConfigs } from './tabConfigs'
 import { LayoutProps } from './types'
-
-enum TabEnum {
-  STATS = 'stats',
-  CHARTS = 'charts',
-  POSITIONS = 'positions',
-}
-
-const tabConfigs = [
-  {
-    key: TabEnum.STATS,
-    name: <Trans>Stats</Trans>,
-    icon: <BookOpenText size={20} />,
-    activeIcon: <BookOpenText size={20} weight="fill" />,
-  },
-  {
-    key: TabEnum.CHARTS,
-    name: <Trans>Charts</Trans>,
-    icon: <ChartLine size={20} />,
-    activeIcon: <ChartLine size={20} weight="fill" />,
-  },
-  {
-    key: TabEnum.POSITIONS,
-    name: <Trans>Positions</Trans>,
-    icon: <Notebook size={20} />,
-    activeIcon: <Notebook size={20} weight="fill" />,
-  },
-]
-
-const tabConfigsApiMode = [
-  {
-    key: TabEnum.STATS,
-    name: <Trans>Stats</Trans>,
-    icon: <BookOpenText size={20} />,
-    activeIcon: <BookOpenText size={20} weight="fill" />,
-  },
-  {
-    key: TabEnum.POSITIONS,
-    name: <Trans>Positions</Trans>,
-    icon: <Notebook size={20} />,
-    activeIcon: <Notebook size={20} weight="fill" />,
-  },
-]
 
 const MobileLayout = (props: LayoutProps) => {
   const { tab, handleTab: setTab } = useTabHandler({ defaultTab: TabEnum.POSITIONS })
@@ -159,7 +117,7 @@ const MobileLayout = (props: LayoutProps) => {
           sx={{ position: 'fixed', bottom: FOOTER_HEIGHT, zIndex: 9, display: ['flex', 'flex', 'flex', 'none'] }}
         >
           <TabHeader
-            configs={props.apiMode ? tabConfigsApiMode : tabConfigs}
+            configs={props.apiMode && props.protocol === ProtocolEnum.HYPERLIQUID ? noChartsTabConfigs : tabConfigs}
             isActiveFn={(config) => config.key === tab}
             onClickItem={(key) => setTab({ tab: key })}
           />

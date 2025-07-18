@@ -115,6 +115,7 @@ const TraderInfo = ({
                         title: label,
                       })) ?? []
                     }
+                    isIF
                     showedItems={3}
                     shouldShowTooltip={false}
                   />

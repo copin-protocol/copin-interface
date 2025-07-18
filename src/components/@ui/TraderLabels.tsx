@@ -1,14 +1,15 @@
 import React from 'react'
 
 import Tag from 'theme/Tag'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { PNL_TIER_KEY, VOLUME_TIER_KEY } from 'utils/config/enums'
 import { LABEL_TOOLTIP_TRANSLATION, LABEL_TRANSLATION } from 'utils/config/translations'
 
 import LabelWithTooltip from './LabelWithTooltip'
 
-const getLabelColor = (key: string) => {
+const getLabelColor = (key: string, isIF?: boolean) => {
+  if (isIF) return '#422c54'
   switch (key) {
     case VOLUME_TIER_KEY.VOLUME_TIER1:
       return `${themeColors.primary1}20`
@@ -50,15 +51,20 @@ const TraderLabels = ({
   showedItems,
   tooltipPlacement,
   shouldShowTooltip = true,
+  isIF,
 }: {
   labels: { key: string; title?: React.ReactNode; tooltip?: React.ReactNode }[]
   showedItems?: number
   tooltipPlacement?: string
   shouldShowTooltip?: boolean
+  isIF?: boolean
 }) => {
   if (!showedItems) {
     showedItems = labels.length
   }
+
+  const tagSx = isIF ? { px: '4px', py: 0, borderRadius: '2px' } : { px: '4px', py: 0 }
+
   return (
     <>
       {labels.slice(0, showedItems).map((label) =>
@@ -69,18 +75,25 @@ const TraderLabels = ({
             id={`tt_label_${label.key}`}
             tooltip={label.tooltip || LABEL_TOOLTIP_TRANSLATION[label.key]}
           >
-            <Tag sx={{ px: '4px', py: 0 }} bg={getLabelColor(label.key)}>
+            <Tag sx={tagSx} bg={getLabelColor(label.key, isIF)}>
               <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
             </Tag>
           </LabelWithTooltip>
         ) : (
-          <Tag key={label.key} sx={{ px: '4px', py: 0 }} bg={getLabelColor(label.key)}>
+          <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
+            <Box
+              width={10}
+              height={10}
+              sx={{ fontSize: '8px', lineHeight: '10px', color: '#a05fd3', fontWeight: 'bold' }}
+            >
+              IF
+            </Box>
             <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
           </Tag>
         )
       )}
       {labels.length > showedItems && (
-        <Tag sx={{ px: '4px', py: 0 }}>
+        <Tag sx={tagSx} bg={isIF ? '#422c54' : undefined}>
           <LabelWithTooltip
             tooltipClickable
             id="tt_more_labels"
@@ -94,12 +107,12 @@ const TraderLabels = ({
                       id={`tt_label_${label.key}`}
                       tooltip={label.tooltip || LABEL_TOOLTIP_TRANSLATION[label.key]}
                     >
-                      <Tag key={label.key} sx={{ px: '4px', py: 0 }} bg={getLabelColor(label.key)}>
+                      <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
                         <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
                       </Tag>
                     </LabelWithTooltip>
                   ) : (
-                    <Tag key={label.key} sx={{ px: '4px', py: 0 }} bg={getLabelColor(label.key)}>
+                    <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
                       <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
                     </Tag>
                   )

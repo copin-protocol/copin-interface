@@ -174,6 +174,7 @@ const FavoriteNoteTooltip = () => {
   // Track mouse position
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (!isOpen) return
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
@@ -181,7 +182,8 @@ const FavoriteNoteTooltip = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [isOpen])
+
   useEffect(() => {
     const handleScroll = () => {
       if (!tooltipRef.current || !mousePosition || !isOpen || !md) return
@@ -428,7 +430,6 @@ const FavoriteNoteTooltip = () => {
     <OutsideClickHandler
       onOutsideClick={(e) => {
         if (isOpenUpgradeModal) return
-        e.stopPropagation()
         setTooltip(undefined)
       }}
     >

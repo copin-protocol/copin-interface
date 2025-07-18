@@ -129,9 +129,9 @@ const CommonStats = ({
       width="100%"
       sx={{
         alignItems: 'center',
-        gap: [1, 2, 2, 2, 24],
+        gap: [48, 24, 24, 24, 24],
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
       }}
     >
       <Box minWidth="fit-content" textAlign="left" color="neutral3" flex={['1', 'none']}>
@@ -174,14 +174,13 @@ const HyperliquidCommonStats = ({
   account: string
   protocol: ProtocolEnum
 }) => {
-  const { xl } = useResponsive()
   const { lastTradeAt, runTimeDays, smartAccount } = traderData ?? {}
   return (
     <Flex
       sx={{
         width: '100%',
         alignItems: 'center',
-        gap: xl ? 24 : 1,
+        gap: 1,
         flexWrap: 'wrap',
       }}
     >
@@ -189,7 +188,7 @@ const HyperliquidCommonStats = ({
         width={['100%', 'auto']}
         flexDirection={['column', 'row']}
         alignItems={['flex-start', 'center']}
-        sx={{ gap: [0, 2] }}
+        sx={{ gap: [0, 2], mr: 3 }}
       >
         <LabelWithTooltip
           id="tt_balance"
@@ -204,12 +203,11 @@ const HyperliquidCommonStats = ({
           <BalanceText protocol={protocol} account={account} smartAccount={smartAccount} maxDigit={0} minDigit={0} />
         </Type.Caption>
       </Flex>
-
       <Flex
         width={['50%', 'auto']}
         flexDirection={['column', 'row']}
         alignItems={['flex-start', 'center']}
-        sx={{ gap: [0, 2] }}
+        sx={{ gap: [0, 2], mr: 3 }}
       >
         <Type.Caption color="neutral3" display={['block', 'inline-block']}>
           Last Trade:
