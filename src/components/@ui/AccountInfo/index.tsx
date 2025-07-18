@@ -214,14 +214,14 @@ export function AccountInfo({
               data-tooltip-id={`tt_note_${address}`}
               data-tooltip-offset={0}
             >
-              {note.slice(0, 10)}
-              {note.length > 10 && '...'}
+              {note.slice(0, 12)}
+              {note.length > 12 && '...'}
             </Type.Small>
           ) : (
             <div></div>
           )
         ) : null}
-        {note && note.length > 10 && (
+        {/* {note && note.length > 10 && (
           <Tooltip id={`tt_note_${address}`} clickable={false}>
             <Type.Caption
               maxWidth={300}
@@ -233,7 +233,7 @@ export function AccountInfo({
               {note}
             </Type.Caption>
           </Tooltip>
-        )}
+        )} */}
         {smartAccount && (
           <Tooltip id={`tt_sm_${smartAccount}`} clickable={false}>
             <Type.Caption>Smart Account: {smartAccount}</Type.Caption>

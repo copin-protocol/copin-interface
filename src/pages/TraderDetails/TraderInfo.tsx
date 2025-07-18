@@ -44,7 +44,7 @@ const TraderInfo = ({
   // const shareStats = traderStats?.find((data) => data && data.type === (timeOption.id as unknown as TimeFrameEnum))
   const shareStats = traderStats?.find((data) => data && data.type === TimeFrameEnum.ALL_TIME)
   const { trader, resetTrader } = useQuickViewTraderStore()
-  const { notes } = useTraderFavorites()
+  const { bookmarks } = useTraderFavorites()
   const { ensName } = useEnsName(address)
   const { lg } = useResponsive()
 
@@ -133,7 +133,7 @@ const TraderInfo = ({
           )}
         </Flex>
       </Box>
-      {!!notes?.[`${address}-${protocol}`] && (
+      {!!bookmarks?.[`${address}-${protocol}`]?.note && (
         <Tooltip id={`note-${address}-${protocol}`} place="bottom">
           <Type.Caption
             maxWidth={300}
@@ -142,7 +142,7 @@ const TraderInfo = ({
               textTransform: 'none',
             }}
           >
-            {notes[`${address}-${protocol}`]}
+            {bookmarks[`${address}-${protocol}`]?.note}
           </Type.Caption>
         </Tooltip>
       )}

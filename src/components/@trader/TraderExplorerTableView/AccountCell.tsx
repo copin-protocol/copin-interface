@@ -9,8 +9,8 @@ import { Box, Flex } from 'theme/base'
 
 export function AccountCell({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
   const { sm } = useResponsive()
-  const { notes } = useTraderFavorites()
-  const note = notes?.[`${data.account}-${data.protocol}`]
+  const { bookmarks } = useTraderFavorites()
+  const note = bookmarks?.[`${data.account}-${data.protocol}`]?.note
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 0, position: 'relative' }}>
       <AccountInfo
@@ -33,8 +33,8 @@ export function AccountCellMobile({
   data: TraderData
   additionalComponent?: ReactElement
 }) {
-  const { notes } = useTraderFavorites()
-  const note = notes?.[`${data.account}-${data.protocol}`]
+  const { bookmarks } = useTraderFavorites()
+  const note = bookmarks?.[`${data.account}-${data.protocol}`]?.note
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
       <AccountInfo

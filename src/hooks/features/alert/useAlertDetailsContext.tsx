@@ -173,7 +173,7 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
         !!myProfile?.id &&
         botAlert?.id !== 'new' &&
         botAlert?.alertType === AlertTypeEnum.CUSTOM &&
-        botAlert?.type === AlertCustomType.TRADER_GROUP,
+        (botAlert?.type === AlertCustomType.TRADER_GROUP || botAlert?.type === AlertCustomType.TRADER_BOOKMARK),
       retry: 0,
     }
   )

@@ -70,6 +70,7 @@ export interface AlertPermissionConfig extends BasePermissionConfig {
   webhookQuota: number
   channelQuota: number
   groupQuota: number
+  bookmarkGroupQuota: number
 }
 
 export interface CopyTradePermissionConfig extends BasePermissionConfig {

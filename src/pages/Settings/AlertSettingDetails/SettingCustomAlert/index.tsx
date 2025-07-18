@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CaretRight, Funnel, Siren, UsersThree } from '@phosphor-icons/react'
+import { CaretRight, Funnel, Siren, Star, UsersThree } from '@phosphor-icons/react'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ import { formatNumber } from 'utils/helpers/format'
 import { generateAlertSettingDetailsRoute } from 'utils/helpers/generateRoute'
 
 import DisplayFilter from './DisplayFilters'
+import TraderBookmark from './TraderBookmark'
 import TraderFilter from './TraderFilter'
 import TraderGroup from './TraderGroup'
 import TradersTag from './TradersTag'
@@ -35,6 +36,7 @@ enum CustomAlertStep {
   BASIC_INFO = 'BASIC_INFO',
   TRADER_FILTER = 'TRADER_FILTER',
   TRADER_GROUP = 'TRADER_GROUP',
+  TRADER_BOOKMARK = 'TRADER_BOOKMARK',
 }
 
 export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps) {
@@ -44,7 +46,7 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
   const onSuccess = (data?: BotAlertData) => {
     if (data && data.id) {
       history.replace(generateAlertSettingDetailsRoute({ id: data.id, type: AlertCategoryEnum.CUSTOM }))
-      if (customType === AlertCustomType.TRADER_GROUP) {
+      if (customType === AlertCustomType.TRADER_GROUP || customType === AlertCustomType.TRADER_BOOKMARK) {
         methods.setValue('traderGroupAdd', [])
         methods.setValue('traderGroupUpdate', [])
         methods.setValue('traderGroupRemove', [])
@@ -106,6 +108,7 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
         setCustomStep(CustomAlertStep.TRADER_FILTER)
         break
       case AlertCustomType.TRADER_GROUP:
+      case AlertCustomType.TRADER_BOOKMARK:
         setCustomStep(CustomAlertStep.TRADER_GROUP)
         break
     }
@@ -115,7 +118,9 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
     <>
       {customStep === CustomAlertStep.TRADER_GROUP ? (
         <TraderGroup
+          id={botAlert?.id}
           isNew={isCreatingCustomAlert}
+          customType={customType}
           matchingTraderCount={matchingTraderCount}
           setMatchingTraderCount={setMatchingTraderCount}
           defaultValues={{ ...defaultValues, ...traderGroup }}
@@ -123,6 +128,14 @@ export default function SettingCustomAlert({ botAlert }: SettingCustomAlertProps
           onBack={() => setCustomStep(CustomAlertStep.BASIC_INFO)}
           onApply={onApply}
           submitting={submitting}
+        />
+      ) : customStep === CustomAlertStep.TRADER_BOOKMARK ? (
+        <TraderBookmark
+          onBack={() => setCustomStep(CustomAlertStep.BASIC_INFO)}
+          onSelect={(id: string) => {
+            setCustomStep(CustomAlertStep.BASIC_INFO)
+            history.replace(generateAlertSettingDetailsRoute({ id, type: AlertCategoryEnum.CUSTOM }))
+          }}
         />
       ) : customStep === CustomAlertStep.TRADER_FILTER ? (
         <TraderFilter
@@ -318,7 +331,8 @@ function ExistingAlertInfo({
           <DisplayFilter {...traderFilter} />
         </Flex>
       )}
-      {customType === AlertCustomType.TRADER_GROUP && (
+
+      {(customType === AlertCustomType.TRADER_GROUP || customType === AlertCustomType.TRADER_BOOKMARK) && (
         <Flex alignItems="center">
           <TradersTag
             title={
@@ -382,6 +396,29 @@ function NewAlertOptions({ customType, setCustomStep }: NewAlertOptionsProps) {
                 <IconBox icon={<UsersThree size={20} />} size={20} />
                 <Type.CaptionBold>
                   <Trans>Trader Group</Trans>
+                </Type.CaptionBold>
+              </Flex>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <IconBox icon={<CaretRight />} />
+              </Flex>
+            </Flex>
+          </Flex>
+        </Button>
+      )}
+      {(!customType || customType === AlertCustomType.TRADER_GROUP) && (
+        <Button
+          mt={2}
+          type="button"
+          variant="outline"
+          sx={{ color: 'neutral1', textTransform: 'initial' }}
+          onClick={() => setCustomStep(CustomAlertStep.TRADER_BOOKMARK)}
+        >
+          <Flex flexDirection="column" alignItems="flex-start" sx={{ gap: 1 }}>
+            <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ gap: 2 }}>
+              <Flex alignItems="center" sx={{ gap: 2 }}>
+                <IconBox icon={<Star size={20} />} size={20} />
+                <Type.CaptionBold>
+                  <Trans>Group Bookmark</Trans>
                 </Type.CaptionBold>
               </Flex>
               <Flex alignItems="center" sx={{ gap: 2 }}>

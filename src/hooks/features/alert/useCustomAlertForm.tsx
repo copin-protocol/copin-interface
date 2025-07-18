@@ -53,7 +53,7 @@ export const useCustomAlertForm = ({ botAlert, onSuccess }: CustomAlertFormProps
     methods.setValue('traderGroupAdd', form.traderGroupAdd)
     methods.setValue('traderGroupUpdate', form.traderGroupUpdate)
     methods.setValue('traderGroupRemove', form.traderGroupRemove)
-    methods.setValue('customType', AlertCustomType.TRADER_GROUP)
+    methods.setValue('customType', form.customType)
     methods.clearErrors()
   }
 
@@ -93,6 +93,7 @@ export const useCustomAlertForm = ({ botAlert, onSuccess }: CustomAlertFormProps
         requestData.ranges = [...ranges, ...(normalizeCondition ?? [])]
         break
       case AlertCustomType.TRADER_GROUP:
+      case AlertCustomType.TRADER_BOOKMARK:
         const { traderGroupAdd, traderGroupUpdate, traderGroupRemove } = values
         methods.clearErrors?.()
         requestData.traderGroup = {

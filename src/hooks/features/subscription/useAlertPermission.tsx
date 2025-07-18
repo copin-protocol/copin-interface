@@ -15,6 +15,8 @@ export default function useAlertPermission() {
   const webhookQuota = userPermission?.webhookQuota ?? 0
   const groupQuota = userPermission?.groupQuota ?? 0
   const monthlyQuota = userPermission?.monthlyQuota ?? 0
+  const bookmarkGroupsQuota = userPermission?.bookmarkGroupQuota ?? 0
+  const maxBookmarkGroupsQuota = pagePermission?.[SubscriptionPlanEnum.ELITE]?.bookmarkGroupQuota ?? 0
   const maxChannelQuota = pagePermission?.[SubscriptionPlanEnum.ELITE]?.channelQuota ?? 0
   const maxWatchedListQuota = pagePermission?.[SubscriptionPlanEnum.ELITE]?.watchedListQuota ?? 0
   const maxCustomQuota = pagePermission?.[SubscriptionPlanEnum.ELITE]?.watchedListQuota ?? 0
@@ -53,6 +55,8 @@ export default function useAlertPermission() {
     maxCustomQuota,
     maxWatchedListQuota,
     watchedListQuota,
+    bookmarkGroupsQuota,
+    maxBookmarkGroupsQuota,
     customQuota,
     channelQuota,
     webhookQuota,

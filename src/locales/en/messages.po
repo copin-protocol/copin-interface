@@ -279,6 +279,10 @@ msgstr "ALERT LIST"
 msgid "ALERT LOGS"
 msgstr "ALERT LOGS"
 
+#: src/pages/MyProfile/Bookmarks/components.tsx
+msgid "ALERT SETTINGS"
+msgstr "ALERT SETTINGS"
+
 #: src/pages/Subscription/v1/Plans.tsx
 msgid "ALERT SIGNAL"
 msgstr "ALERT SIGNAL"
@@ -403,9 +407,14 @@ msgid "Advance Settings"
 msgstr "Advance Settings"
 
 #: src/pages/@layouts/Navbar/NavUser.tsx
+#: src/pages/MyProfile/Bookmarks/components.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Alert"
 msgstr "Alert"
+
+#: src/pages/MyProfile/Bookmarks/components.tsx
+msgid "Alert Group"
+msgstr "Alert Group"
 
 #: src/pages/Settings/Layouts/Layout.tsx
 msgid "Alert List"
@@ -807,6 +816,14 @@ msgstr "BingX API Key"
 #: src/utils/config/translations.tsx
 msgid "Bitget"
 msgstr "Bitget"
+
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+msgid "Bookmark"
+msgstr "Bookmark"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
+msgid "Bookmarks"
+msgstr "Bookmarks"
 
 #: src/components/@wallet/SmartWalletFundModal/BridgeAndSwap/BridgeETH.tsx
 msgid "Bridge ETH to OP (Sepolia)"
@@ -1351,6 +1368,10 @@ msgstr "Create Smart Wallet"
 msgid "Create Synthetix v2 wallet"
 msgstr "Create Synthetix v2 wallet"
 
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
+msgid "Create a new group in"
+msgstr "Create a new group in"
+
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Create an account"
 msgstr "Create an account"
@@ -1628,6 +1649,11 @@ msgstr "Easily see how a trader stacks up against the rest"
 msgid "Edit"
 msgstr "Edit"
 
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderGroup/components.tsx
+msgid "Edit Bookmark"
+msgstr "Edit Bookmark"
+
 #: src/components/@copyTrade/CopyTradeEditDrawer/index.tsx
 msgid "Edit Copytrade Settings"
 msgstr "Edit Copytrade Settings"
@@ -1642,6 +1668,10 @@ msgstr "Elite"
 #: src/components/@subscription/CryptoPaymentForm.tsx
 msgid "Email"
 msgstr "Email"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
+msgid "Enable"
+msgstr "Enable"
 
 #: src/pages/@layouts/GettingStarted/index.tsx
 msgid "Enable Alert"
@@ -2028,6 +2058,10 @@ msgstr "Go To Deposit"
 msgid "Go to Copy Management"
 msgstr "Go to Copy Management"
 
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
+msgid "Group Bookmark"
+msgstr "Group Bookmark"
+
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
 msgid "Group Chat ID"
 msgstr "Group Chat ID"
@@ -2035,6 +2069,22 @@ msgstr "Group Chat ID"
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
 msgid "Group Name"
 msgstr "Group Name"
+
+#: src/components/@widgets/FavoriteButton/AddGroupInput.tsx
+msgid "Group created successfully"
+msgstr "Group created successfully"
+
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "Group deleted successfully"
+msgstr "Group deleted successfully"
+
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "Group updated successfully"
+msgstr "Group updated successfully"
+
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+msgid "Groups (optional)"
+msgstr "Groups (optional)"
 
 #: src/pages/MyProfile/index.tsx
 #: src/pages/MyProfile/index.tsx
@@ -2962,6 +3012,15 @@ msgstr "Network"
 msgid "Never miss every significant event on any exchange"
 msgstr "Never miss every significant event on any exchange"
 
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "New Group"
+msgstr "New Group"
+
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "New Group ({0}/{bookmarkGroupsQuota})"
+msgstr "New Group ({0}/{bookmarkGroupsQuota})"
+
 #: src/components/@auth/LoginAction/ModalResetPassword.tsx
 #: src/pages/@layouts/Navbar/ChangePasswordModal.tsx
 msgid "New Password"
@@ -3117,6 +3176,14 @@ msgstr "No trader data was found to compare in the past {0}"
 msgid "No trader matched"
 msgstr "No trader matched"
 
+#: src/pages/MyProfile/Bookmarks/ListTraderFavorites.tsx
+msgid "No traders match your protocol filters"
+msgstr "No traders match your protocol filters"
+
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
+msgid "No unnotified groups found."
+msgstr "No unnotified groups found."
+
 #: src/components/@auth/ConfirmReferralModal/index.tsx
 msgid "No, thanks"
 msgstr "No, thanks"
@@ -3155,6 +3222,10 @@ msgstr "Notice:"
 #: src/pages/@layouts/Navbar/WarningWalletDisconnected.tsx
 msgid "Notice: Your wallet has been disconnected from Copin"
 msgstr "Notice: Your wallet has been disconnected from Copin"
+
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "Number of traders in this group"
+msgstr "Number of traders in this group"
 
 #: src/utils/config/translations.tsx
 msgid "OKX"
@@ -3551,7 +3622,7 @@ msgstr "Please upgrade to explore open interest with advanced filters"
 
 #: src/pages/Explorer/ListTradersSection/index.tsx
 #: src/pages/Home/Traders.tsx
-#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+#: src/pages/MyProfile/Bookmarks/ListTraderFavorites.tsx
 msgid "Please upgrade to explore traders with advanced filters"
 msgstr "Please upgrade to explore traders with advanced filters"
 
@@ -3752,6 +3823,10 @@ msgstr "RECOMMEND TRADERS"
 msgid "REMOVE ALERT"
 msgstr "REMOVE ALERT"
 
+#: src/pages/MyProfile/Bookmarks/components.tsx
+msgid "REMOVE GROUP"
+msgstr "REMOVE GROUP"
+
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
 msgid "REVENUE (TRADING FEE)"
 msgstr "REVENUE (TRADING FEE)"
@@ -3826,6 +3901,7 @@ msgid "Remaining quota after export"
 msgstr "Remaining quota after export"
 
 #: src/components/@copyTrade/renderProps/copyTradeColumns.tsx
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
 #: src/pages/Settings/AlertSettingDetails/SearchToAdd.tsx
 msgid "Remove"
 msgstr "Remove"
@@ -3856,7 +3932,7 @@ msgstr "Reset"
 
 #: src/pages/Explorer/ListTradersSection/index.tsx
 #: src/pages/Home/Traders.tsx
-#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+#: src/pages/MyProfile/Bookmarks/ListTraderFavorites.tsx
 #: src/pages/OpenInterest/OpenInterestByMarket/index.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/index.tsx
 #: src/pages/OpenInterest/TopOpenInterest/index.tsx
@@ -4219,6 +4295,10 @@ msgstr "Smart wallets are a unique Copin offering that allows copiers to copytra
 msgid "Some features or data from your current plan may no longer be available after downgrading."
 msgstr "Some features or data from your current plan may no longer be available after downgrading."
 
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "Some traders from higher plan are not shown"
+msgstr "Some traders from higher plan are not shown"
+
 #: src/pages/@helpers/ErrorFallback.tsx
 msgid "Something went wrong"
 msgstr "Something went wrong"
@@ -4529,10 +4609,10 @@ msgstr "TRADER BOARD"
 msgid "TRADER EXPLORER"
 msgstr "TRADER EXPLORER"
 
-#: src/pages/MyProfile/Favorites/index.tsx
-#: src/pages/MyProfile/Favorites/index.tsx
-msgid "TRADER FAVORITES STATISTICS"
-msgstr "TRADER FAVORITES STATISTICS"
+#: src/pages/MyProfile/Bookmarks/index.tsx
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "TRADER GROUP BOOKMARKS"
+msgstr "TRADER GROUP BOOKMARKS"
 
 #: src/pages/PerpDEXsExplorer/PerpDexDetails/chartConfig.tsx
 msgid "TRADER LIQUIDATIONS"
@@ -4753,7 +4833,7 @@ msgstr "This URL contains filters available from the {requiredPlanText} plan"
 
 #: src/pages/Explorer/ListTradersSection/index.tsx
 #: src/pages/Home/Traders.tsx
-#: src/pages/MyProfile/Favorites/ListTraderFavorites.tsx
+#: src/pages/MyProfile/Bookmarks/ListTraderFavorites.tsx
 msgid "This URL contains filters available from {0} plan"
 msgstr "This URL contains filters available from {0} plan"
 
@@ -5012,9 +5092,13 @@ msgstr "Trade On"
 msgid "Trader"
 msgstr "Trader"
 
+#: src/utils/config/translations.tsx
+msgid "Trader Bookmark"
+msgstr "Trader Bookmark"
+
 #: src/pages/@layouts/Navbar/NavUser.tsx
-msgid "Trader Favorites"
-msgstr "Trader Favorites"
+msgid "Trader Bookmarks"
+msgstr "Trader Bookmarks"
 
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
 #: src/utils/config/translations.tsx
@@ -5236,9 +5320,17 @@ msgstr "Unlock to discover more similar traders and advanced insights."
 msgid "Unlocking more exchanges brings more choices for your strategies"
 msgstr "Unlocking more exchanges brings more choices for your strategies"
 
+#: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
+msgid "Unnotified Bookmark Groups"
+msgstr "Unnotified Bookmark Groups"
+
 #: src/pages/TraderDetails/AlertAction.tsx
 msgid "Unnotify"
 msgstr "Unnotify"
+
+#: src/pages/MyProfile/Bookmarks/components.tsx
+msgid "Unnotify Group"
+msgstr "Unnotify Group"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Unrealized PnL"
@@ -5645,6 +5737,7 @@ msgstr "YOU'VE HIT YOUR API WALLET LIMIT"
 msgid "YOU’VE HIT YOUR API WALLET LIMIT"
 msgstr "YOU’VE HIT YOUR API WALLET LIMIT"
 
+#: src/pages/MyProfile/Bookmarks/components.tsx
 #: src/pages/Settings/AlertDashboard/index.tsx
 msgid "YOU’VE HIT YOUR CUSTOM ALERTS LIMIT"
 msgstr "YOU’VE HIT YOUR CUSTOM ALERTS LIMIT"
@@ -5793,6 +5886,11 @@ msgstr "You're reach the maximum of API wallets for your current plan. Upgrade y
 msgid "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>{maxApiKeyQuota} wallets</0>"
 msgstr "You're reach the maximum of API wallets for your current plan. Upgrade your plan to unlock access up to <0>{maxApiKeyQuota} wallets</0>"
 
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "You're reach the maximum of Bookmark Groups for your current plan. Upgrade your plan to unlock access up to {maxBookmarkGroupsQuota} bookmark groups"
+msgstr "You're reach the maximum of Bookmark Groups for your current plan. Upgrade your plan to unlock access up to {maxBookmarkGroupsQuota} bookmark groups"
+
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 #: src/components/@copyTrade/ListCopyTrade/useListCopyTradeConfig.tsx
 msgid "You're reach the maximum of Copy Trades for your current plan. Upgrade your plan to unlock access up to {0} copy trades"
@@ -5801,6 +5899,11 @@ msgstr "You're reach the maximum of Copy Trades for your current plan. Upgrade y
 #: src/pages/Settings/UserSubscription/PlanUpgradeModal.tsx
 msgid "You're upgrading your subscription before your current plan ends."
 msgstr "You're upgrading your subscription before your current plan ends."
+
+#: src/components/@widgets/FavoriteButton/FavoriteNoteTooltip.tsx
+#: src/pages/MyProfile/Bookmarks/index.tsx
+msgid "You've hit your bookmark groups limit"
+msgstr "You've hit your bookmark groups limit"
 
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 #: src/components/@copyTrade/ListCopyTrade/useListCopyTradeConfig.tsx
@@ -5916,6 +6019,7 @@ msgstr "Your {title} Is Empty"
 msgid "You’re reach the maximum of Trader in watchlist for your current plan. Upgrade your plan to unlock access up to <0>{0} traders</0>"
 msgstr "You’re reach the maximum of Trader in watchlist for your current plan. Upgrade your plan to unlock access up to <0>{0} traders</0>"
 
+#: src/pages/MyProfile/Bookmarks/components.tsx
 #: src/pages/Settings/AlertDashboard/index.tsx
 msgid "You’re reach the maximum of custom alerts for your current plan. Upgrade your plan to unlock more custom alerts."
 msgstr "You’re reach the maximum of custom alerts for your current plan. Upgrade your plan to unlock more custom alerts."

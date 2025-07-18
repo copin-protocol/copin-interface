@@ -215,6 +215,7 @@ export const ALERT_TYPE_TRANS: ObjectTrans = {
 export const ALERT_CUSTOM_TYPE_TRANS: ObjectTrans = {
   [AlertCustomType.TRADER_FILTER]: <Trans>Trader Filter</Trans>,
   [AlertCustomType.TRADER_GROUP]: <Trans>Trader Group</Trans>,
+  [AlertCustomType.TRADER_BOOKMARK]: <Trans>Trader Bookmark</Trans>,
   [AlertCustomType.TRADER_POSITION]: <Trans>Position</Trans>,
 }
 

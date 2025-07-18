@@ -40,6 +40,9 @@ export const EditAlertHeader = ({
       case AlertCustomType.TRADER_GROUP:
         defaultName = 'TRADER GROUP'
         break
+      case AlertCustomType.TRADER_BOOKMARK:
+        defaultName = 'TRADER GROUP BOOKMARK'
+        break
     }
   }
   return (
@@ -47,7 +50,7 @@ export const EditAlertHeader = ({
       <Flex alignItems="center" justifyContent="space-between">
         {hasChange ? (
           <Popconfirm
-            action={<IconButton icon={<ArrowLeft size={20} />} size={20} variant="ghost" sx={{ p: 0 }}></IconButton>}
+            action={<IconButton icon={<ArrowLeft size={20} />} size={20} variant="ghost" sx={{ p: 0 }} />}
             title="Discard changes?"
             description="You have unsaved changes. Are you sure to discard them?"
             onConfirm={onBack}
@@ -62,12 +65,14 @@ export const EditAlertHeader = ({
             type="button"
             onClick={onBack}
             sx={{ p: 0 }}
-          ></IconButton>
+          />
         )}
         <Flex alignItems="center" sx={{ gap: 1 }}>
           <Type.Body sx={{ textTransform: 'uppercase' }}>
             {isNew ? (
               defaultName
+            ) : customType === AlertCustomType.TRADER_BOOKMARK ? (
+              <Type.Body sx={{ textTransform: 'uppercase' }}>{name}</Type.Body>
             ) : (
               <Box
                 sx={{

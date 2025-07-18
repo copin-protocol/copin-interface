@@ -12,6 +12,7 @@ import { CustomAlertFormValues } from '../types'
 import { traderGroupReducer } from './reducer'
 
 interface UseTraderGroupStateProps {
+  customType: AlertCustomType
   defaultValues?: CustomAlertFormValues
   groupTraders?: ApiListResponse<TraderAlertData>
   onApply: (filters: CustomAlertFormValues) => void
@@ -22,6 +23,7 @@ interface UseTraderGroupStateProps {
  * Custom hook for managing TraderGroup state and operations
  */
 export const useTraderGroupState = ({
+  customType,
   defaultValues,
   groupTraders,
   onApply,
@@ -164,7 +166,7 @@ export const useTraderGroupState = ({
         traderGroupRemove,
         name: form?.name ?? name,
         description: form?.description ?? description,
-        customType: AlertCustomType.TRADER_GROUP,
+        customType,
       })
       setMatchingTraderCount(totalActiveTrader)
     },

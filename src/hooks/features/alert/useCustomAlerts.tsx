@@ -10,7 +10,17 @@ import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
-export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: BotAlertData) => void }) {
+export default function useCustomAlerts({
+  onSuccess,
+  createSuccessMsg,
+  updateSuccessMsg,
+  deleteSuccessMsg,
+}: {
+  onSuccess?: (data?: BotAlertData) => void
+  createSuccessMsg?: React.ReactNode
+  updateSuccessMsg?: React.ReactNode
+  deleteSuccessMsg?: React.ReactNode
+}) {
   const refetchQueries = useRefetchQueries()
 
   const { mutate: createCustomAlert, isLoading: submittingCreate } = useMutation(createCustomAlertApi, {
@@ -18,7 +28,7 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
       toast.success(
         <ToastBody
           title={<Trans>Success</Trans>}
-          message={<Trans>This custom alert has been created successfully</Trans>}
+          message={createSuccessMsg ?? <Trans>This custom alert has been created successfully</Trans>}
         />
       )
       refetchQueries([
@@ -38,11 +48,12 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
       toast.success(
         <ToastBody
           title={<Trans>Success</Trans>}
-          message={<Trans>This custom alert has been updated successfully</Trans>}
+          message={updateSuccessMsg ?? <Trans>This custom alert has been updated successfully</Trans>}
         />
       )
       refetchQueries([
         QUERY_KEYS.GET_CUSTOM_ALERTS,
+        QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE,
         QUERY_KEYS.GET_CUSTOM_ALERT_DETAILS_BY_ID,
         QUERY_KEYS.GET_CUSTOM_TRADER_GROUP_BY_ID,
       ])
@@ -58,7 +69,7 @@ export default function useCustomAlerts({ onSuccess }: { onSuccess?: (data?: Bot
       toast.success(
         <ToastBody
           title={<Trans>Success</Trans>}
-          message={<Trans>This custom alert has been deleted successfully</Trans>}
+          message={deleteSuccessMsg ?? <Trans>This custom alert has been deleted successfully</Trans>}
         />
       )
       refetchQueries([QUERY_KEYS.GET_CUSTOM_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])

@@ -23,6 +23,7 @@ export interface BotAlertData {
   channels?: AlertSettingData[]
   config?: CustomAlertConfigData
   enableAlert?: boolean
+  showAlert?: boolean
   lastMessageAt?: string
   createdAt: string
 }
@@ -77,6 +78,7 @@ export interface CustomAlertRequestData {
   queries?: QueryFilter[]
   ranges?: RangeFilter[]
   enableAlert?: boolean
+  showAlert?: boolean
   type?: AlertCustomType
   traderGroup?: TraderGroupRequestData
 }

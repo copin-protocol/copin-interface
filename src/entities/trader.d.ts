@@ -236,6 +236,7 @@ export interface FavoritedTrader {
   note: string
   createdAt: string
   protocol?: ProtocolEnum
+  customAlertId?: string
 }
 
 export interface PositionStatisticCounter {

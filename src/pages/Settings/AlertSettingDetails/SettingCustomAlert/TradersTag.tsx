@@ -23,8 +23,8 @@ export default function TradersTag({
   const tooltipId = useMemo(() => uuid(), [])
   return (
     <TagWrapper onClear={traders?.length && !!onClear ? onClear : undefined} sx={tagSx}>
-      <Type.Caption>{title}:</Type.Caption>
-      {traders?.length && (
+      <Type.Caption>{title}</Type.Caption>
+      {!!traders?.length && (
         <Box data-tooltip-id={tooltipId} data-tooltip-delay-show={360}>
           <AvatarGroup size={18} addresses={traders.map((e) => e.address)} />
         </Box>

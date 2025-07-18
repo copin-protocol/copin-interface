@@ -37,6 +37,7 @@ export default function TraderListTable<T>({
   lefts = [36, 48],
   noDataMessage,
   learnMoreSection,
+  dataView,
 }: {
   data: T[] | undefined
   isLoading: boolean
@@ -56,6 +57,7 @@ export default function TraderListTable<T>({
   lefts?: [number, number]
   noDataMessage?: ReactNode
   learnMoreSection?: SubscriptionFeatureEnum
+  dataView?: 'BOOKMARK'
 }) {
   const { columnKeys: visibleColumns } = useTraderExplorerTableColumns()
 
@@ -236,6 +238,7 @@ export default function TraderListTable<T>({
                 handleSelect={handleSelect}
                 hiddenSelectBox={hiddenSelectItemBox}
                 availableColumns={isEliteUser ? undefined : fieldsAllowed}
+                dataView={dataView}
                 lefts={lefts}
               />
             </TableContainer>

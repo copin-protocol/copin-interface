@@ -75,7 +75,7 @@ const NavUser = () => {
       link: generateFavoriteTradersRoute({ params: { protocol: protocolParams } }),
       event: EVENT_ACTIONS[EventCategory.ROUTES].FAVORITES,
       icon: <Star size={20} />,
-      label: <Trans>Trader Favorites</Trans>,
+      label: <Trans>Trader Bookmarks</Trans>,
       isWeb3Required: false,
     },
   ]

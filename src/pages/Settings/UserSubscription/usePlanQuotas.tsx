@@ -52,6 +52,11 @@ const usePlanQuotas = () => {
         ...generatePermissionData(permission?.COPY_TRADING, 'copyTradeQuota'),
       },
       {
+        name: 'Trader Group Bookmarks',
+        usageKey: 'bookmarkGroups',
+        ...generatePermissionData(permission?.TRADER_ALERT, 'bookmarkGroupQuota'),
+      },
+      {
         name: 'CSV Download Quota',
         usageKey: 'csvDownloads',
         ...generatePermissionData(permission?.TRADER_EXPLORER, 'exportExcelQuota'),

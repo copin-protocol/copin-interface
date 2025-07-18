@@ -301,6 +301,15 @@ export const usePlanPermissions = (): PlanPermission[] => {
             ...generatePermissionData(permission?.TRADER_EXPLORER, 'isEnableCexDepth'),
           },
           {
+            name: 'Trader Group Bookmarks',
+            ...generatePermissionData(
+              permission?.TRADER_ALERT,
+              'bookmarkGroupQuota',
+              (value) => `${value} Groups`,
+              true
+            ),
+          },
+          {
             name: 'CSV Download Quota',
             ...generatePermissionData(permission?.TRADER_EXPLORER, 'exportExcelQuota', (value) =>
               value > 0 ? `${formatNumber(value)} Rows` : 'Unlimited'

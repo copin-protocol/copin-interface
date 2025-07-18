@@ -36,8 +36,8 @@ const ROUTES = {
   COPIER_RANKING: {
     path: '/copier-ranking',
   },
-  FAVORITES: {
-    path: '/favorites',
+  BOOKMARKS: {
+    path: '/bookmarks',
   },
   SEARCH: {
     path: '/search',

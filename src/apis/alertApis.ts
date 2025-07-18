@@ -6,7 +6,7 @@ import {
   TraderAlertData,
 } from 'entities/alert'
 import { DEFAULT_LIMIT } from 'utils/config/constants'
-import { AlertTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { AlertCustomType, AlertTypeEnum, ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
 
 import { ApiListResponse } from './api'
 import requester from './index'
@@ -151,11 +151,15 @@ export async function getCustomAlertsApi({
   sortBy,
   sortType,
   name,
-}: { name?: string; sortBy?: string; sortType?: string } & GetApiParams) {
+  type,
+  showAlert,
+}: { name?: string; sortBy?: string; sortType?: string; type?: AlertCustomType; showAlert?: boolean } & GetApiParams) {
   const params: Record<string, any> = {}
   if (name) params.name = name
   if (sortBy) params.sort_by = sortBy
   if (sortType) params.sort_type = sortType
+  if (type) params.type = type
+  if (showAlert) params.showAlert = showAlert
   return requester
     .get(`${SERVICE}/custom`, { params: { limit, offset, ...params } })
     .then((res: any) => normalizeCustomAlertConfigResponse(res.data as ApiListResponse<BotAlertData>))

@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { ArrowLeft } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import UpgradeButton from 'components/@subscription/UpgradeButton'
@@ -9,14 +10,17 @@ import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
+import { useIsElite } from 'hooks/features/subscription/useSubscriptionRestrict'
 import SearchToAdd from 'pages/Settings/AlertSettingDetails/SearchToAdd'
 import { Button } from 'theme/Buttons'
+import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
 import { PaginationWithSelect } from 'theme/Pagination'
 import Popconfirm from 'theme/Popconfirm'
 import Table from 'theme/Table'
 import { Box, Flex, Type } from 'theme/base'
 import { AlertCustomType } from 'utils/config/enums'
+import ROUTES from 'utils/config/routes'
 
 import BasicInfoModal from '../BasicInfoModal'
 import MobileTraderItem from './MobileTraderItem'
@@ -83,6 +87,8 @@ export const TraderGroupHeader = ({
  * Search section with add trader functionality
  */
 export const TraderGroupSearch = ({
+  id,
+  customType,
   totalTrader,
   maxTraderAlert,
   ignoreSelectTraders,
@@ -92,10 +98,21 @@ export const TraderGroupSearch = ({
   onRemoveWatchlist,
 }: TraderGroupSearchProps) => {
   const { isAvailableWatchlistAlert, watchlistRequiredPlan } = useAlertPermission()
-  const { sm } = useResponsive()
+  const { lg } = useResponsive()
+  const isElite = useIsElite()
+  const isShowUpgradeButton =
+    lg && isAvailableWatchlistAlert && customType !== AlertCustomType.TRADER_BOOKMARK && !isElite
+  const canAddTrader = totalTrader < (maxTraderAlert ?? 0) && customType === AlertCustomType.TRADER_GROUP
   return (
     <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
-      <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
+      <Flex
+        sx={{
+          pl: 1,
+          width: 200,
+          borderRight: 'small',
+          borderColor: 'neutral4',
+        }}
+      >
         <InputSearchText
           placeholder="SEARCH ADDRESS"
           sx={{
@@ -109,8 +126,12 @@ export const TraderGroupSearch = ({
           setSearchText={setSearchText}
         />
       </Flex>
-      <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
-        {totalTrader < (maxTraderAlert ?? 0) && (
+      <Flex
+        flex={1}
+        justifyContent={isShowUpgradeButton && canAddTrader ? 'space-between' : 'end'}
+        sx={{ px: 2, gap: 2 }}
+      >
+        {canAddTrader && (
           <SearchToAdd
             totalTrader={totalTrader}
             maxTraderAlert={maxTraderAlert ?? 0}
@@ -119,9 +140,14 @@ export const TraderGroupSearch = ({
             onRemove={onRemoveWatchlist}
           />
         )}
-        {isAvailableWatchlistAlert && (
-          <UpgradeButton requiredPlan={watchlistRequiredPlan} showIcon={!sm} showCurrentPlan={sm} />
+        {customType === AlertCustomType.TRADER_BOOKMARK && (
+          <Link to={`${ROUTES.BOOKMARKS.path}?groupId=${id}`} target="_blank">
+            <ButtonWithIcon variant="ghostPrimary" sx={{ px: 0 }} direction="right" icon={<ArrowSquareOut size={16} />}>
+              <Trans>Edit Bookmark</Trans>
+            </ButtonWithIcon>
+          </Link>
         )}
+        {isShowUpgradeButton && <UpgradeButton requiredPlan={watchlistRequiredPlan} showCurrentPlan showIcon={false} />}
       </Flex>
     </Flex>
   )
@@ -131,6 +157,7 @@ export const TraderGroupSearch = ({
  * Trader list component - handles both mobile and desktop views
  */
 export const TraderGroupList = ({
+  customType,
   isMobile,
   paginatedTraders,
   columns,
@@ -145,6 +172,9 @@ export const TraderGroupList = ({
     )
   }
 
+  const availableColumns =
+    customType === AlertCustomType.TRADER_BOOKMARK ? columns.slice(0, columns.length - 1) : columns
+
   return (
     <Flex
       flex={1}
@@ -156,6 +186,7 @@ export const TraderGroupList = ({
           {paginatedTraders.data.length > 0 &&
             paginatedTraders.data.map((data) => (
               <MobileTraderItem
+                customType={customType}
                 key={`${data.address}-${data.protocol}`}
                 data={data}
                 onUpdateWatchlist={onUpdateWatchlist}
@@ -167,7 +198,7 @@ export const TraderGroupList = ({
       ) : (
         <Table
           data={paginatedTraders?.data}
-          columns={columns}
+          columns={availableColumns}
           isLoading={false}
           tableHeadSx={{
             '& th': {

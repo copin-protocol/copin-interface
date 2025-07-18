@@ -157,6 +157,9 @@ export const DISABLED_FIELDS: Partial<Record<ProtocolEnum, string[]>> = {
   [ProtocolEnum.HYPERLIQUID]: ['pnl', 'roi', 'avgRoi', 'maxRoi'],
 }
 
+export const BOOKMARK_NO_GROUP_KEY = 'others'
+export const BOOKMARK_GROUP_NAME_MAX_LENGTH = 20
+
 export const SUBSCRIPTION_COLLECTION_URL =
   NETWORK === 'devnet'
     ? 'https://testnets.opensea.io/collection/copin-subscription-3'
