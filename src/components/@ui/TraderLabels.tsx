@@ -81,13 +81,15 @@ const TraderLabels = ({
           </LabelWithTooltip>
         ) : (
           <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
-            <Box
-              width={10}
-              height={10}
-              sx={{ fontSize: '8px', lineHeight: '10px', color: '#a05fd3', fontWeight: 'bold' }}
-            >
-              IF
-            </Box>
+            {isIF && (
+              <Box
+                width={10}
+                height={10}
+                sx={{ fontSize: '8px', lineHeight: '10px', color: '#a05fd3', fontWeight: 'bold' }}
+              >
+                IF
+              </Box>
+            )}
             <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
           </Tag>
         )

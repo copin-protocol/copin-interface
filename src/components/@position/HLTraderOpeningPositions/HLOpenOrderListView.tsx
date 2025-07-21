@@ -87,11 +87,9 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
                 <Flex flex={1} alignItems="center">
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
-                      Price:
+                      Value:
                     </Box>
-                    {item.priceNumber && !item.isPositionTpsl
-                      ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
-                      : 'Market'}
+                    ${compactNumber(item.sizeNumber)}
                   </Type.Caption>
                 </Flex>
               </Flex>
@@ -107,9 +105,11 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
                 <Flex flex={1} alignItems="center">
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
-                      Value:
+                      Price:
                     </Box>
-                    ${compactNumber(item.sizeNumber)}
+                    {item.priceNumber && !item.isPositionTpsl
+                      ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
+                      : 'Market'}
                   </Type.Caption>
                 </Flex>
               </Flex>

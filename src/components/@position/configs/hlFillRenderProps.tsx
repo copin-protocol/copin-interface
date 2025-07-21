@@ -171,7 +171,11 @@ export const fullFillColumns: ColumnData<GroupedFillsData>[] = [
   fillsColumn,
   { ...priceColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.avgPrice} /> },
   { ...feeColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalFee} /> },
-  { ...pnlColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} /> },
+  {
+    ...pnlColumn,
+    style: { ...pnlColumn.style, minWidth: '100px' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} />,
+  },
 ]
 
 export const fillColumns: ColumnData<GroupedFillsData>[] = [
@@ -192,5 +196,5 @@ export const drawerFillColumns: ColumnData<GroupedFillsData>[] = [
   fillsColumn,
   priceColumn,
   feeColumn,
-  pnlColumn,
+  { ...pnlColumn, style: { ...pnlColumn.style, minWidth: '100px' } },
 ]

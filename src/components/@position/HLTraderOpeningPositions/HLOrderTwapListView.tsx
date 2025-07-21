@@ -78,24 +78,6 @@ export default function HLOrderTwapListView({ data, isLoading, scrollDep }: Prop
               </Flex>
             </Flex>
             <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch' }}>
-              <Flex flex={3} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Fees:
-                </Type.Caption>
-                <Type.Caption color="neutral3">
-                  {!!item.fee ? <SignedText value={item.fee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
-                </Type.Caption>
-              </Flex>
-              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Price:
-                </Type.Caption>
-                <Type.Caption color="neutral1">
-                  {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : 'N/A'}
-                </Type.Caption>
-              </Flex>
-            </Flex>
-            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch', justifyContent: 'space-between' }}>
               <Flex flex={3} alignItems="center">
                 <Type.Caption color="neutral1">
                   <Box as="span" color="neutral3" mr="1ch">
@@ -110,6 +92,25 @@ export default function HLOrderTwapListView({ data, isLoading, scrollDep }: Prop
                     Value:
                   </Box>
                   ${compactNumber(item.sizeNumber, 2)}
+                </Type.Caption>
+              </Flex>
+            </Flex>
+            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch', justifyContent: 'space-between' }}>
+              <Flex flex={3} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Fees:
+                </Type.Caption>
+                <Type.Caption color="neutral3">
+                  {!!item.fee ? <SignedText value={item.fee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
+                </Type.Caption>
+              </Flex>
+
+              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Price:
+                </Type.Caption>
+                <Type.Caption color="neutral1">
+                  {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : 'N/A'}
                 </Type.Caption>
               </Flex>
             </Flex>

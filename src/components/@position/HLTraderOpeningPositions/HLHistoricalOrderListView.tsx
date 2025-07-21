@@ -112,14 +112,12 @@ export default function HLHistoricalOrderListView({ data, isLoading, scrollDep }
                 </Type.Caption>
                 <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>
               </Flex>
-              <Flex flex={2} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Price:
-                </Type.Caption>
+              <Flex flex={2} alignItems="center">
                 <Type.Caption color="neutral1">
-                  {item.priceNumber && !item.isPositionTpsl
-                    ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
-                    : 'Market'}
+                  <Box as="span" color="neutral3" mr="1ch">
+                    Value:
+                  </Box>
+                  ${compactNumber(item.sizeNumber, 2)}
                 </Type.Caption>
               </Flex>
             </Flex>
@@ -134,12 +132,14 @@ export default function HLHistoricalOrderListView({ data, isLoading, scrollDep }
                   )}
                 </Type.Caption>
               </Flex>
-              <Flex flex={2} alignItems="center">
+              <Flex flex={2} sx={{ alignItems: 'center', gap: '1ch' }}>
+                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                  Price:
+                </Type.Caption>
                 <Type.Caption color="neutral1">
-                  <Box as="span" color="neutral3" mr="1ch">
-                    Value:
-                  </Box>
-                  ${compactNumber(item.sizeNumber, 2)}
+                  {item.priceNumber && !item.isPositionTpsl
+                    ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
+                    : 'Market'}
                 </Type.Caption>
               </Flex>
             </Flex>

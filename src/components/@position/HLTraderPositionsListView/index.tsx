@@ -72,8 +72,15 @@ export default function HLTraderPositionListView({
         return (
           <Box role="button" sx={{ p: 2 }} key={position.id} onClick={() => onClickItem?.(position)}>
             <Flex sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Box flex={['60%', '40%', '15%']}>{renderEntry(position)}</Box>
-              <Flex flex={['40%', '30%', '10%']} minWidth="105px" sx={{ alignItems: 'center', gap: 1 }}>
+              <Box flex={['60%', '40%', '15%']} order={[0, 0, 0]}>
+                {renderEntry(position)}
+              </Box>
+              <Flex
+                flex={['40%', '30%', '10%']}
+                minWidth="105px"
+                sx={{ alignItems: 'center', gap: 1 }}
+                order={[0, 1, 1]}
+              >
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Weight:
                 </Type.Caption>
@@ -82,9 +89,9 @@ export default function HLTraderPositionListView({
 
               <Box
                 display={['none', 'flex', 'flex']}
-                flex={['40%', '30%', '10%']}
+                flex={['40%', '30%', '15%']}
                 sx={{ alignItems: 'center', gap: 1 }}
-                order={[5, 0, 5]}
+                order={[5, 1, 1]}
               >
                 <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                   Funding:
@@ -101,7 +108,7 @@ export default function HLTraderPositionListView({
                 </Type.Caption>
               </Box>
 
-              <Flex flex={['60%', '70%', '25%']} alignItems="center" my={12}>
+              <Flex flex={['60%', '70%', '25%']} alignItems="center" my={12} order={[0, 1, 0]}>
                 {isOpening ? (
                   <>
                     <Box sx={{ width: [200, 250, 200], flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
@@ -122,16 +129,8 @@ export default function HLTraderPositionListView({
                   </Type.Caption>
                 )}
               </Flex>
-              <Box flex={['40%', '30%', '10%']}>
-                <Flex sx={{ alignItems: 'center', gap: 1 }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    PnL:
-                  </Type.Caption>
-                  <Type.Caption>
-                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
-                  </Type.Caption>
-                </Flex>
-                <Box display={['flex', 'none']} sx={{ alignItems: 'center', gap: 1 }} mt="4px">
+              <Box flex={['40%', '30%', '10%']} order={[1, 1, 1]}>
+                <Box display={['flex', 'none']} sx={{ alignItems: 'center', gap: 1 }} mb="4px">
                   <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
                     Funding:
                   </Type.Caption>
@@ -146,6 +145,14 @@ export default function HLTraderPositionListView({
                     />
                   </Type.Caption>
                 </Box>
+                <Flex sx={{ alignItems: 'center', gap: 1 }}>
+                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
+                    PnL:
+                  </Type.Caption>
+                  <Type.Caption>
+                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
+                  </Type.Caption>
+                </Flex>
               </Box>
 
               {isOpening && hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />}
