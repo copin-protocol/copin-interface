@@ -4398,8 +4398,8 @@ msgstr "Stop Loss"
 
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
-msgid "Stop Loss - Trigger by ROI (%)"
-msgstr "Stop Loss - Trigger by ROI (%)"
+msgid "Stop Loss - Trigger by ROI"
+msgstr "Stop Loss - Trigger by ROI"
 
 #: src/utils/config/translations.tsx
 msgid "Stop Loss Amount"
@@ -4653,8 +4653,8 @@ msgstr "Take Profit"
 
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
-msgid "Take Profit - Trigger by ROI (%)"
-msgstr "Take Profit - Trigger by ROI (%)"
+msgid "Take Profit - Trigger by ROI"
+msgstr "Take Profit - Trigger by ROI"
 
 #: src/utils/config/translations.tsx
 msgid "Take Profit Amount"

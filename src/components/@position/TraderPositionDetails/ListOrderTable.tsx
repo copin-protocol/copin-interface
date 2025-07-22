@@ -63,12 +63,14 @@ export default function ListOrderTable({
               externalSource.totalOrders &&
               index === externalSource.totalOrders - 1)
           return (
-            <Flex alignItems="center" sx={{ gap: 2 }}>
-              {isOpen
-                ? ORDER_TYPES[OrderTypeEnum.OPEN].icon
-                : item.isClose && item.type !== OrderTypeEnum.LIQUIDATE
-                ? ORDER_TYPES[OrderTypeEnum.CLOSE].icon
-                : ORDER_TYPES[item.type]?.icon}
+            <Flex alignItems="center" justifyContent="start" sx={{ gap: 2 }}>
+              <Type.Caption color="neutral1">
+                {isOpen
+                  ? ORDER_TYPES[OrderTypeEnum.OPEN].icon
+                  : item.isClose && item.type !== OrderTypeEnum.LIQUIDATE
+                  ? ORDER_TYPES[OrderTypeEnum.CLOSE].icon
+                  : ORDER_TYPES[item.type]?.icon}
+              </Type.Caption>
               <Type.Caption color="neutral1">
                 {isOpen
                   ? ORDER_TYPES[OrderTypeEnum.OPEN].text
@@ -91,14 +93,14 @@ export default function ListOrderTable({
         title: 'Value Delta',
         dataIndex: 'sizeDeltaNumber',
         key: 'sizeDeltaNumber',
-        style: { minWidth: '120px', textAlign: 'right' },
+        style: { minWidth: '130px', textAlign: 'right' },
         render: (item) => renderOrderSize(item),
       },
       {
         title: 'Leverage',
         dataIndex: 'leverage',
         key: 'leverage',
-        style: { minWidth: '70px', textAlign: 'right' },
+        style: { minWidth: '90px', textAlign: 'right' },
         render: renderOrderLeverage,
       },
       {
@@ -113,7 +115,7 @@ export default function ListOrderTable({
         title: isFeeWithFunding ? 'Fee & Funding' : 'Paid Fee',
         dataIndex: 'feeNumber',
         key: 'feeNumber',
-        style: { minWidth: isFeeWithFunding ? '120px' : '85px', textAlign: 'right', pr: 3 },
+        style: { minWidth: isFeeWithFunding ? '120px' : '100px', textAlign: 'right', pr: 3 },
         render: renderOrderFee,
       },
     ]

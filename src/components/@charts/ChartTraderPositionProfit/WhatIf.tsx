@@ -45,7 +45,7 @@ export default function WhatIf({
       <SafeDropdownIndex />
       <Dropdown
         menuSx={{
-          width: [300, 400],
+          width: [340, 400],
           p: 2,
           // bg: 'neutral5',
         }}

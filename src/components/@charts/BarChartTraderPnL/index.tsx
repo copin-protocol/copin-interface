@@ -9,6 +9,7 @@ import Loading from 'theme/Loading'
 import { Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, FONT_FAMILY } from 'utils/config/constants'
+import { Z_INDEX } from 'utils/config/zIndex'
 import { compactNumber, formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 export default function BarChartTraderPnL({
@@ -158,6 +159,7 @@ export default function BarChartTraderPnL({
                   fontSize: '12px',
                   fontFamily: FONT_FAMILY,
                 }}
+                wrapperStyle={{ zIndex: Z_INDEX.MODAL }}
                 content={(payload) => <CustomTooltip item={payload.payload} />}
               />
             </ComposedChart>

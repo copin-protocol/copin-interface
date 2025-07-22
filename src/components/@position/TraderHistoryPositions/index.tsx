@@ -573,6 +573,9 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
     return [address, protocol, currentPage, currentLimit]
   }, [address, protocol, currentPage, currentLimit])
 
+  const isHyper = protocol === ProtocolEnum.HYPERLIQUID
+  const outdatedData = isHyper ? <OutdatedDataHandler account={address} /> : null
+
   return (
     <Flex flexDirection="column" height="100%">
       <Flex pt={16} px={12} pb={12} alignItems="center">
@@ -580,7 +583,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
           {props.hasTitle ? <SectionTitle icon={ClockCounterClockwise} title="History" /> : <></>}
         </Box>
         <Flex justifyContent="space-between" alignItems="center" width="100%">
-          {protocol === ProtocolEnum.HYPERLIQUID && <OutdatedDataHandler account={address} />}
+          {outdatedData}
           <Flex
             sx={{
               alignItems: 'center',
@@ -588,7 +591,10 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
               '.select__control': { border: 'none !important' },
               '.currency_option': { width: 'auto !important' },
               '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
-              '.select__menu': { minWidth: 88, transform: 'translateX(-32px)' },
+              '.select__menu': {
+                minWidth: 88,
+                ...(!!outdatedData && { transform: 'translateX(-32px)' }),
+              },
             }}
           >
             <CurrencyOption

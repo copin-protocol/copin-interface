@@ -322,7 +322,7 @@ const MarketSelection = ({
       <Box
         display={showPreference ? 'none' : 'flex'}
         flex="1 0 0"
-        sx={{ '& *': { fontSize: '13px !important' }, width: '100%', flexDirection: 'column' }}
+        sx={{ '& *:not(input)': { fontSize: '13px !important' }, width: '100%', flexDirection: 'column' }}
       >
         <Flex
           mb={10}

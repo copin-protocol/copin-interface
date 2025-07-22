@@ -243,7 +243,7 @@ function TraderDetailsComponent({
       <ProtocolPermissionContainer protocol={protocol}>
         <Flex flexDirection="column" flex={1} sx={{ overflow: 'auto' }}>
           <Box
-            height={[330, 310, 270]}
+            height={[330, 310, 300]}
             alignItems="center"
             sx={{
               m: [0, 2],
@@ -258,16 +258,18 @@ function TraderDetailsComponent({
               alignItems="center"
               sx={{
                 borderBottom: 'small',
-                display: ['block', 'block', 'flex'],
+                display: ['block', 'block', 'block', 'flex'],
+                alignItems: 'center',
                 borderBottomColor: 'neutral4',
               }}
             >
               <Box sx={{ overflow: ['auto', 'auto', 'unset'], width: '100%' }}>
                 <TradeLabelsFrame
                   traderStats={traderData}
-                  showedItems={md ? 3 : undefined}
+                  showedItems={lg ? 3 : undefined}
                   sx={{
                     width: ['max-content', 'max-content', '100%'],
+                    my: [0, 0, 2],
                     px: 2,
                     py: [2, 2, 0],
                     justifyContent: ['center', 'start'],
@@ -279,7 +281,7 @@ function TraderDetailsComponent({
                 traderData={currentTraderData}
                 account={address}
                 protocol={protocol}
-                sx={{ height: [60, 40], border: 'none' }}
+                sx={{ height: [60, 25], border: 'none', py: lg ? 3 : 0 }}
                 isDrawer
               />
             </Box>
@@ -312,16 +314,18 @@ function TraderDetailsComponent({
                     <TimeDropdown
                       timeOption={timeOption}
                       onChangeTime={setTimeOption}
-                      menuSx={{ transform: 'translateX(12px)' }}
+                      menuSx={{ transform: lg ? 'translateX(-12px)' : 'translateX(5px)' }}
                     />
                   </Flex>
                 </Flex>
-                <Box height={190}>
+                <Box height={200}>
                   <ChartTrader
                     protocol={protocol}
                     account={address}
                     timeOption={timeOption}
-                    // onChangeTime={setTimeOption}
+                    onChangeTime={setTimeOption}
+                    isShowTimeFilter={false}
+                    chartTraderSx={{ pt: 0 }}
                   />
                 </Box>
               </Box>

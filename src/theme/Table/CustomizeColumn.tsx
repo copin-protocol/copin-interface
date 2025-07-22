@@ -138,9 +138,9 @@ function CustomizeColumn<T, K>({
       visible={visible}
       setVisible={setVisible}
       menuSx={{
-        width: 320,
+        width: [250, 320],
         p: 2,
-        height: 376,
+        height: [280, 376],
         '& > *': {
           height: '100%',
           '& > *': {

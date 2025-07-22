@@ -590,7 +590,8 @@ function TraderItem({
           />
         ) : null}
       </Box>
-      <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1.3fr 1fr' }}>
+      {/* <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: '1fr 1.3fr 1fr' }}> */}
+      <Box sx={{ display: 'flex', gap: 3, justifyContent: 'space-between' }}>
         <Box>
           <Type.Caption display="block">
             <Trans>

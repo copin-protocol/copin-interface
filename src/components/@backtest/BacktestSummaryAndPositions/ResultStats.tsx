@@ -55,10 +55,7 @@ export default function ResultStats({
         }
       />
 
-      <Item
-        label={'Max Draw Down (%)'}
-        value={<SignedText value={maxDrawDown} maxDigit={2} fontInherit suffix="%" />}
-      />
+      <Item label={'Max Draw Down'} value={<SignedText value={maxDrawDown} maxDigit={2} fontInherit suffix="%" />} />
     </>
   )
 }

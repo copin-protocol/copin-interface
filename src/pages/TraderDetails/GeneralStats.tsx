@@ -129,12 +129,12 @@ const CommonStats = ({
       width="100%"
       sx={{
         alignItems: 'center',
-        gap: [48, 24, 24, 24, 24],
+        columnGap: [48, 24, 24, 24, 24],
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
       }}
     >
-      <Box minWidth="fit-content" textAlign="left" color="neutral3" flex={['1', 'none']}>
+      <Box minWidth="fit-content" textAlign="left" color="neutral3">
         <LabelWithTooltip
           id="tt_balance"
           sx={{

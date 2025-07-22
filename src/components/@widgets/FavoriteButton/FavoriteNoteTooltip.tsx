@@ -45,7 +45,6 @@ const SELECT_MAX_HEIGHT = 200
 //   console.log('domNode', domNode)
 //   return domNode && domNode.length ? ReactDOM.createPortal(children, domNode[0]) : <div>{children}</div>
 // }
-
 const FavoriteNoteTooltip = () => {
   const {
     submitting,

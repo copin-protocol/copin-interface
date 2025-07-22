@@ -268,12 +268,7 @@ export function TraderDetailsComponent({
             </Box>
           }
           traderChartPnl={
-            <ChartTrader
-              protocol={protocol}
-              account={address}
-              timeOption={timeOption}
-              // onChangeTime={setTimeOption}
-            />
+            <ChartTrader protocol={protocol} account={address} timeOption={timeOption} onChangeTime={setTimeOption} />
           }
           traderStatsSummary={
             <GeneralStats

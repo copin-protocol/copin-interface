@@ -180,7 +180,7 @@ export const openingColumns: ColumnData<CopyPositionData, ExternalSourceCopyPosi
     render: (item) => renderEntry(item),
   },
   {
-    title: 'ROI (%)',
+    title: 'ROI',
     key: 'realisedPnl', // just for identify
     style: { minWidth: 50, maxWidth: 50, textAlign: 'right' },
     render: renderOpeningROI,

@@ -6,6 +6,7 @@ import PageHeader from 'components/@widgets/PageHeader'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import { Box, Flex } from 'theme/base'
+import { themeColors } from 'theme/colors'
 
 import SearchRanking from './SearchRanking'
 import SelectSeason from './SelectSeason'
@@ -42,7 +43,11 @@ const LeaderboardPage = () => {
             <Flex width="100%" alignItems="center" flex={1} flexWrap="wrap">
               <Flex flex="auto">
                 <SwitchLeaderboardType
-                  sx={{ width: 'fit-content', borderBottom: ['small', 'small', 'none'], borderColor: 'neutral4' }}
+                  sx={{
+                    width: 'fit-content',
+                    borderBottom: ['small', 'small', 'none'],
+                    borderColor: `${themeColors.neutral4} !important`,
+                  }}
                 />
                 <SelectSeason />
               </Flex>

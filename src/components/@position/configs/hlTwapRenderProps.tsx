@@ -116,7 +116,7 @@ const feeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Fee',
   dataIndex: 'fee',
   key: 'fee',
-  style: { minWidth: '80px', textAlign: 'right' },
+  style: { minWidth: '100px', textAlign: 'right' },
   render: (item, _, externalSource: any) => (
     <>
       {!!item.fee ? (

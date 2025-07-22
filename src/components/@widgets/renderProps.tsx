@@ -238,13 +238,13 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
             )}
           </Type.Caption>
         </Flex>
-        <VerticalDivider sx={{ opacity: 0.2 }} />
+        <VerticalDivider sx={{ opacity: 1 }} />
         <Flex minWidth={40} justifyContent="center" flexShrink={0}>
           <Type.Caption {..._textProps} textAlign="center">
             {formatLeverage(data.marginMode, data.leverage)}
           </Type.Caption>
         </Flex>
-        <VerticalDivider sx={{ opacity: 0.2 }} />
+        <VerticalDivider sx={{ opacity: 1 }} />
         <Flex
           flex={dynamicWidth ? undefined : '1.5'}
           justifyContent="flex-end"

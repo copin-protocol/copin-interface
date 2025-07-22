@@ -131,6 +131,7 @@ export default function ListCopyOrderTable({
             maxDigit={4}
             minDigit={4}
             suffix={`${externalSource?.symbol}`}
+            prefix="$"
           />
         ),
       },
