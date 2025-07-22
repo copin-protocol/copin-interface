@@ -39,7 +39,7 @@ function TwapTime({ data }: { data: HlTwapOrderData }) {
 export const renderTwapBlockTime = (item: HlTwapOrderData, format = DAYJS_FULL_DATE_FORMAT) => (
   <Flex alignItems="center" sx={{ gap: 2 }}>
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.timestamp} format={format} hasTooltip={false} />
+      <LocalTimeText date={item.timestamp} format={format} hasTooltip />
     </Type.Caption>
   </Flex>
 )

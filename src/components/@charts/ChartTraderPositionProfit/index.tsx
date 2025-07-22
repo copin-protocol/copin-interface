@@ -52,7 +52,7 @@ export default function ChartProfit({
     const pnl = !pnlWithFeeEnabled ? data.realisedPnl : data.pnl
     return isOpening ? calcOpeningPnL(data, prices[symbol]) : pnl
   }, [crossMove?.pnl, data, symbol, prices, realisedPnl, isOpening, pnlWithFeeEnabled])
-  const markPrice = !symbol && !prices ? prices[symbol] : null
+  const markPrice = !!symbol && !!prices ? prices[symbol] : null
 
   const latestROI = useMemo(() => {
     if (!data || !symbol) return 0

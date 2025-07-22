@@ -70,7 +70,7 @@ export default function HLHistoricalOrderListView({ data, isLoading, scrollDep }
             <Flex sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
               <Flex flex={1} sx={{ alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                 <Type.Caption color="neutral3">
-                  <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+                  <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip />
                 </Type.Caption>
               </Flex>
               <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>

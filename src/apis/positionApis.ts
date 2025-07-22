@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import { ChartData, ChartDataV2 } from 'entities/chart.d'
 import { OpenInterestMarketData, ProtocolsStatisticData } from 'entities/statistic'
 import { PositionStatisticCounter, ResponsePositionData } from 'entities/trader.d'
@@ -248,8 +246,7 @@ export async function getTokenTradesByTraderApi({ protocol, account }: { protoco
 
 export const getLatestPrices = () => requester.get(`prices/latest`).then((res) => res.data)
 
-export const getOstiumLatestPrices = () =>
-  axios.get(`https://metadata-backend.ostium.io/PricePublish/latest-prices`).then((res) => res.data)
+export const getOstiumLatestPrices = () => requester.get(`prices/ostium`).then((res) => res.data)
 
 export const getChartData = ({
   symbol,

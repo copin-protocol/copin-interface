@@ -8,9 +8,12 @@ import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { formatNumber } from 'utils/helpers/format'
+import { formatNumber, formatPrice } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
+import { UsdPrices } from 'utils/types'
 
 export type ExternalSourceHlPosition = {
+  prices?: UsdPrices
   totalPositionValue?: number
   isExpanded?: boolean
   submitting?: boolean
@@ -164,6 +167,31 @@ const renderPositionWeight = (item: PositionData, totalPositionValue?: number) =
   return <Type.Caption color="neutral1">{formatNumber(weightPercent, 2, 2)}%</Type.Caption>
 }
 
+export const sizeInTokenColumn: ColumnData<PositionData> = {
+  title: 'Size',
+  dataIndex: 'totalSizeInToken',
+  key: 'totalSizeInToken',
+  style: { minWidth: '100px', textAlign: 'right' },
+  render: (item) => renderSizeInToken(item),
+}
+const renderSizeInToken = (item: PositionData) => {
+  return <Type.Caption color="neutral1">{formatNumber(item.sizeInToken, 2, 2)}</Type.Caption>
+}
+
+export const markPriceColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
+  title: 'Mark Price',
+  key: undefined,
+  style: { minWidth: '100px', textAlign: 'right' },
+  render: (item, _, externalSource) => renderMarkPrice(item, externalSource?.prices),
+}
+const renderMarkPrice = (item: PositionData, prices?: UsdPrices) => {
+  return (
+    <Type.Caption color="neutral1">
+      {prices ? formatPrice(prices[getSymbolFromPair(item.pair)], 2, 2) : '--'}
+    </Type.Caption>
+  )
+}
+
 const actionColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   title: ' ',
   dataIndex: 'id',
@@ -177,8 +205,10 @@ const actionColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
 }
 
 export const fullOpeningColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
-  { ...entryColumn, style: { minWidth: 150 } },
+  { ...entryColumn, style: { minWidth: 185 } },
   { ...sizeOpeningColumn, style: { minWidth: 200 } },
+  markPriceColumn,
+  sizeInTokenColumn,
   weightColumn,
   collateralColumn,
   fundingColumn,

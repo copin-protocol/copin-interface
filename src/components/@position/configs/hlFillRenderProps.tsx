@@ -33,7 +33,7 @@ function FillTime({ data }: { data: GroupedFillsData }) {
     </Box>
   ) : (
     <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
-      <RelativeTimeText key={currentTime} date={data.timestamp} textStyle={{ fontSize: '12px' }} />
+      <RelativeTimeText key={currentTime} date={data.timestamp} textStyle={{ fontSize: '12px' }} hasTooltip />
     </Flex>
   )
 }
@@ -41,7 +41,7 @@ function FillTime({ data }: { data: GroupedFillsData }) {
 export const renderFillsBlockTime = (item: GroupedFillsData, format = DAYJS_FULL_DATE_FORMAT) => (
   <Flex alignItems="center" sx={{ gap: 2 }}>
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.timestamp} format={format} hasTooltip={false} />
+      <LocalTimeText date={item.timestamp} format={format} hasTooltip />
     </Type.Caption>
   </Flex>
 )

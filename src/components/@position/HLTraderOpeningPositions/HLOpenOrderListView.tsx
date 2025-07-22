@@ -61,7 +61,7 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
           <Box sx={{ p: [2, 3] }} key={item.timestamp + item.orderId}>
             <Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
               <Type.Caption flex={1} color="neutral3">
-                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip />
               </Type.Caption>
               <Box flex={1}>
                 <Type.Caption

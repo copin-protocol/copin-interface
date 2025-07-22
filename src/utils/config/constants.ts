@@ -104,6 +104,7 @@ export const DATE_FORMAT = 'YYYY/MM/DD'
 export const DATE_TEXT_FORMAT = 'DD MMM, YYYY'
 export const TIME_FORMAT = 'HH:mm:ss'
 export const DAYJS_FULL_DATE_FORMAT = 'YYYY/MM/DD HH:mm:ss'
+export const DAYJS_FULL_DATE_MS_FORMAT = 'YYYY/MM/DD HH:mm:ss:SSS'
 export const DEFAULT_LIMIT = 20
 export const DEFAULT_LIMIT_VALUES = [20, 50, 100]
 export const SEARCH_DEFAULT_LIMIT = 30

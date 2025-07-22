@@ -160,7 +160,7 @@ export function parseHLOrderFillData({ account, data }: { account: string; data:
         timestamp: e.time,
       } as HlOrderFillData
     })
-    .filter((d) => !['Buy', 'Sell'].includes(d.direction) || !d.pair.startsWith('@'))
+    .filter((d) => !['Buy', 'Sell'].includes(d.direction) && !d.pair.startsWith('@'))
 }
 
 export function convertPairHL(symbol: string) {
@@ -256,7 +256,7 @@ export function parseHLTwapOrderFillData({ account, data }: { account: string; d
         timestamp: e.fill.time,
       } as HlTwapOrderData
     })
-    .filter((d) => !['Buy', 'Sell'].includes(d.direction) || !d.pair.startsWith('@'))
+    .filter((d) => !['Buy', 'Sell'].includes(d.direction) && !d.pair.startsWith('@'))
 }
 
 export function parseHLHistoricalOrderData({ account, data }: { account: string; data: HlHistoricalOrderRawData[] }) {
@@ -294,7 +294,7 @@ export function parseHLHistoricalOrderData({ account, data }: { account: string;
         status: e.status,
       } as HlHistoricalOrderData
     })
-    .filter((d) => !['Buy', 'Sell'].includes(d.side) || !d.pair.startsWith('@'))
+    .filter((d) => !['Buy', 'Sell'].includes(d.side) && !d.pair.startsWith('@'))
 }
 
 export function convertHlOrderStatus(status: HlOrderStatusEnum): string {

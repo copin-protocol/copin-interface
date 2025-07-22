@@ -65,7 +65,7 @@ export default function HLOrderTwapListView({ data, isLoading, scrollDep }: Prop
           >
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption flex={3} color="neutral3">
-                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} />
               </Type.Caption>
               <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
                 <Flex flex={2} sx={{ alignItems: 'center', gap: '1ch' }}>
