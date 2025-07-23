@@ -117,7 +117,7 @@ export default function HLHistoricalOrderListView({ data, isLoading, scrollDep }
                   <Box as="span" color="neutral3" mr="1ch">
                     Value:
                   </Box>
-                  ${compactNumber(item.sizeNumber, 2)}
+                  {!!item.sizeNumber ? `$${compactNumber(item.sizeNumber, 2)}` : '--'}
                 </Type.Caption>
               </Flex>
             </Flex>
