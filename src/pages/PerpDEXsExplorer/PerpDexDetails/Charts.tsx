@@ -14,6 +14,7 @@ import TimeFilter from 'components/@ui/TimeFilter'
 import RangeFilter from 'components/@ui/TimeFilter/RangeFilter'
 import { PERP_DEX_CHART_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import { DataPoint, PerpDexChartData, StatsData, TopPairChartData } from 'entities/chart'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import {
@@ -293,6 +294,11 @@ function StatisticChart({
     setIsExpanded((prev) => !prev)
     setCurrentChartId((prev) => (prev === chartId ? undefined : (chartId as PerpChartTypeEnum)))
   }
+
+  useEscapeToClose({
+    isOpen: isExpanded,
+    onClose: () => handleToggleExpand(currentChartId ?? ''),
+  })
 
   return (
     <Box mt={1}>

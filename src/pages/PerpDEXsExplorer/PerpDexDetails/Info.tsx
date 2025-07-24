@@ -9,6 +9,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { PerpDEXSourceResponse } from 'entities/perpDexsExplorer'
 import useGetProtocolStatus from 'hooks/features/systemConfig/useGetProtocolStatus'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { ProtocolEnum, SystemStatusTypeEnum } from 'utils/config/enums'
@@ -32,6 +33,10 @@ export default function InfoDesktopView({
   isExpanded: boolean
   handleExpand: () => void
 }) {
+  useEscapeToClose({
+    isOpen: isExpanded,
+    onClose: handleExpand,
+  })
   if (!data) return null
   return (
     <Box

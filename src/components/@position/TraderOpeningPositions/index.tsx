@@ -18,6 +18,7 @@ import Divider from 'components/@ui/Divider'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { PositionData } from 'entities/trader'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import Badge from 'theme/Badge'
 import Loading from 'theme/Loading'
@@ -84,6 +85,13 @@ export default function TraderOpeningPositionsTableView({
     resetSortOpening()
     toggleExpand?.()
   }
+
+  useEscapeToClose({
+    isOpen: isExpanded || false,
+    onClose: handleToggleExpand,
+    disabled: isDrawer,
+  })
+
   const { data, isLoading } = useQuery(
     [QUERY_KEYS.GET_POSITIONS_OPEN, address, protocol, currentSort, isEnableOpeningPosition],
     () =>

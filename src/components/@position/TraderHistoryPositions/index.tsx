@@ -17,6 +17,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import CurrencyOption from 'components/@widgets/CurrencyOption'
 import { PositionData } from 'entities/trader'
 import useInfiniteLoadMore from 'hooks/features/useInfiniteLoadMore'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { useHeatmapStore } from 'hooks/store/useHeatmap'
@@ -185,7 +186,12 @@ export default function TraderHistoryPositionsTableView(props: HistoryTableProps
     resetSort()
     toggleExpand?.()
   }
-  //
+
+  useEscapeToClose({
+    isOpen: isExpanded && !openDrawer,
+    onClose: handleToggleExpand,
+    disabled: isDrawer,
+  })
 
   const history = useHistory()
   const nextHoursParam = useMemo(
