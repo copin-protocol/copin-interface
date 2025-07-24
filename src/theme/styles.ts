@@ -561,6 +561,13 @@ input[type=number] {
     border-radius: 4px;
   }
 
+  .if-tag-select {
+    .select__multi-value {
+      border-radius: 2px;
+      background: #422c54;
+    }
+  }
+
 ${drawerStyles}
 
 `

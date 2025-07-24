@@ -43,7 +43,7 @@ import {
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import useHyperliquidModeStore from 'hooks/store/useHyperliquidMode'
 import { parseHlSpotData } from 'pages/TraderDetails/HyperliquidApiMode/helpers'
-import { ProtocolEnum } from 'utils/config/enums'
+import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
 export interface HyperliquidTraderContextData {
@@ -101,13 +101,12 @@ export const HyperliquidTraderProvider = ({
   protocol: ProtocolEnum
   children: ReactNode
 }) => {
-  const { timeframe, setTimeframe } = useHyperliquidModeStore()
-  const [isCombined, setIsCombined] = useState(false)
-  const [isAccountValue, setIsAccountValue] = useState(false)
+  const { timeframe, setTimeframe, isCombined, isAccountValue, setIsCombined, setIsAccountValue } =
+    useHyperliquidModeStore()
   const { currentOption, changeCurrentOption } = useOptionChange({
     optionName: 'hlTime',
     options: HYPERLIQUID_API_FILTER_OPTIONS,
-    defaultOption: timeframe.toString(),
+    defaultOption: (timeframe ?? TimeFilterByEnum.LAST_24H).toString(),
     optionNameToBeDelete: ['hlTime'],
   })
 

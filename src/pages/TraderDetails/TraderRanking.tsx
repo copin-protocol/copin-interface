@@ -96,7 +96,11 @@ const TraderRanking = memo(function TraderRankingMemo({
               // borderBottomColor: 'neutral4',
             }}
           >
-            <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} />
+            <TimeDropdown
+              timeOption={timeOption}
+              onChangeTime={onChangeTime}
+              menuSx={{ transform: 'translateX(10px)' }}
+            />
           </Flex>
           <Type.CaptionBold mt={2} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
             <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>

@@ -68,7 +68,7 @@ function MobileHome() {
     }
   }
   return (
-    <BodyWrapperMobile>
+    <BodyWrapperMobile sx={{ overflow: 'hidden' }}>
       <Box display={currentTab === TabKeys.traders ? 'block' : 'none'} sx={{ width: '100%', height: '100%' }}>
         <Traders />
       </Box>

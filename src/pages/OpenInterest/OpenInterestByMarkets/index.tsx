@@ -186,7 +186,7 @@ function OpenInterestByMarketsPage() {
           excludedPairs={excludedPairs}
           onChangePairs={onChangePairs}
         />
-        {sm && <PythWatermark />}
+        {sm && <PythWatermark sx={{ ml: 2 }} />}
       </Flex>
       {/* {symbol && !symbolInfo ? (
         <NoMarketFound
@@ -250,22 +250,24 @@ function Filter({
 
   return (
     <Flex sx={{ gap: '6px', justifyContent: !lg ? 'space-between' : 'flex-start', width: !lg ? '100%' : 'auto' }}>
-      {sm && <Type.CaptionBold>SELECTED</Type.CaptionBold>}
-      <FilterItemWrapper
-        permissionIconSx={{ transform: 'translateX(-8px)' }}
-        allowedFilter={allowedFilter}
-        planToFilter={planToFilter}
-      >
-        <MarketFilter
-          pairs={pairs}
-          onChangePairs={onChangePairs}
-          excludedPairs={excludedPairs}
-          menuWrapper={FilterMenuWrapper}
-          menuSx={isEnabled ? {} : { width: 220 }}
-          iconSize={allowedFilter ? undefined : 0}
+      <Flex sx={{ gap: '6px' }}>
+        {sm && <Type.CaptionBold>SELECTED</Type.CaptionBold>}
+        <FilterItemWrapper
+          permissionIconSx={{ transform: 'translateX(-8px)' }}
           allowedFilter={allowedFilter}
-        />
-      </FilterItemWrapper>
+          planToFilter={planToFilter}
+        >
+          <MarketFilter
+            pairs={pairs}
+            onChangePairs={onChangePairs}
+            excludedPairs={excludedPairs}
+            menuWrapper={FilterMenuWrapper}
+            menuSx={isEnabled ? {} : { width: 220 }}
+            iconSize={allowedFilter ? undefined : 0}
+            allowedFilter={allowedFilter}
+          />
+        </FilterItemWrapper>
+      </Flex>
       <Flex sx={{ gap: '6px' }}>
         <Type.CaptionBold>OPEN FROM</Type.CaptionBold>
         <TimeDropdown

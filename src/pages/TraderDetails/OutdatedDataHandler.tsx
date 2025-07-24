@@ -46,7 +46,7 @@ const OutdatedDataHandler = memo(
         )}
       </Type.Caption>
     ) : (
-      <></>
+      <div></div>
     )
   },
   (prevProps, nextProps) => {

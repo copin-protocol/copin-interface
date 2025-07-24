@@ -47,6 +47,14 @@ const WorkerConnection = memo(function WorkerConnectionMemo() {
         const data = event.data as WorkerMessage
         if (data?.type === 'pyth_price') {
           setIsReady(true)
+          const prices = data.data
+          Object.entries(PROTOCOL_PRICE_MULTIPLE_MAPPING).forEach(([protocolSymbol, config]) => {
+            const multiple = config.multiple
+            const originalSymbol = config.originalSymbol
+            if (prices[originalSymbol]) {
+              data.data[protocolSymbol] = (prices[originalSymbol] ?? 0) * multiple
+            }
+          })
           setPrices(data?.data ?? {})
         }
 

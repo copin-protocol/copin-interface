@@ -90,7 +90,7 @@ function TopLeaderboardDesktop({ contextValues }: { contextValues: LeaderboardCo
             tableHeadSx={{
               '& th:first-child': {
                 pl: '36px',
-                minWidth: ['90px !important', '90px !important', '85px !important', '85px !important'],
+                minWidth: ['90px !important', '95px !important', '95px !important', '95px !important'],
               },
               '& th:last-child': {
                 pr: '36px',

@@ -69,7 +69,7 @@ export const leaderboardColumns: ColumnData<TopTraderData, ExternalLeaderboardSo
     dataIndex: 'totalLiquidation',
     key: 'totalLiquidation',
     // sortBy: 'fee',
-    style: { minWidth: ['120px', '120px'], textAlign: 'right' },
+    style: { minWidth: ['140px', '140px'], textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
         {formatNumber(item.totalLiquidation)}

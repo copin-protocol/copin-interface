@@ -191,7 +191,7 @@ const usePollingOstiumPrice = () => {
       stopPollingBalance()
       setOstiumPrices({})
     }
-  }, [setOstiumPrices])
+  }, [setOstiumPrices, getListForexSymbols, listForexSymbols])
 }
 
 const usePollingGainsUsdPrice = () => {

@@ -178,7 +178,7 @@ export default function LiteEmbeddedDetailsDrawer({
                       protocol={protocol}
                       account={address}
                       timeOption={timeOption}
-                      // onChangeTime={setTimeOption}
+                      onChangeTime={setTimeOption}
                     />
                   </Box>
                 </Box>

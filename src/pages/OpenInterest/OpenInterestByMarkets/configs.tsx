@@ -277,7 +277,7 @@ export function getColumns() {
       dataIndex: 'totalInterest',
       key: 'totalInterest',
       sortBy: 'totalInterest',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '160px', textAlign: 'right' },
       render: renderTotalInterest,
     },
     {
@@ -285,7 +285,7 @@ export function getColumns() {
       dataIndex: 'totalLong',
       key: 'totalLong',
       sortBy: 'totalLong',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '130px', textAlign: 'right' },
       render: renderLongTrades,
     },
     {
@@ -293,7 +293,7 @@ export function getColumns() {
       dataIndex: 'totalShort',
       key: 'totalShort',
       sortBy: 'totalShort',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '130px', textAlign: 'right' },
       render: renderShortTrades,
     },
     {
@@ -301,7 +301,7 @@ export function getColumns() {
       dataIndex: 'totalVolumeLong',
       key: 'totalVolumeLong',
       sortBy: 'totalVolumeLong',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '130px', textAlign: 'right' },
       render: renderLongVolume,
     },
     {
@@ -309,7 +309,7 @@ export function getColumns() {
       dataIndex: 'totalVolumeShort',
       key: 'totalVolumeShort',
       sortBy: 'totalVolumeShort',
-      style: { minWidth: '120px', textAlign: 'right' },
+      style: { minWidth: '130px', textAlign: 'right' },
       render: renderShortVolume,
     },
     {

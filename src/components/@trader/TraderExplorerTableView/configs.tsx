@@ -150,12 +150,12 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     },
   },
   ifLabels: {
-    style: { minWidth: '200px', width: '200px' },
+    style: { minWidth: '220px', width: '220px' },
     text: 'IF Labels',
     searchText: 'IF Labels',
     label: (
       <LabelWithTooltip id="tt_if_labels_label" tooltip="Labels that FM flagged">
-        IF Labels
+        IF Tags
       </LabelWithTooltip>
     ),
     visible: true,
@@ -188,7 +188,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
             alignItems: 'center',
           }}
         >
-          <TraderLabels labels={labels} showedItems={3} shouldShowTooltip={false} />
+          <TraderLabels labels={labels} showedItems={3} shouldShowTooltip={false} isIF />
         </Flex>
       )
     },

@@ -107,7 +107,7 @@ const AccountStats = memo(function AccountStatsMemo({
   }, [data, isEnableLast24H, isEnableYesterday])
 
   return (
-    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 965 : undefined}>
+    <Box display="flex" flexWrap="wrap" minWidth={customizeView === 'LIST' ? 1150 : undefined} pb={[3, 4, 4, 4, 3]}>
       <Box
         sx={{
           mr: '1px',
@@ -128,6 +128,7 @@ const AccountStats = memo(function AccountStatsMemo({
               position: 'sticky',
               left: 0,
               top: 0,
+              maxWidth: 160,
               bg: 'neutral7',
               width: 160,
               alignItems: 'center',
@@ -424,7 +425,7 @@ const AccountStats = memo(function AccountStatsMemo({
               .filter((key) => key !== 'labels' && key !== 'ifLabels')
               .map((key, index) => {
                 const stat = statsObj[key]
-                if (!stat) return <div key={key}></div>
+                if (!stat) return <div key={key} style={{ display: 'none' }}></div>
                 return (
                   <Flex pr={3} key={key} alignItems="center" width="calc(100% - 2px)" mx="1px" className="stat">
                     <Flex
@@ -435,6 +436,7 @@ const AccountStats = memo(function AccountStatsMemo({
                         width: 160,
                         py: 2,
                         zIndex: 3,
+                        maxWidth: 160,
                       }}
                       className="column-freeze"
                       alignItems="center"

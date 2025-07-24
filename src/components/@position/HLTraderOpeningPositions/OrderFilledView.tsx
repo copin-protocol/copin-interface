@@ -140,7 +140,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
         <>
           {sm ? (
             <>
-              <Box ref={containerRef} flex="1 0 0" overflow="hidden">
+              <Box ref={containerRef} flex="1 0 0" overflow="hidden" height="100%">
                 <Table
                   restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
                   wrapperSx={{

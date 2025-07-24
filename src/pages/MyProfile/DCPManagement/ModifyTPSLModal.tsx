@@ -225,7 +225,7 @@ const ModifyTPSLModal = memo(function ModifyTPSLModal({
           <StatsItem label={<Trans>Liq.Price</Trans>} value={formatNumber(liqPrice)} color="orange1" />
         </Flex>
         <Divider my={3} />
-        <Label label={<Trans>Take Profit - Trigger by ROI (%)</Trans>} />
+        <Label label={<Trans>Take Profit - Trigger by ROI</Trans>} />
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Flex sx={{ gap: 2 }}>
             <Input
@@ -356,7 +356,7 @@ const ModifyTPSLModal = memo(function ModifyTPSLModal({
               </Type.Caption>
             </Box>
           )}
-          <Label label={<Trans>Stop Loss - Trigger by ROI (%)</Trans>} />
+          <Label label={<Trans>Stop Loss - Trigger by ROI</Trans>} />
 
           <Flex sx={{ gap: 2 }}>
             <Input

@@ -23,7 +23,7 @@ const openTimeColumn: ColumnData<HlHistoricalOrderData> = {
   style: { minWidth: '156px' },
   render: (item) => (
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+      <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip />
     </Type.Caption>
   ),
 }

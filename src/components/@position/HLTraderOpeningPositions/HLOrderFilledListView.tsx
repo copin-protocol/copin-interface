@@ -63,7 +63,7 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
           <Box sx={{ p: [2, 3] }} key={index + symbol + item.orderId + item.txHash + item.timestamp}>
             <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
               <Type.Caption color="neutral3" flex={4}>
-                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
+                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip />
               </Type.Caption>
 
               <Box flex={7}>
@@ -86,15 +86,15 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
                 <Flex flex={7} alignItems="center" sx={{ gap: 3 }}>
                   <Type.Caption color="neutral1">
                     <Box as="span" color="neutral3" mr="1ch">
-                      Price:
-                    </Box>
-                    {item.avgPrice ? PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 }) : 'N/A'}
-                  </Type.Caption>
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
                       Value:
                     </Box>
                     ${compactNumber(item.totalSize, 2)}
+                  </Type.Caption>
+                  <Type.Caption color="neutral1">
+                    <Box as="span" color="neutral3" mr="1ch">
+                      Price:
+                    </Box>
+                    {item.avgPrice ? PriceTokenText({ value: item.avgPrice, maxDigit: 2, minDigit: 2 }) : 'N/A'}
                   </Type.Caption>
                 </Flex>
               </Flex>

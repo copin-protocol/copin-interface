@@ -45,7 +45,6 @@ const SELECT_MAX_HEIGHT = 200
 //   console.log('domNode', domNode)
 //   return domNode && domNode.length ? ReactDOM.createPortal(children, domNode[0]) : <div>{children}</div>
 // }
-
 const FavoriteNoteTooltip = () => {
   const {
     submitting,
@@ -174,6 +173,7 @@ const FavoriteNoteTooltip = () => {
   // Track mouse position
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (!isOpen) return
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
@@ -181,7 +181,8 @@ const FavoriteNoteTooltip = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [isOpen])
+
   useEffect(() => {
     const handleScroll = () => {
       if (!tooltipRef.current || !mousePosition || !isOpen || !md) return
@@ -428,7 +429,6 @@ const FavoriteNoteTooltip = () => {
     <OutsideClickHandler
       onOutsideClick={(e) => {
         if (isOpenUpgradeModal) return
-        e.stopPropagation()
         setTooltip(undefined)
       }}
     >

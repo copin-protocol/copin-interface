@@ -176,6 +176,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
   const [newLabel, setNewLabel] = useState<string | undefined>(undefined)
   const [selectedLabels, setSelectedLabels] = useState<string[]>([])
   const [isEditingLabels, setIsEditingLabels] = useState<boolean>(false)
+  const refetchQueries = useRefetchQueries()
   const newLabelRef = useRef<HTMLInputElement>(null)
   const { data: allLabels, refetch: refetchAllLabels } = useQuery(QUERY_KEYS.GET_ALL_NOTE_LABELS, () =>
     getAllNoteLabelsApi()
@@ -195,9 +196,13 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
     onSuccess: () => {
       toast.success(<ToastBody title="Success" message="Updated labels successfully" />)
       setCreatingLabel(false)
+
       setNewLabel(undefined)
       refetchAllLabels()
       refetchLabels()
+      setTimeout(() => {
+        refetchQueries([QUERY_KEYS.GET_TRADER_DETAIL])
+      }, 1000)
       if (newLabelRef.current) {
         newLabelRef.current.value = ''
       }
@@ -226,7 +231,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
       <>
         <Box>
           <Flex flex="1" sx={{ gap: 1, alignItems: 'center' }}>
-            <Type.Caption color="neutral2">IF Labels</Type.Caption>
+            <Type.Caption color="neutral2">IF Tags</Type.Caption>
             <ButtonWithIcon
               icon={<Pencil size={16} />}
               size="xs"
@@ -244,6 +249,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
                   title: label,
                 })) ?? []
               }
+              isIF
               shouldShowTooltip={false}
             />
           </Flex>
@@ -257,7 +263,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
     <>
       {!creatingLabel && (
         <Flex alignItems="center" justifyContent="space-between" mb={2}>
-          <Type.Caption color="neutral2">Edit IF Labels</Type.Caption>
+          <Type.Caption color="neutral2">Edit IF Tags</Type.Caption>
 
           <ButtonWithIcon
             icon={<Plus />}
@@ -321,7 +327,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
       ) : labelOptions ? (
         <>
           <Select
-            className="select-container pad-right-0"
+            className="select-container if-tag-select pad-right-0"
             closeMenuOnSelect={false}
             options={labelOptions}
             value={labelOptions?.filter?.((option) => selectedLabels.includes(option.value))}

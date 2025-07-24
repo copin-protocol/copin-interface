@@ -11,6 +11,7 @@ import {
 import { HlAccountData, HlOrderData } from 'entities/hyperliquid'
 import { PositionData } from 'entities/trader'
 import useGetTraderPnL from 'hooks/features/trader/useGetTraderPnL'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
 import Table from 'theme/Table'
 import { ColumnData, TableSortProps } from 'theme/Table/types'
@@ -50,6 +51,9 @@ export default function OpeningPositionsView({
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
   const { lg, xl, md } = useResponsive()
 
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: ProtocolEnum.HYPERLIQUID })
+
   const tableData = useMemo(() => {
     if (!data?.assetPositions) return undefined
     let openingPositions = parseHLPositionData({ account: address, data: data.assetPositions })
@@ -75,6 +79,7 @@ export default function OpeningPositionsView({
     [data]
   )
   const externalSource: ExternalSourceHlPosition = {
+    prices,
     totalPositionValue,
     isExpanded,
   }

@@ -26,33 +26,7 @@ import { Box, Flex } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 
-enum TabKeyEnum {
-  OPENING = 'opening',
-  CLOSED = 'closed',
-  OPEN_ORDERS = 'open_orders',
-  FILLS = 'fills',
-  HISTORICAL = 'historical',
-  TWAP = 'twap',
-}
-const TABS = [
-  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
-  { key: TabKeyEnum.CLOSED, name: 'History' },
-]
-
-const HYPERLIQUID_TABS = [
-  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
-  { key: TabKeyEnum.CLOSED, name: 'History' },
-  { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
-  { key: TabKeyEnum.FILLS, name: 'Fills' },
-  { key: TabKeyEnum.HISTORICAL, name: 'History Orders' },
-  { key: TabKeyEnum.TWAP, name: 'TWAP' },
-]
-
-const LITE_TABS = [
-  { key: TabKeyEnum.OPENING, name: 'Opening Positions' },
-  { key: TabKeyEnum.OPEN_ORDERS, name: 'Orders' },
-  { key: TabKeyEnum.FILLS, name: 'Fills' },
-]
+import { HYPERLIQUID_TABS, LITE_TABS, TABS, TabsKeyEnumPosition } from './tabPositionConfigs'
 
 export default function PositionMobileView({
   historyPositions,
@@ -70,13 +44,13 @@ export default function PositionMobileView({
   isDrawer?: boolean
 }) {
   const { searchParams, setSearchParams } = useSearchParams()
-  const currentTabKey = searchParams['position_tab'] ?? TabKeyEnum.OPENING
+  const currentTabKey = searchParams['position_tab'] ?? TabsKeyEnumPosition.OPENING
   const handleChangeTab = (key: string) => setSearchParams({ ['position_tab']: key })
   const firstLoadedRef = useRef(!!searchParams['position_tab'] ? true : false)
   const handleNoOpeningPositionsLoaded = () => {
     if (firstLoadedRef.current) return
     firstLoadedRef.current = true
-    handleChangeTab(TabKeyEnum.CLOSED)
+    handleChangeTab(TabsKeyEnumPosition.CLOSED)
   }
 
   const isHyperliquid = protocol === ProtocolEnum.HYPERLIQUID
@@ -207,17 +181,19 @@ export default function PositionMobileView({
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <TabHeader
         configs={isLite ? LITE_TABS : isHyperliquid ? (isDrawer ? TABS : HYPERLIQUID_TABS) : TABS}
+        // configs={isLite ? LITE_TABS : isHyperliquid ? hlTabs : TABS}
         isActiveFn={(config) => config.key === currentTabKey}
         onClickItem={handleChangeTab}
         hasLine
+        itemSx={isHyperliquid && { px: '10px' }}
       />
       <Box flex="1 0 0" overflow="hidden">
-        {currentTabKey === TabKeyEnum.OPENING &&
+        {currentTabKey === TabsKeyEnumPosition.OPENING &&
           cloneElement<TraderOpeningPositionsListViewProps>(openingPositions as any, {
             onNoPositionLoaded: handleNoOpeningPositionsLoaded,
           })}
-        {currentTabKey === TabKeyEnum.CLOSED && historyPositions}
-        {currentTabKey === TabKeyEnum.OPEN_ORDERS && (
+        {currentTabKey === TabsKeyEnumPosition.CLOSED && historyPositions}
+        {currentTabKey === TabsKeyEnumPosition.OPEN_ORDERS && (
           <Box display="flex" flexDirection="column" height="100%">
             <OpenOrdersView
               data={openOrders}
@@ -229,47 +205,41 @@ export default function PositionMobileView({
             />
           </Box>
         )}
-        {currentTabKey === TabKeyEnum.FILLS && (
-          <Box display="flex" flexDirection="column" height="100%">
-            <OrderFilledView
-              toggleExpand={() => {
-                //
-              }}
-              onPageChange={onOrderFilledPageChange}
-              isLoading={isLoadingFilledOrders}
-              data={groupedFilledOrders}
-              isDrawer={false}
-              isExpanded={true}
-            />
-          </Box>
+        {currentTabKey === TabsKeyEnumPosition.FILLS && (
+          <OrderFilledView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onOrderFilledPageChange}
+            isLoading={isLoadingFilledOrders}
+            data={groupedFilledOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
         )}
-        {currentTabKey === TabKeyEnum.HISTORICAL && (
-          <Box display="flex" flexDirection="column" height="100%">
-            <HistoricalOrdersView
-              toggleExpand={() => {
-                //
-              }}
-              onPageChange={onHistoricalOrderPageChange}
-              isLoading={isLoadingHistoricalOders}
-              data={historicalOrders}
-              isDrawer={false}
-              isExpanded={true}
-            />
-          </Box>
+        {currentTabKey === TabsKeyEnumPosition.HISTORICAL && (
+          <HistoricalOrdersView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onHistoricalOrderPageChange}
+            isLoading={isLoadingHistoricalOders}
+            data={historicalOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
         )}
-        {currentTabKey === TabKeyEnum.TWAP && (
-          <Box display="flex" flexDirection="column" height="100%">
-            <OrderTwapView
-              toggleExpand={() => {
-                //
-              }}
-              onPageChange={onTwapOrderPageChange}
-              isLoading={isLoadingTwapOders}
-              data={twapOrders}
-              isDrawer={false}
-              isExpanded={true}
-            />
-          </Box>
+        {currentTabKey === TabsKeyEnumPosition.TWAP && (
+          <OrderTwapView
+            toggleExpand={() => {
+              //
+            }}
+            onPageChange={onTwapOrderPageChange}
+            isLoading={isLoadingTwapOders}
+            data={twapOrders}
+            isDrawer={false}
+            isExpanded={true}
+          />
         )}
       </Box>
     </Flex>

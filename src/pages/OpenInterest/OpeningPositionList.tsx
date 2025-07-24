@@ -34,7 +34,7 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     title: 'Trader',
     dataIndex: 'account',
     key: 'account',
-    style: { width: '154px' },
+    style: { width: '160px' },
     render: (item, _, externalSource) =>
       renderTrader(item.account, item.protocol, true, true, externalSource?.onQuickView),
   },
@@ -128,7 +128,7 @@ function OpeningPositionsTable({
     <Table
       restrictHeight
       wrapperSx={{
-        minWidth: 650,
+        minWidth: 750,
         '& tbody': {
           '.hiding-btn': { opacity: 0, transition: 'all 240ms ease' },
         },

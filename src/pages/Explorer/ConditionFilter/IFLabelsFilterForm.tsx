@@ -51,7 +51,7 @@ function SelectLabelWithSearch({
       <Box sx={{ position: 'sticky', top: 0, bg: ['black', 'black', 'black', 'neutral7'], zIndex: 2, px: 3, pt: 3 }}>
         <InputSearch
           ref={inputSearchRef}
-          placeholder={'SEARCH LABEL'}
+          placeholder={'SEARCH TAG'}
           sx={{
             padding: 2,
             width: '100%',
@@ -77,7 +77,7 @@ function SelectLabelWithSearch({
             mt: 3,
           }}
         >
-          <Type.Caption>Match any labels below</Type.Caption>
+          <Type.Caption>Match any tags below</Type.Caption>
           <ButtonWithIcon
             sx={{ p: 0, gap: 1 }}
             variant="ghostInactive"

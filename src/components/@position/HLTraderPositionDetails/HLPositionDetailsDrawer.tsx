@@ -1,4 +1,5 @@
 import { XCircle } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { Suspense, lazy } from 'react'
 
 import Container from 'components/@ui/Container'
@@ -23,8 +24,14 @@ export default function HLPositionDetailsDrawer({
   orders: HlOrderData[]
 }) {
   const isMobile = useIsMobile()
+  const { lg } = useResponsive()
   return (
-    <RcDrawer open={isOpen} onClose={onDismiss} width={isMobile ? '100%' : '60%'} zIndex={Z_INDEX.TOASTIFY + 1}>
+    <RcDrawer
+      open={isOpen}
+      onClose={onDismiss}
+      width={isMobile ? '100%' : lg ? '60%' : '100%'}
+      zIndex={Z_INDEX.TOASTIFY + 1}
+    >
       <Container sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'auto' }}>
         <IconButton
           icon={<XCircle size={24} />}

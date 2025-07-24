@@ -257,7 +257,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       title: 'Market',
       dataIndex: 'indexToken',
       key: 'indexToken',
-      style: { minWidth: '80px' },
+      style: { minWidth: '80px', width: '80px' },
       render: (item) => {
         if (!item.pair) return <></>
         const symbol = getSymbolFromPair(item.pair, true)

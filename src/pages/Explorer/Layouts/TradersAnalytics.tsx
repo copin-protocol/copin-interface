@@ -45,6 +45,7 @@ export default function TradersAnalytics() {
                       ? labelsFilters.map((value) => ({ key: value }))
                       : ifLabelsFilters.map((value) => ({ key: value, title: value }))
                   }
+                  isIF={filterTab === FilterTabEnum.IF_LABELS}
                   shouldShowTooltip={false}
                   showedItems={3}
                 />

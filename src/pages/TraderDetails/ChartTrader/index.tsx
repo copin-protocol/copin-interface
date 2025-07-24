@@ -1,4 +1,5 @@
 import { ChartBar, ChartLine } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import React, { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -9,8 +10,8 @@ import LineChartPnL from 'components/@charts/LineChartPnL'
 import { parseTraderPnLStatisticData } from 'components/@charts/LineChartPnL/helpers'
 import ActiveDot from 'components/@ui/ActiveDot'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
+import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import useTraderProfitStore from 'hooks/store/useTraderProfitStore'
-// import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
 import Tooltip from 'theme/Tooltip'
@@ -25,12 +26,16 @@ const ChartTrader = ({
   protocol,
   account,
   timeOption,
-}: // onChangeTime,
-{
+  onChangeTime,
+  isShowTimeFilter = true,
+  chartTraderSx,
+}: {
   protocol: ProtocolEnum
   account: string
   timeOption: TimeFilterProps
-  // onChangeTime: (option: TimeFilterProps) => void
+  onChangeTime: (option: TimeFilterProps) => void
+  isShowTimeFilter?: boolean
+  chartTraderSx?: any
 }) => {
   const { unrealisedPnl } = useTraderProfitStore()
   const [isBarChart, setIsBarChart] = useState(false)
@@ -82,86 +87,107 @@ const ChartTrader = ({
     return parseTraderPnLStatisticData(stats)
   }, [stats])
 
+  const { lg } = useResponsive()
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1 }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column', px: 12, pt: 12, pb: 1, ...chartTraderSx }}>
       {loadingStats && <Loading />}
       {stats && !loadingStats && (
         <>
-          <Flex width="100%" alignItems="center" justifyContent="space-between">
-            <Box width={56} />
-            <Flex alignItems="center" sx={{ gap: 2 }} mb={1} flex="1">
-              {isBarChart ? (
-                <Flex flexWrap="wrap" alignItems="center" color="neutral3" sx={{ gap: 2 }}>
-                  <Flex alignItems="center" sx={{ gap: 1 }}>
-                    <ActiveDot color="green1" />
-                    <Type.Caption>Daily Profit</Type.Caption>
-                  </Flex>
-                  <Flex alignItems="center" sx={{ gap: 1 }}>
-                    <ActiveDot color="red2" />
-                    <Type.Caption>Daily Loss</Type.Caption>
-                  </Flex>
-                  <Flex alignItems="center" sx={{ gap: 1 }}>
-                    <ActiveDot color={`${themeColors.red1}80`} />
-                    <Type.Caption>Daily Fees</Type.Caption>
-                  </Flex>
-                  <Flex alignItems="center" sx={{ gap: 1 }}>
-                    <ActiveDot color="orange1" />
-                    <Type.Caption>Cumulative PnL: </Type.Caption>
-                    <Type.Caption color={cumulativePnL > 0 ? 'green1' : cumulativePnL < 0 ? 'red2' : 'neutral1'}>{`${
-                      cumulativePnL < 0 ? '-' : ''
-                    }$${formatNumber(Math.abs(cumulativePnL), 2)}`}</Type.Caption>
-                  </Flex>
+          <Flex width="100%" flexDirection={['column', 'column', 'column', 'column', 'row']} alignItems="start">
+            {isBarChart && (
+              <Flex
+                flexWrap="wrap"
+                alignItems="center"
+                color="neutral3"
+                width="100%"
+                sx={{
+                  minWidth: lg ? '230px' : 'auto',
+                  pl: '12px',
+                  gap: 2,
+                  order: [2, 2, 2, 2, 1],
+                }}
+              >
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <ActiveDot color="green1" />
+                  <Type.Caption>Daily Profit</Type.Caption>
                 </Flex>
-              ) : (
-                <Type.Caption color="neutral3" sx={{ width: '100%', textAlign: 'center' }}>
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <ActiveDot color="red2" />
+                  <Type.Caption>Daily Loss</Type.Caption>
+                </Flex>
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <ActiveDot color={`${themeColors.red1}80`} />
+                  <Type.Caption>Daily Fees</Type.Caption>
+                </Flex>
+                <Flex alignItems="center" sx={{ gap: 1 }}>
+                  <ActiveDot color="orange1" />
+                  <Type.Caption>Cumulative PnL: </Type.Caption>
+                  <Type.Caption color={cumulativePnL > 0 ? 'green1' : cumulativePnL < 0 ? 'red2' : 'neutral1'}>
+                    {`${cumulativePnL < 0 ? '-' : ''}$${formatNumber(Math.abs(cumulativePnL), 2)}`}
+                  </Type.Caption>
+                </Flex>
+              </Flex>
+            )}
+            <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ order: [1, 1, 1, 1, 2] }}>
+              <Box display={['block', 'block', 'block', 'block', 'none']}>
+                {isShowTimeFilter && (
+                  <TimeDropdown
+                    timeOption={timeOption}
+                    onChangeTime={onChangeTime}
+                    menuSx={{ transform: 'translateX(10px)' }}
+                  />
+                )}
+              </Box>
+              <Box width={56} display={['none', 'none', 'none', 'none', 'block']} />
+              {!isBarChart && (
+                <Type.Caption color="neutral3" sx={{ textAlign: 'center' }}>
                   PnL
                 </Type.Caption>
               )}
-              {/* <TimeDropdown timeOption={timeOption} onChangeTime={onChangeTime} /> */}
-            </Flex>
-            <Flex alignItems="center">
-              <ButtonWithIcon
-                sx={{ border: 'none' }}
-                icon={
-                  <Box color={!isBarChart ? 'primary1' : 'neutral3'}>
-                    <ChartLine size={20} />
-                  </Box>
-                }
-                size={28}
-                variant="ghost"
-                p={1}
-                block
-                onClick={() => {
-                  setIsBarChart(false)
-                }}
-                data-tip="React-tooltip"
-                data-tooltip-id="trader_line_chart"
-                data-tooltip-offset={8}
-              />
-              <ButtonWithIcon
-                icon={
-                  <Box color={isBarChart ? 'primary1' : 'neutral3'}>
-                    <ChartBar size={20} />
-                  </Box>
-                }
-                size={28}
-                variant="ghost"
-                p={1}
-                block
-                onClick={() => {
-                  setIsBarChart(true)
-                }}
-                sx={{ border: 'none' }}
-                data-tip="React-tooltip"
-                data-tooltip-id="trader_bar_chart"
-                data-tooltip-offset={8}
-              />
-              <Tooltip id="trader_line_chart">
-                <Type.Caption>Line Chart</Type.Caption>
-              </Tooltip>
-              <Tooltip id="trader_bar_chart">
-                <Type.Caption>Bar Chart</Type.Caption>
-              </Tooltip>
+              <Flex alignItems="center">
+                <ButtonWithIcon
+                  sx={{ border: 'none' }}
+                  icon={
+                    <Box color={!isBarChart ? 'primary1' : 'neutral3'}>
+                      <ChartLine size={20} />
+                    </Box>
+                  }
+                  size={28}
+                  variant="ghost"
+                  p={1}
+                  block
+                  onClick={() => {
+                    setIsBarChart(false)
+                  }}
+                  data-tip="React-tooltip"
+                  data-tooltip-id="trader_line_chart"
+                  data-tooltip-offset={8}
+                />
+                <ButtonWithIcon
+                  icon={
+                    <Box color={isBarChart ? 'primary1' : 'neutral3'}>
+                      <ChartBar size={20} />
+                    </Box>
+                  }
+                  size={28}
+                  variant="ghost"
+                  p={1}
+                  block
+                  onClick={() => {
+                    setIsBarChart(true)
+                  }}
+                  sx={{ border: 'none' }}
+                  data-tip="React-tooltip"
+                  data-tooltip-id="trader_bar_chart"
+                  data-tooltip-offset={8}
+                />
+                <Tooltip id="trader_line_chart">
+                  <Type.Caption>Line Chart</Type.Caption>
+                </Tooltip>
+                <Tooltip id="trader_bar_chart">
+                  <Type.Caption>Bar Chart</Type.Caption>
+                </Tooltip>
+              </Flex>
             </Flex>
           </Flex>
           <Box flex="1 0 0" mt={1} sx={{ position: 'relative' }} id={ELEMENT_IDS.TRADER_CHART_PNL}>

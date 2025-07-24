@@ -108,7 +108,9 @@ const CopyManagement = () => {
                 </Flex>
                 <Flex sx={{ flexDirection: ['row', 'row', 'row', 'column', 'row'], columnGap: 1 }}>
                   <Type.Caption color="neutral2">Total ePnL</Type.Caption>
-                  <Type.Caption>{data?.pnl != null ? `$${formatNumber(data?.pnl, 2, 2)}` : '--'}</Type.Caption>
+                  <Type.Caption>
+                    {`${(data?.pnl ?? 0) < 0 ? '-' : ''}$${formatNumber(Math.abs(data?.pnl ?? 0) ?? 0, 2, 2)}`}
+                  </Type.Caption>
                 </Flex>
               </Box>
             </Flex>

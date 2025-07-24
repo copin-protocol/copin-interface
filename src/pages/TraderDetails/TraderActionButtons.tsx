@@ -148,7 +148,10 @@ export default function TraderActionButtons({
             alignItems: 'center',
           }}
         >
-          {isIF && <NoteAction account={account} protocol={protocol} />}
+          <Box display={{ _: isDrawer ? 'block' : 'none', lg: 'block' }}>
+            {isIF && <NoteAction account={account} protocol={protocol} />}
+          </Box>
+
           <Dropdown
             hasArrow={false}
             buttonVariant="ghost"

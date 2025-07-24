@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CaretDown, MagnifyingGlass } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { ChangeEvent, MouseEventHandler, RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -115,7 +116,7 @@ export default QuickSearchBox
 function QuickSearchContainer({
   isOpen,
   onDismiss,
-  placeholder = 'SEARCH ADDRESS OR TRANSACTION',
+  placeholder,
   onSelect,
   returnRanking = false,
   allowAllProtocol = true,
@@ -133,6 +134,7 @@ function QuickSearchContainer({
   setSearchTextRef?: (keyword: string) => void
 }) {
   const isMobile = useIsMobile()
+  const { md } = useResponsive()
   const [openSelectProtocols, setOpenSelectProtocols] = useState(false)
   const handleToggleSelectProtocols = () => setOpenSelectProtocols((prev) => !prev)
 
@@ -234,7 +236,9 @@ function QuickSearchContainer({
           <InputSearchComponent
             isOpen={isOpen}
             inputSearchRef={inputSearchRef}
-            placeholder={placeholder}
+            placeholder={
+              placeholder !== undefined ? placeholder : md ? 'SEARCH ADDRESS OR TRANSACTION' : 'SEARCH ADDRESS OR TXH'
+            }
             searchText={searchText}
             handleSearchFocus={handleSearchFocus}
             handleChangeSearchInput={handleChangeSearchInput}
@@ -360,7 +364,7 @@ function InputSearchComponent({
       ref={inputSearchRef}
       placeholder={placeholder}
       sx={{
-        padding: 2,
+        padding: [1, 2],
         width: '100%',
         height: 'max-content',
         borderColor: 'neutral5',

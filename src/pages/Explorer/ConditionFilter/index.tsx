@@ -95,7 +95,7 @@ export default function ConditionFilter({
               ? [
                   {
                     key: FilterTabEnum.IF_LABELS as unknown as string,
-                    name: <Trans>IF LABELS</Trans>,
+                    name: <Trans>IF TAGS</Trans>,
                     icon: <Tag size={20} />,
                   },
                 ]

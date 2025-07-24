@@ -156,7 +156,7 @@ const HistoricalOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, is
         <>
           {sm ? (
             <>
-              <Box ref={containerRef} flex="1 0 0" overflowX="auto" overflowY="hidden">
+              <Box ref={containerRef} flex="1 0 0" overflowX="auto" overflowY="hidden" height="100%">
                 <Table
                   restrictHeight={(!isDrawer && lg) || (isDrawer && isDrawer && dataLength > 10)}
                   wrapperSx={{

@@ -33,7 +33,7 @@ function FillTime({ data }: { data: GroupedFillsData }) {
     </Box>
   ) : (
     <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
-      <RelativeTimeText key={currentTime} date={data.timestamp} textStyle={{ fontSize: '12px' }} />
+      <RelativeTimeText key={currentTime} date={data.timestamp} textStyle={{ fontSize: '12px' }} hasTooltip />
     </Flex>
   )
 }
@@ -41,7 +41,7 @@ function FillTime({ data }: { data: GroupedFillsData }) {
 export const renderFillsBlockTime = (item: GroupedFillsData, format = DAYJS_FULL_DATE_FORMAT) => (
   <Flex alignItems="center" sx={{ gap: 2 }}>
     <Type.Caption color="neutral1">
-      <LocalTimeText date={item.timestamp} format={format} hasTooltip={false} />
+      <LocalTimeText date={item.timestamp} format={format} hasTooltip />
     </Type.Caption>
   </Flex>
 )
@@ -171,7 +171,11 @@ export const fullFillColumns: ColumnData<GroupedFillsData>[] = [
   fillsColumn,
   { ...priceColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.avgPrice} /> },
   { ...feeColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalFee} /> },
-  { ...pnlColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} /> },
+  {
+    ...pnlColumn,
+    style: { ...pnlColumn.style, minWidth: '100px' },
+    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} />,
+  },
 ]
 
 export const fillColumns: ColumnData<GroupedFillsData>[] = [
@@ -192,5 +196,5 @@ export const drawerFillColumns: ColumnData<GroupedFillsData>[] = [
   fillsColumn,
   priceColumn,
   feeColumn,
-  pnlColumn,
+  { ...pnlColumn, style: { ...pnlColumn.style, minWidth: '100px' } },
 ]

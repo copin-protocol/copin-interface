@@ -126,6 +126,7 @@ export default function TraderExplorerListView({
                           key: label,
                           title: label,
                         }))}
+                        isIF
                         showedItems={4}
                         shouldShowTooltip={false}
                       />

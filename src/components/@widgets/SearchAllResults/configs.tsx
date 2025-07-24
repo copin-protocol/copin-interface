@@ -63,7 +63,7 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
     dataIndex: 'totalTrade',
     key: 'totalTrade',
     sortBy: 'totalTrade',
-    style: { minWidth: '90px', textAlign: 'right' },
+    style: { minWidth: '110px', textAlign: 'right' },
     render: (item) => (
       <Type.Caption width="100%" color="neutral1" textAlign="right">
         {formatNumber(item.totalTrade, 0, 0)}
