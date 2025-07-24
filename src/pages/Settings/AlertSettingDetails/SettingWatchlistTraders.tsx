@@ -13,6 +13,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import AlertLabelButton from 'components/@widgets/AlertLabelButton'
 import { BotAlertData, TraderAlertData } from 'entities/alert'
 import { TraderData } from 'entities/trader'
+import { useAlertSettingDetailsContext } from 'hooks/features/alert/useAlertDetailsContext'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
 import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
@@ -51,7 +52,7 @@ export default function SettingWatchlistTraders({
   const { lg } = useResponsive()
   const isMobile = !lg
   const { maxTraderAlert, usage } = useBotAlertContext()
-  const [searchText, setSearchText] = useState('')
+  const { keyword: searchText, setKeyword: setSearchText } = useAlertSettingDetailsContext()
   const protocolOptionsMapping = useGetProtocolOptionsMapping()
   const { isAvailableWatchlistAlert, watchlistRequiredPlan, userWatchlistNextPlan } = useAlertPermission()
   const [traderData, setTraderData] = useState<TraderAlertData[]>(traders?.data || [])
@@ -81,11 +82,13 @@ export default function SettingWatchlistTraders({
   const filteredTraders = useMemo(() => {
     if (!traderData?.length) return traders
     const filtered = traderData.filter((e) => {
+      const search = searchText?.toLowerCase() ?? ''
       return (
-        e?.address?.toLowerCase()?.includes(searchText.toLowerCase()) ||
-        e?.protocol?.toLowerCase()?.includes(searchText.toLowerCase()) ||
-        protocolOptionsMapping[e.protocol]?.text?.toLowerCase().includes(searchText.toLowerCase()) ||
-        protocolOptionsMapping[e.protocol]?.label?.toLowerCase().includes(searchText.toLowerCase())
+        e?.address?.toLowerCase()?.includes(search) ||
+        e?.protocol?.toLowerCase()?.includes(search) ||
+        e?.label?.toLowerCase()?.includes(search) ||
+        protocolOptionsMapping[e.protocol]?.text?.toLowerCase().includes(search) ||
+        protocolOptionsMapping[e.protocol]?.label?.toLowerCase().includes(search)
       )
     })
     return {
@@ -315,9 +318,9 @@ export default function SettingWatchlistTraders({
         </Flex>
       </Flex>
       <Flex alignItems="center" sx={{ borderBottom: 'small', borderColor: 'neutral4' }}>
-        <Flex sx={{ pl: 1, width: 200, borderRight: 'small', borderColor: 'neutral4' }}>
+        <Flex sx={{ pl: 1, width: 240, borderRight: 'small', borderColor: 'neutral4' }}>
           <InputSearchText
-            placeholder="SEARCH ADDRESS"
+            placeholder="SEARCH ADDRESS/ LABEL"
             sx={{
               width: '100%',
               height: 'max-content',
@@ -325,8 +328,14 @@ export default function SettingWatchlistTraders({
               borderRadius: 'xs',
               backgroundColor: 'transparent !important',
             }}
-            searchText={searchText}
-            setSearchText={setSearchText}
+            searchText={searchText || ''}
+            setSearchText={
+              setSearchText
+                ? (t) => setSearchText(t as any)
+                : (t) => {
+                    console.warn('setSearchText is not defined', t)
+                  }
+            }
           />
         </Flex>
         <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
@@ -346,15 +355,10 @@ export default function SettingWatchlistTraders({
           />
         </Flex>
       </Flex>
-      {!traders?.data?.length ? (
+      {!searchText && !traders?.data?.length ? (
         <TraderLastViewed />
       ) : (
-        <Flex
-          ref={tableWrapperRef}
-          flex={1}
-          flexDirection="column"
-          sx={{ overflow: 'auto', maxHeight: 'calc(100vh - 280px)' }}
-        >
+        <Flex ref={tableWrapperRef} flex={1} flexDirection="column" sx={{ overflow: 'auto' }}>
           {isMobile ? (
             <Flex pt={2} flexDirection="column" sx={{ gap: 2 }}>
               {!!filteredTraders?.data?.length &&
@@ -453,7 +457,7 @@ export default function SettingWatchlistTraders({
                     </Flex>
                   )
                 })}
-              {!filteredTraders?.data?.length && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
+              {!filteredTraders?.data?.length && searchText && <NoDataFound message={<Trans>No Trader Found</Trans>} />}
             </Flex>
           ) : (
             <Table
@@ -492,19 +496,23 @@ export default function SettingWatchlistTraders({
           )}
         </Flex>
       )}
-      <PaginationWithSelect
-        currentPage={currentPage}
-        onPageChange={changeCurrentPage}
-        apiMeta={filteredTraders?.meta}
-        sx={{
-          width: '100%',
-          justifyContent: 'end',
-          py: 1,
-          px: 2,
-          borderTop: 'small',
-          borderColor: 'neutral4',
-        }}
-      />
+      {!filteredTraders?.data?.length && searchText ? (
+        <></>
+      ) : (
+        <PaginationWithSelect
+          currentPage={currentPage}
+          onPageChange={changeCurrentPage}
+          apiMeta={filteredTraders?.meta}
+          sx={{
+            width: '100%',
+            justifyContent: 'end',
+            py: 1,
+            px: 2,
+            borderTop: 'small',
+            borderColor: 'neutral4',
+          }}
+        />
+      )}
     </Flex>
   )
 }
