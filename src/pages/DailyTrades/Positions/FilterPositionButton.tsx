@@ -9,6 +9,7 @@ import { MarketSelect } from 'components/@widgets/PairFilterIcon'
 import { MobileRangeFilterButtons, MobileRangeFilterItem } from 'components/@widgets/TableFilter/MobileRangeFilter'
 import { PositionData } from 'entities/trader'
 import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useSearchParams from 'hooks/router/useSearchParams'
 import { Button } from 'theme/Buttons'
 import Label from 'theme/InputField/Label'
@@ -75,6 +76,8 @@ export default function FilterPositionButton() {
     setOpenModal(false)
   }
   const hasFilter = !!pairs?.length || !!status || !!ranges?.length
+
+  useEscapeToClose({ isOpen: openModal, onClose: () => setOpenModal(false) })
 
   return (
     <>
