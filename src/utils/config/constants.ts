@@ -90,6 +90,8 @@ export const LINKS = {
   vaultTerms: 'https://docs.copin.io/another/terms-of-vault',
   vaultQA: 'https://docs.copin.io/another/q-and-a-of-vault',
   fungiesSubscriptionManagement: 'https://pay.copin.io/portal/subscriptions',
+  arkhamAddress: 'https://intel.arkm.com/explorer/address',
+  debankAddress: 'https://debank.com/profile',
 }
 
 export const NAVBAR_HEIGHT = 56

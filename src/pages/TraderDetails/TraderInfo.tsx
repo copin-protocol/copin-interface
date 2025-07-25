@@ -12,8 +12,13 @@ import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useEnsName } from 'hooks/useEnsName'
 import CopyButton from 'theme/Buttons/CopyButton'
+import ArkhamIcon from 'theme/Icons/ArkhamIcon'
+import DebankIcon from 'theme/Icons/DebankIcon'
+import DebankIconColor from 'theme/Icons/DebankIconColor'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
+import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum, TimeFrameEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { addressShorten } from 'utils/helpers/format'
@@ -56,6 +61,8 @@ const TraderInfo = ({
       resetTrader()
     }
   }
+  const ignoreArkhamProtocols = ProtocolEnum.DYDX
+  const ignoreDebankProtocols = [ProtocolEnum.JUPITER, ProtocolEnum.DYDX]
 
   return (
     <Box px={3} py={2}>
@@ -94,6 +101,45 @@ const TraderInfo = ({
                 {ensName ? addressShorten(address, 3, 5) : ''}
               </CopyButton>
               <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} size={16} />
+              {!ignoreDebankProtocols.includes(protocol) && (
+                <Flex
+                  as="a"
+                  href={`${LINKS.debankAddress}/${address}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{
+                    position: 'relative',
+                    top: '2px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    '&:hover .icon-default': { display: 'none' },
+                    '&:hover .icon-hover': { display: 'inline' },
+                  }}
+                >
+                  <Box className="icon-default">
+                    <DebankIcon />
+                  </Box>
+                  <Box className="icon-hover" sx={{ display: 'none' }}>
+                    <DebankIconColor />
+                  </Box>
+                </Flex>
+              )}
+
+              {!ignoreArkhamProtocols.includes(protocol) && (
+                <Flex
+                  as={'a'}
+                  href={`${LINKS.arkhamAddress}/${address}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{
+                    '&:hover svg path': {
+                      fill: '#fff',
+                    },
+                  }}
+                >
+                  <ArkhamIcon />
+                </Flex>
+              )}
               <ShareProfile
                 address={address}
                 protocol={protocol}
