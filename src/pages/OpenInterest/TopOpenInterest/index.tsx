@@ -12,16 +12,18 @@ import { toast } from 'react-toastify'
 
 import { normalizePositionData } from 'apis/normalize'
 import { normalizePositionPayload } from 'apis/positionApis'
+import noDataImage from 'assets/images/no_data_bubble.png'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import PythWatermark from 'components/@ui/PythWatermark'
 import ToastBody from 'components/@ui/ToastBody'
 import { ResponsePositionData } from 'entities/trader'
 import useOIPermission from 'hooks/features/subscription/useOIPermission'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
+import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import Loading from 'theme/Loading'
-import { Box, Flex } from 'theme/base'
-import { TAB_HEIGHT } from 'utils/config/constants'
+import { Box, Flex, Image, Type } from 'theme/base'
+import { BOOKMARK_NO_GROUP_KEY, NAVBAR_HEIGHT, TAB_HEIGHT } from 'utils/config/constants'
 import { SortTypeEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 import { transformGraphqlFilters } from 'utils/helpers/graphql'
@@ -37,6 +39,7 @@ import useGetFilterRange from './useGetFilterRange'
 export default function TopOpenInterest() {
   const { isAuthenticated, loading } = useAuthContext()
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
+  const { bookmarks } = useTraderFavorites()
 
   const { ranges } = useGetFilterRange()
   const { lg, sm } = useResponsive()
@@ -56,6 +59,8 @@ export default function TopOpenInterest() {
     resetFilters,
     hasExcludingPairs,
     isCopyAll,
+    currentGroupId,
+    onChangeGroupId,
   } = useFilters()
 
   // FETCH DATA
@@ -78,6 +83,15 @@ export default function TopOpenInterest() {
         in: pairs.map((pair) => getPairFromSymbol(pair)),
       })
     }
+    if (currentGroupId && currentGroupId !== BOOKMARK_NO_GROUP_KEY && bookmarks) {
+      console.log('bookmarks', bookmarks)
+      query.push({
+        field: 'account',
+        in: Object.keys(bookmarks)
+          .filter((account) => bookmarks[account]?.customAlertIds?.includes(currentGroupId))
+          .map((k) => k.split('-')[0]),
+      })
+    }
     const rangeFilters = transformGraphqlFilters(ranges.map((v) => ({ gte: v.gte, lte: v.lte, fieldName: v.field })))
     rangeFilters.forEach((values) => query.push(values))
 
@@ -90,7 +104,7 @@ export default function TopOpenInterest() {
     }
 
     return { index: SEARCH_POSITIONS_INDEX, body, protocols: selectedProtocols ?? [] }
-  }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs, ranges, isCopyAll])
+  }, [sort.key, from, to, pairs, limit, selectedProtocols, excludedPairs, ranges, isCopyAll, currentGroupId])
 
   const { allowedFilter, planToFilter, isEnabled } = useOIPermission()
   // const { allowedSelectProtocols } = useProtocolPermission()
@@ -185,8 +199,26 @@ export default function TopOpenInterest() {
     previousData?.[SEARCH_TOP_OPENING_POSITIONS_FUNCTION_NAME].data
 
   const data = useMemo(() => {
-    return rawPositionData?.map((position) => normalizePositionData(position))
-  }, [rawPositionData])
+    let normalizedData = rawPositionData?.map((position) => normalizePositionData(position)) || []
+
+    // Filter by group bookmark if a group is selected
+    if (currentGroupId && currentGroupId !== BOOKMARK_NO_GROUP_KEY) {
+      normalizedData = normalizedData.filter((position) => {
+        const traderKey = `${position.account}-${position.protocol}`
+        const bookmark = bookmarks[traderKey]
+        return bookmark?.customAlertIds?.includes(currentGroupId)
+      })
+    } else if (currentGroupId === BOOKMARK_NO_GROUP_KEY) {
+      // Show only positions from traders that are not in any group
+      normalizedData = normalizedData.filter((position) => {
+        const traderKey = `${position.account}-${position.protocol}`
+        const bookmark = bookmarks[traderKey]
+        return !bookmark?.customAlertIds || bookmark.customAlertIds.length === 0
+      })
+    }
+
+    return normalizedData
+  }, [rawPositionData, currentGroupId, bookmarks])
 
   if (selectedProtocols == null) return null
 
@@ -196,7 +228,7 @@ export default function TopOpenInterest() {
         alignItems="center"
         justifyContent="space-between"
         p={3}
-        height={TAB_HEIGHT}
+        height={[NAVBAR_HEIGHT, NAVBAR_HEIGHT, TAB_HEIGHT]}
         sx={{
           borderBottom: ['small', 'small', 'small', 'none'],
           borderBottomColor: ['neutral4', 'neutral4', 'neutral4', 'none'],
@@ -214,6 +246,8 @@ export default function TopOpenInterest() {
           excludedPairs={excludedPairs}
           allowedFilter={allowedFilter}
           planToFilter={planToFilter}
+          currentGroupId={currentGroupId}
+          onChangeGroupId={onChangeGroupId}
         />
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
           {sm && <FilterPositionRangesTags allowedFilter={allowedFilter} />}
@@ -228,16 +262,49 @@ export default function TopOpenInterest() {
           noDataMessage
         ) : (
           <Flex height="100%" flexDirection={lg ? 'row' : 'column'}>
-            {lg ? (
-              <Box flex="1">
-                <VisualizeSection data={data} isLoading={isLoading} />
-              </Box>
+            {data.length ? (
+              <>
+                {lg ? (
+                  <Box flex="1">
+                    <VisualizeSection data={data} isLoading={isLoading} />
+                  </Box>
+                ) : (
+                  <Box p={3}>
+                    <VisualizeSectionMobile data={data} />
+                  </Box>
+                )}
+              </>
+            ) : lg ? (
+              <Flex flex="1" bg="neutral6" justifyContent="center" alignItems="center" sx={{ position: 'relative' }}>
+                <Image width="90%" maxWidth="400px" src={noDataImage} alt="no data" />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: '250px',
+                    mx: 'auto',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Type.BodyBold mb={2}>No Data Yet</Type.BodyBold>
+                  <Type.Caption color="neutral3">
+                    This graph will show bubble chart of positions once data is available
+                  </Type.Caption>
+                </Box>
+              </Flex>
             ) : (
-              <Box p={3}>
-                <VisualizeSectionMobile data={data} />
-              </Box>
+              <div></div>
             )}
-            <Box flex={[1, 1, 1, '0 0 720px']}>
+
+            <Box flex={[1, 1, 1, '0 0 750px']}>
               {data && (
                 <PositionsSection data={data} total={Math.min(limit, data?.length ?? 0)} isLoading={isLoading} />
               )}

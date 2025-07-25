@@ -42,6 +42,8 @@ export interface DailyOrderContextValues {
   changeFilters: (vars: ChangeFilterVariables) => void
   enabledLiveTrade: boolean
   toggleLiveTrade: (enabled?: boolean) => void
+  currentGroupId?: string
+  changeGroupId: (groupId: string | undefined) => void
 }
 export const DailyOrdersContext = createContext({} as DailyOrderContextValues)
 
@@ -100,6 +102,13 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
   const direction = searchParams['direction'] as DirectionFilterEnum
   const changeDirection = useCallback(
     (direction: DirectionFilterEnum | undefined) => setSearchParams({ ['direction']: direction, ['page']: undefined }),
+    [setSearchParams]
+  )
+
+  // Group bookmark filtering
+  const currentGroupId = searchParams.groupId as string | undefined
+  const changeGroupId = useCallback(
+    (groupId: string | undefined) => setSearchParams({ groupId, ['page']: undefined }),
     [setSearchParams]
   )
 
@@ -206,6 +215,8 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
       changeFilters,
       enabledLiveTrade,
       toggleLiveTrade,
+      currentGroupId,
+      changeGroupId,
     }
   }, [
     onClearPairs,
@@ -228,6 +239,8 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
     changeFilters,
     enabledLiveTrade,
     toggleLiveTrade,
+    currentGroupId,
+    changeGroupId,
   ])
 
   return <DailyOrdersContext.Provider value={contextValue}>{children}</DailyOrdersContext.Provider>

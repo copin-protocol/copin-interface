@@ -87,7 +87,7 @@ const EXCLUDING_PATH = [
   ROUTES.ALERT_LIST.path,
   ROUTES.REFERRAL.path,
   ROUTES.COMPARING_TRADERS.path,
-  ROUTES.POSITION_DETAILS.path_prefix,
+  // ROUTES.POSITION_DETAILS.path_prefix,
 ]
 const useInitTraderFavorites = () => {
   const { profile } = useAuthContext()

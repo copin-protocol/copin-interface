@@ -2,6 +2,8 @@ import { useResponsive } from 'ahooks'
 import dayjs from 'dayjs'
 import { ReactNode, useMemo } from 'react'
 
+import GroupBookmarkDropdown from 'components/@trader/GroupBookmarkDropdown'
+import ItemWrapper from 'components/@ui/FilterItemWrapper'
 import { MarketFilter } from 'components/@ui/MarketFilter'
 import { ALL_TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import { PositionData } from 'entities/trader'
@@ -14,7 +16,6 @@ import { Flex, Type } from 'theme/base'
 import { PairFilterEnum, SubscriptionPlanEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { parsePairsFromQueryString, stringifyPairsQuery } from 'utils/helpers/transform'
 
-import ItemWrapper from '../FilterItemWrapper'
 import FilterMenuWrapper from '../FilterMenuWrapper'
 import { TimeDropdown, TimeDropdownProps } from '../TimeFilterDropdown'
 
@@ -30,6 +31,8 @@ export default function Filters({
   excludedPairs,
   planToFilter,
   allowedFilter,
+  currentGroupId,
+  onChangeGroupId,
 }: {
   currentSort: SortOption
   currentLimit: number
@@ -40,11 +43,13 @@ export default function Filters({
   excludedPairs: string[]
   planToFilter: SubscriptionPlanEnum
   allowedFilter: boolean
+  currentGroupId?: string
+  onChangeGroupId?: (groupId: string | undefined) => void
 } & TimeDropdownProps) {
   const { sm } = useResponsive()
 
   return (
-    <Flex sx={{ gap: ['10px', '6px'] }} alignItems="center">
+    <Flex sx={{ columnGap: ['10px', '6px'], rowGap: 2, flexWrap: 'wrap' }} alignItems="center">
       {sm && <Type.Caption>SELECTED</Type.Caption>}
       <ItemWrapper
         permissionIconSx={{ transform: 'translateX(-8px)' }}
@@ -84,7 +89,8 @@ export default function Filters({
           <Type.Caption>{currentLimit}</Type.Caption>
         </Dropdown>
       </ItemWrapper>
-      {sm && <Type.Caption ml={2}>BY</Type.Caption>}
+
+      {sm && <Type.Caption ml={2}>SORT BY</Type.Caption>}
       <ItemWrapper allowedFilter={allowedFilter} planToFilter={planToFilter}>
         <Dropdown
           buttonVariant="ghostPrimary"
@@ -111,16 +117,31 @@ export default function Filters({
           <Type.Caption>{currentSort.text}</Type.Caption>
         </Dropdown>
       </ItemWrapper>
-      {sm && <Type.Caption ml={2}>OPEN FROM</Type.Caption>}
-      <TimeDropdown
-        currentTimeOption={currentTimeOption}
-        onChangeTime={onChangeTime}
-        allowedFilter={allowedFilter}
-        planToFilter={planToFilter}
-      />
+      <Flex sx={{ gap: ['10px', '6px'], mr: 2 }} alignItems="center">
+        {sm && <Type.Caption ml={{ md: 2 }}>OPEN FROM</Type.Caption>}
+        <TimeDropdown
+          currentTimeOption={currentTimeOption}
+          onChangeTime={onChangeTime}
+          allowedFilter={allowedFilter}
+          planToFilter={planToFilter}
+        />
+      </Flex>
+
+      {onChangeGroupId && (
+        <Flex sx={{ gap: ['10px', '6px'] }} alignItems="center">
+          {<Type.Caption>BY</Type.Caption>}
+          <GroupBookmarkDropdown
+            currentGroupId={currentGroupId}
+            onChangeGroupId={onChangeGroupId}
+            allowedFilter={allowedFilter}
+            planToFilter={planToFilter}
+          />
+        </Flex>
+      )}
     </Flex>
   )
 }
+
 export function useTimeFilter() {
   const { searchParams, setSearchParams } = useSearchParams()
   let time = DEFAULT_TIME
@@ -196,13 +217,20 @@ export function useFilters(args?: { isOverviewPage?: boolean }) {
 
   const { hasExcludingPairs, isCopyAll } = useFilterPairs({ pairs, excludedPairs })
 
+  // Group bookmark filtering
+  const currentGroupId = searchParams.groupId as string | undefined
+  const onChangeGroupId = (groupId: string | undefined) => {
+    setSearchParams({ groupId, ['page']: '1' })
+  }
+
   const hasFilter = args?.isOverviewPage
-    ? !!excludedPairs.length || (!isCopyAll && !!pairs.length) || time.id !== DEFAULT_TIME.id
+    ? !!excludedPairs.length || (!isCopyAll && !!pairs.length) || time.id !== DEFAULT_TIME.id || !!currentGroupId
     : !!excludedPairs.length ||
       (!isCopyAll && !!pairs.length) ||
       limit !== DEFAULT_LIMIT ||
       time.id !== DEFAULT_TIME.id ||
-      sort.key !== DEFAULT_SORT.key
+      sort.key !== DEFAULT_SORT.key ||
+      !!currentGroupId
 
   const resetFilters = () => setSearchParamsOnly({})
 
@@ -222,6 +250,8 @@ export function useFilters(args?: { isOverviewPage?: boolean }) {
     excludedPairs,
     hasFilter,
     resetFilters,
+    currentGroupId,
+    onChangeGroupId,
   }
 }
 

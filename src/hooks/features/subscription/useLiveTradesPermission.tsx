@@ -47,11 +47,13 @@ export default function useLiveTradesPermission() {
   })
 
   const isEliteUser = useIsElite()
+
   const planToShowOrderDetails = getRequiredPlan({
     conditionFn: (plan) =>
       !!pagePermission?.[plan]?.orderFieldsAllowed?.includes(SYMBOL_ALLOWED_ALL as any) ||
       !!pagePermission?.[plan]?.orderFieldsAllowed?.includes('account'),
   })
+
   const planToShowPositionDetails = getRequiredPlan({
     conditionFn: (plan) =>
       !!pagePermission?.[plan]?.positionFieldsAllowed?.includes(SYMBOL_ALLOWED_ALL as any) ||
@@ -59,6 +61,7 @@ export default function useLiveTradesPermission() {
   })
   const isEnabledFilterOrder = !!userPermission?.isEnableLiveOrderFilter
   const isEnabledFilterPosition = !!userPermission?.isEnableLivePositionFilter
+
   const planToFilterOrder = getRequiredPlan({
     conditionFn: (plan) => !!pagePermission?.[plan]?.isEnableLiveOrderFilter,
   })
@@ -80,20 +83,20 @@ export default function useLiveTradesPermission() {
     myProfile,
     orderFieldsAllowed,
     positionFieldsAllowed,
-    isEnableSearchOrderTrader,
-    isEnableSearchPositionTrader,
     isEliteUser,
     planToShowOrderDetails,
     planToShowPositionDetails,
     planToFilterOrder,
     planToFilterPosition,
+    planToSearchOrderTrader,
+    planToSearchPositionTrader,
     liveOrderDelayInSecond,
     livePositionDelayInSecond,
     planToEnabledLiveOrder,
     planToEnabledLivePosition,
-    planToSearchOrderTrader,
-    planToSearchPositionTrader,
     isEnabledFilterOrder,
     isEnabledFilterPosition,
+    isEnableSearchOrderTrader,
+    isEnableSearchPositionTrader,
   }
 }

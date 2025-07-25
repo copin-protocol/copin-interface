@@ -17,14 +17,22 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
+import FilterGroupBookmarkTag from '../FilterTags/FilterGroupBookmarkTag'
 import { DaliPositionsContextValues, useDailyPositionsContext } from './usePositionsProvider'
 
 export default function FilterPositionButton() {
-  const { isEnabledFilterPosition, planToFilterPosition, positionFieldsAllowed } = useLiveTradesPermission()
+  const {
+    isEnabledFilterPosition,
+    planToFilterPosition,
+    positionFieldsAllowed,
+    isEnableSearchPositionTrader,
+    planToSearchPositionTrader,
+  } = useLiveTradesPermission()
 
   const [openModal, setOpenModal] = useState(false)
   const { setSearchParamsOnly } = useSearchParams()
-  const { ranges, pairs, excludedPairs, status, changeFilters } = useDailyPositionsContext()
+  const { ranges, pairs, excludedPairs, status, changeFilters, currentGroupId, changeGroupId } =
+    useDailyPositionsContext()
   const [_rangesFilter, _setRangesFilter] = useState<Record<string, DaliPositionsContextValues['ranges'][0]>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
@@ -65,16 +73,22 @@ export default function FilterPositionButton() {
   }, [pairs, excludedPairs])
 
   const [_status, _setStatus] = useState(status)
+  const [_currentGroupId, _setCurrentGroupId] = useState(currentGroupId)
 
   const _onApply = () => {
     changeFilters({ status: _status, pairs: _pairs, ranges: Object.values(_rangesFilter) })
+    if (_currentGroupId !== currentGroupId) {
+      changeGroupId(_currentGroupId)
+    }
     setOpenModal(false)
   }
   const _onReset = () => {
     setSearchParamsOnly({})
+    _setRangesFilter({})
+    _setCurrentGroupId(undefined)
     setOpenModal(false)
   }
-  const hasFilter = !!pairs?.length || !!status || !!ranges?.length
+  const hasFilter = !!pairs?.length || !!status || !!ranges?.length || !!currentGroupId
 
   return (
     <>
@@ -101,6 +115,14 @@ export default function FilterPositionButton() {
               </Flex>
               <Box flex="1 0 0" overflow="auto">
                 <Box px={3} pb={3}>
+                  <Label label="Traders" labelColor="neutral1" />
+                  <FilterGroupBookmarkTag
+                    currentGroupId={_currentGroupId}
+                    onChangeGroupId={_setCurrentGroupId}
+                    allowedFilter={isEnableSearchPositionTrader}
+                    planToFilter={planToSearchPositionTrader}
+                  />
+                  <Box mb={3} />
                   <Label label="Status" labelColor="neutral1" />
                   <PositionStatusSelect currentFilter={_status} changeFilter={_setStatus} />
                   <Box mb={3} />

@@ -3163,6 +3163,10 @@ msgstr "No position found"
 msgid "No position was found"
 msgstr "No position was found"
 
+#: src/pages/OpenInterest/OpeningPositionList.tsx
+msgid "No positions matched your filters"
+msgstr "No positions matched your filters"
+
 #: src/components/@backtest/BacktestSummaryAndPositions/index.tsx
 msgid "No trade history from {0} to {1}"
 msgstr "No trade history from {0} to {1}"

@@ -19,19 +19,20 @@ import ToastBody from 'components/@ui/ToastBody'
 import { PositionData, ResponsePositionData } from 'entities/trader'
 import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
 import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
-import useUserNextPlan from 'hooks/features/subscription/useUserNextPlan'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
+import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { MAX_LIST_DATA_LIMIT } from 'utils/config/constants'
+import { BOOKMARK_NO_GROUP_KEY, MAX_LIST_DATA_LIMIT, SYMBOL_ALLOWED_ALL } from 'utils/config/constants'
 import { ProtocolEnum, SortTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import reorderArray from 'utils/helpers/reorderArray'
 import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
+import FilterGroupBookmarkTag from '../FilterTags/FilterGroupBookmarkTag'
 import FilterPairTags from '../FilterTags/FilterPairTag'
 import FilterPositionRangesTag from '../FilterTags/FilterPositionRangesTag'
 import FilterPositionStatusTag from '../FilterTags/FilterPositionStatusTag'
@@ -40,7 +41,6 @@ import { mapPositionData } from '../helpers'
 import FilterPositionButton from './FilterPositionButton'
 import { LiveDataSortSelect } from './LiveDataSortSelect'
 import SortPositionsDropdown from './SortPositionDropdown'
-import { getTablePositionPermissionStyle } from './helpers'
 import { DailyPositionsProvider, useDailyPositionsContext } from './usePositionsProvider'
 
 export default function DailyPositionsPage() {
@@ -69,9 +69,12 @@ function DailyPositionsComponent() {
     changeCurrentLimit,
     enabledLiveTrade,
     toggleLiveTrade,
+    currentGroupId,
+    changeGroupId,
   } = useDailyPositionsContext()
 
   const { md } = useResponsive()
+  const { bookmarks } = useTraderFavorites()
 
   // Filters
   const { isCopyAll, hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
@@ -95,6 +98,17 @@ function DailyPositionsComponent() {
         match: address,
       })
     }
+
+    // Group bookmark filtering
+    if (currentGroupId && currentGroupId !== BOOKMARK_NO_GROUP_KEY && bookmarks) {
+      result.push({
+        field: 'account',
+        in: Object.keys(bookmarks)
+          .filter((account) => bookmarks[account]?.customAlertIds?.includes(currentGroupId))
+          .map((k) => k.split('-')[0]),
+      })
+    }
+
     if (ranges.length) {
       ranges.forEach((values) => {
         //@ts-ignore
@@ -132,7 +146,7 @@ function DailyPositionsComponent() {
       }
     })
     return _parsedResult
-  }, [address, pairs, ranges, status])
+  }, [address, pairs, ranges, status, currentGroupId, bookmarks])
 
   // Sorts
   const tableSorts = useMemo(() => {
@@ -459,19 +473,27 @@ function DailyPositionsComponent() {
   const isLoading = loadingLiveData || isLoadingTablePositions
   const isFetching = enabledLiveTrade ? fetchingLiveData : false
 
-  const _positionColumns = reorderArray({
-    source: positionFieldsAllowed,
-    target: dailyPositionColumns,
-    getValue: (v) => v.key,
-  }).map((v) => {
-    const isAllowed = positionFieldsAllowed == null || !v.key || positionFieldsAllowed?.includes(v.key) || isEliteUser
-    return {
-      ...v,
-      sortBy: isAllowed ? v.sortBy : undefined,
-      filterComponent: isAllowed ? v.filterComponent : undefined,
-      style: { ...v.style, paddingRight: '8px' },
-    }
-  })
+  const _positionColumns = useMemo(
+    () =>
+      reorderArray({
+        source: positionFieldsAllowed,
+        target: dailyPositionColumns,
+        getValue: (v) => v.key,
+      }).map((v) => {
+        const isAllowed =
+          positionFieldsAllowed == null ||
+          !v.key ||
+          positionFieldsAllowed?.includes(v.key) ||
+          positionFieldsAllowed?.includes(SYMBOL_ALLOWED_ALL as any)
+        return {
+          ...v,
+          sortBy: isAllowed ? v.sortBy : undefined,
+          filterComponent: isAllowed ? v.filterComponent : undefined,
+          style: { ...v.style, paddingRight: '8px' },
+        }
+      }),
+    [positionFieldsAllowed]
+  )
 
   const overlayRef = useRef<HTMLDivElement | null>(null)
   const tableWrapperRef = useRef<HTMLDivElement | null>(null)
@@ -566,8 +588,14 @@ function DailyPositionsComponent() {
           }}
         >
           <Flex sx={{ alignItems: 'center', gap: 2, flexWrap: 'nowrap', flex: '1 0 0', overflow: 'auto hidden' }}>
+            <FilterGroupBookmarkTag
+              currentGroupId={currentGroupId}
+              onChangeGroupId={changeGroupId}
+              allowedFilter={isEnableSearchPositionTrader}
+              planToFilter={planToSearchPositionTrader}
+            />
             <Type.Caption pr={1} sx={{ flexShrink: 0 }}>
-              Filter:
+              FILTER:
             </Type.Caption>
             <FilterPairTags pairs={pairs} excludedPairs={excludedPairs} onClear={onClearPairs} />
             <FilterPositionStatusTag />
