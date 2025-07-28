@@ -104,7 +104,7 @@ const TraderInfo = ({
               {protocol === ProtocolEnum.HYPERLIQUID && (
                 <Flex
                   as="a"
-                  href={`${LINKS.hyperformance}/${address}`}
+                  href={`${LINKS.hyperformance}?${address}`}
                   target="_blank"
                   rel="noreferrer"
                   sx={{
