@@ -657,6 +657,12 @@ export enum SubscriptionFeatureEnum {
   PERP_EXPLORER = 'PERP_EXPLORER',
 }
 
+export enum TraderStatusReasonEnum {
+  READY_TO_REFRESH = 'READY_TO_REFRESH',
+  PROCESSING = 'PROCESSING',
+  COOLDOWN_ACTIVE = 'COOLDOWN_ACTIVE',
+}
+
 export enum TRADER_LABEL_KEY {
   VOLUME = 'VOLUME',
   PNL = 'PNL',

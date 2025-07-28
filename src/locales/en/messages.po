@@ -393,6 +393,10 @@ msgstr "Add referral successful!"
 msgid "Add referrer successful!"
 msgstr "Add referrer successful!"
 
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "Added to refresh queue"
+msgstr "Added to refresh queue"
+
 #: src/components/@copyTrade/CopyTradeForm/index.tsx
 msgid "Adjust Margin"
 msgstr "Adjust Margin"
@@ -2420,6 +2424,10 @@ msgstr "Last Trade (All)"
 msgid "Last Updated:"
 msgstr "Last Updated:"
 
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "Last refreshed:"
+msgstr "Last refreshed:"
+
 #: src/pages/Home/Traders.tsx
 #: src/pages/Home/Traders.tsx
 msgid "Last update:"
@@ -3164,6 +3172,7 @@ msgid "No position was found"
 msgstr "No position was found"
 
 #: src/pages/OpenInterest/OpeningPositionList.tsx
+#: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "No positions matched your filters"
 msgstr "No positions matched your filters"
 
@@ -3880,6 +3889,14 @@ msgstr "Records to export"
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Referral Code (optional)"
 msgstr "Referral Code (optional)"
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "Refresh"
+msgstr "Refresh"
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "Refresh available at:"
+msgstr "Refresh available at:"
 
 #: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "Refund not accepted."
@@ -4927,6 +4944,10 @@ msgstr "This trader alert has been subscribed successfully"
 #: src/hooks/features/alert/useSettingWatchlistTraders.tsx
 msgid "This trader alert has been updated successfully"
 msgstr "This trader alert has been updated successfully"
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "This trader data is being refreshed. Please check back later."
+msgstr "This trader data is being refreshed. Please check back later."
 
 #: src/components/@copyTrade/TraderCopyCountWarningIcon/index.tsx
 msgid "This trader is being copied by 10 or more copiers."
@@ -6258,6 +6279,10 @@ msgstr "© {0} Copin."
 #: src/pages/TraderDetails/OutdatedDataHandler.tsx
 msgid "⚠ Sync delayed since {0}"
 msgstr "⚠ Sync delayed since {0}"
+
+#: src/pages/TraderDetails/OutdatedDataHandler.tsx
+msgid "⚠ This historical data is being re-synced"
+msgstr "⚠ This historical data is being re-synced"
 
 #: src/pages/TraderDetails/OutdatedDataHandler.tsx
 msgid "⚠ This historical data is delayed"

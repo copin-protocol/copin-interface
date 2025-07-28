@@ -360,6 +360,18 @@ export type PnlStatisticsResponse = {
   [account: string]: TraderPnlStatisticData
 }
 
+export interface TraderDataStatus {
+  traderAddress: string
+  canRefresh: boolean
+  reason: TraderStatusReasonEnum
+  cooldown?: {
+    inCooldown: boolean
+    remainingMinutes?: number
+    lastRefreshTime?: string
+    nextAvailableTime?: string
+  }
+}
+
 export interface TraderNoteData {
   id: string
   account: string
