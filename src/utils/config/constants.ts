@@ -92,6 +92,7 @@ export const LINKS = {
   fungiesSubscriptionManagement: 'https://pay.copin.io/portal/subscriptions',
   arkhamAddress: 'https://intel.arkm.com/explorer/address',
   debankAddress: 'https://debank.com/profile',
+  hyperformance: 'https://hyperformance.xyz/trade?',
 }
 
 export const NAVBAR_HEIGHT = 56
