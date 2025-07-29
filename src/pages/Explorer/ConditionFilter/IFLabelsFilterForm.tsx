@@ -10,6 +10,8 @@ import { GridProps } from 'styled-system'
 
 import { getAllNoteLabelsApi } from 'apis/traderNoteApis'
 import Divider from 'components/@ui/Divider'
+import SelectMarketWithSearch from 'components/@widgets/SelectMarketWithSearch'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -17,11 +19,13 @@ import { ControlledCheckbox } from 'theme/Checkbox/ControlledCheckBox'
 import { InputSearch } from 'theme/Input'
 import { Box, Flex, Grid, Type } from 'theme/base'
 import { QUERY_KEYS } from 'utils/config/keys'
+import { formatSymbol } from 'utils/helpers/transform'
 
-import { formatIFLabelsRangesWithAnd } from '../helpers/formatRanges'
+import { formatIFRangesWithAnd } from '../helpers/formatRanges'
 import useTradersContext from '../useTradersContext'
 import ResultEstimated from './ResultEstimated'
 import { FilterTabEnum } from './configs'
+import { IFFilterParams } from './types'
 
 function SelectLabelWithSearch({
   allItems,
@@ -119,58 +123,139 @@ function SelectLabelWithSearch({
 }
 
 export default function IFLabelsFilterForm({
-  labels,
+  ifFilters,
   handleClose,
   handleChangeOption,
   currentTab,
   lastFilterTab,
 }: {
+  ifFilters: IFFilterParams
   handleClose?: () => void
-  handleChangeOption: (labels: string[]) => void
-  labels: string[]
+  handleChangeOption: (ifFilters: IFFilterParams) => void
   currentTab: FilterTabEnum
   lastFilterTab: FilterTabEnum
 }) {
   const { data } = useQuery(QUERY_KEYS.GET_ALL_NOTE_LABELS, () => getAllNoteLabelsApi())
+  const { getListSymbol } = useMarketsConfig()
 
-  const [pickingLabels, setPickingLabels] = useState<string[]>(labels)
+  const [pickingLabels, setPickingLabels] = useState<string[]>(ifFilters.ifLabels ?? [])
+  const [pickingGoodMarkets, setPickingGoodMarkets] = useState<string[]>(ifFilters.ifGoodMarkets ?? [])
+  const [pickingBadMarkets, setPickingBadMarkets] = useState<string[]>(ifFilters.ifBadMarkets ?? [])
+  const [goodMarketsKeyword, setGoodMarketsKeyword] = useState<string>('')
+  const [badMarketsKeyword, setBadMarketsKeyword] = useState<string>('')
   const selectedProtocols = useGlobalProtocolFilterStore((s) => s.selectedProtocols)
   const { timeOption } = useTradersContext()
   const { sm } = useResponsive()
 
+  // Market data
+  const allPairs = getListSymbol?.()
+  const marketOptions = useMemo(() => {
+    const options = allPairs?.map((symbol) => ({ value: symbol, label: formatSymbol(symbol) })) ?? []
+    return options
+  }, [allPairs])
+
   const handleApply = () => {
-    handleChangeOption(pickingLabels)
+    handleChangeOption({ ifLabels: pickingLabels, ifGoodMarkets: pickingGoodMarkets, ifBadMarkets: pickingBadMarkets })
     toast.success('Save filter success')
     handleClose && handleClose()
   }
 
   const handleReset = () => {
     setPickingLabels([])
-    handleChangeOption([])
+    setPickingGoodMarkets([])
+    setPickingBadMarkets([])
+    handleChangeOption({ ifLabels: [], ifGoodMarkets: [], ifBadMarkets: [] })
     toast.success('Reset filter success')
     handleClose && handleClose()
   }
 
-  // const isEnabledApply = useMemo(() => {
-  //   return currentTab === FilterTabEnum.LABELS
-  // }, [currentTab])
-
-  const hasChanged = !isEqual(labels, pickingLabels)
+  const hasChanged =
+    !isEqual(ifFilters.ifLabels, pickingLabels) ||
+    !isEqual(ifFilters.ifGoodMarkets, pickingGoodMarkets) ||
+    !isEqual(ifFilters.ifBadMarkets, pickingBadMarkets)
 
   return (
     <Flex sx={{ flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
       <Box sx={sm ? {} : { position: 'sticky', top: 0, bg: 'neutral7', zIndex: 2 }}>
         <ResultEstimated
-          ranges={formatIFLabelsRangesWithAnd(pickingLabels)}
+          ranges={formatIFRangesWithAnd({
+            ifLabels: pickingLabels,
+            ifGoodMarkets: pickingGoodMarkets,
+            ifBadMarkets: pickingBadMarkets,
+          })}
           protocols={selectedProtocols ?? []}
           type={timeOption.id}
-          filterTab={FilterTabEnum.IF_LABELS}
+          filterTab={FilterTabEnum.IF}
         />
       </Box>
 
       <Box flex="1 0 0" sx={{ overflow: 'auto', '.select__menu': { minWidth: 'max-content' } }}>
         <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
           <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
+            <Box sx={{ display: ['block', 'block', 'block', 'flex'], gap: 2 }}>
+              {/* Good Markets Section */}
+              <Box sx={{ px: 3, py: 2, flex: 1 }}>
+                <Type.Caption color="neutral3" mb={2}>
+                  <Trans>GOOD MARKETS</Trans>
+                </Type.Caption>
+                <SelectMarketWithSearch
+                  tagBgColor="#7ce45b"
+                  tagColor="#000"
+                  allItems={marketOptions}
+                  selectedItems={pickingGoodMarkets}
+                  keyword={goodMarketsKeyword}
+                  handleToggleItem={(market) => {
+                    setPickingGoodMarkets((prev) => {
+                      if (prev.includes(market)) {
+                        return prev.filter((m) => m !== market)
+                      }
+                      return [...prev, market]
+                    })
+                  }}
+                  handleSelectAllItems={(isSelectedAll) => {
+                    if (isSelectedAll) {
+                      setPickingGoodMarkets([])
+                    } else {
+                      setPickingGoodMarkets(allPairs ?? [])
+                    }
+                  }}
+                  handleChangeKeyword={(keyword) => setGoodMarketsKeyword(keyword ?? '')}
+                  limit={sm ? 3 : 4}
+                />
+              </Box>
+
+              {/* Bad Markets Section */}
+              <Box sx={{ px: 3, py: 2, flex: 1 }}>
+                <Type.Caption color="neutral3" mb={2}>
+                  <Trans>BAD MARKETS</Trans>
+                </Type.Caption>
+                <SelectMarketWithSearch
+                  tagBgColor="#f37b53"
+                  tagColor="#000"
+                  allItems={marketOptions}
+                  selectedItems={pickingBadMarkets}
+                  keyword={badMarketsKeyword}
+                  handleToggleItem={(market) => {
+                    setPickingBadMarkets((prev) => {
+                      if (prev.includes(market)) {
+                        return prev.filter((m) => m !== market)
+                      }
+                      return [...prev, market]
+                    })
+                  }}
+                  handleSelectAllItems={(isSelectedAll) => {
+                    if (isSelectedAll) {
+                      setPickingBadMarkets([])
+                    } else {
+                      setPickingBadMarkets(allPairs ?? [])
+                    }
+                  }}
+                  handleChangeKeyword={(keyword) => setBadMarketsKeyword(keyword ?? '')}
+                  limit={sm ? 3 : 4}
+                />
+              </Box>
+            </Box>
+            {/* Labels Section */}
             {!!data && (
               <SelectLabelWithSearch
                 allItems={data ?? []}
@@ -214,9 +299,7 @@ export default function IFLabelsFilterForm({
                 px={0}
                 variant="ghostPrimary"
                 onClick={handleApply}
-                disabled={
-                  !(currentTab === FilterTabEnum.IF_LABELS && lastFilterTab !== FilterTabEnum.IF_LABELS) && !hasChanged
-                }
+                disabled={!(currentTab === FilterTabEnum.IF && lastFilterTab !== FilterTabEnum.IF) && !hasChanged}
                 sx={{ fontWeight: 'normal' }}
               >
                 Apply & Save

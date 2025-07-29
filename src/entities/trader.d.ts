@@ -21,6 +21,8 @@ export interface TraderData {
   smartAccount: string
   labels: string[]
   ifLabels: string[]
+  ifGoodMarkets: string[]
+  ifBadMarkets: string[]
   statisticLabels: string[]
   aggregatedLabels: string[]
   protocol: ProtocolEnum
@@ -388,8 +390,12 @@ export interface TraderLabelData {
   account: string
   protocol: ProtocolEnum
   labels: string[]
+  goodMarkets: string[]
+  badMarkets: string[]
   userId: string
   username: string
   createdAt: string
   updatedAt: string
 }
+
+export type IFLabelKey = 'labels' | 'goodMarkets' | 'badMarkets'

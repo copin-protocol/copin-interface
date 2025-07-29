@@ -21,6 +21,8 @@ import { LABEL_TRANSLATION } from 'utils/config/translations'
 
 import { getColumnRequiredPlan, getPermissionTooltipId } from '../helpers'
 
+const EXCLUDED_FIELDS = ['labels', 'ifLabels', 'ifGoodMarkets', 'ifBadMarkets']
+
 export default function TraderExplorerListView({
   data,
   isLoading,
@@ -47,8 +49,8 @@ export default function TraderExplorerListView({
   //   getValue: (data) => data.id,
   // }).map((v) => ({ ...v, sortBy: fieldsAllowed.includes(v.id as string) || isEliteUser ? v.sortBy : undefined }))
 
-  const headerColumns = _tableSettings.filter((v) => v.id !== 'labels' && v.id !== 'ifLabels').slice(1, 4)
-  const bodyColumns = _tableSettings.filter((v) => v.id !== 'labels' && v.id !== 'ifLabels').slice(4)
+  const headerColumns = _tableSettings.filter((v) => !EXCLUDED_FIELDS.includes(v.id)).slice(1, 4)
+  const bodyColumns = _tableSettings.filter((v) => !EXCLUDED_FIELDS.includes(v.id)).slice(4)
 
   const mobileScrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -106,6 +108,11 @@ export default function TraderExplorerListView({
                 tooltip: LABEL_TOOLTIP_TRANSLATION[label as keyof typeof LABEL_TOOLTIP_TRANSLATION],
               }
             })
+
+          const isShowIfLabels = _data.ifLabels && _tableSettings.find((v) => v.id === 'ifLabels')
+          const isShowIfGoodMarkets = _data.ifGoodMarkets && _tableSettings.find((v) => v.id === 'ifGoodMarkets')
+          const isShowIfBadMarkets = _data.ifBadMarkets && _tableSettings.find((v) => v.id === 'ifBadMarkets')
+
           return (
             <Accordion
               key={_data.account + _data.protocol}
@@ -119,7 +126,8 @@ export default function TraderExplorerListView({
                       <TraderLabels labels={labels} showedItems={4} />
                     </Flex>
                   )}
-                  {_data.ifLabels && !!_tableSettings.find((v) => v.id === 'ifLabels') && (
+
+                  {isShowIfLabels && (
                     <Flex sx={{ gap: 1, flexWrap: 'wrap', pb: 2 }}>
                       <TraderLabels
                         labels={_data.ifLabels.map((label) => ({
@@ -132,6 +140,33 @@ export default function TraderExplorerListView({
                       />
                     </Flex>
                   )}
+                  {(isShowIfBadMarkets || isShowIfGoodMarkets) && (
+                    <Flex sx={{ gap: 1, flexWrap: 'wrap', pb: 2 }}>
+                      {isShowIfBadMarkets && (
+                        <TraderLabels
+                          labels={_data.ifBadMarkets.map((label) => ({
+                            key: label,
+                            title: label,
+                          }))}
+                          isPositive={false}
+                          showedItems={4}
+                          shouldShowTooltip={false}
+                        />
+                      )}
+                      {isShowIfGoodMarkets && (
+                        <TraderLabels
+                          labels={_data.ifGoodMarkets.map((label) => ({
+                            key: label,
+                            title: label,
+                          }))}
+                          isPositive
+                          showedItems={4}
+                          shouldShowTooltip={false}
+                        />
+                      )}
+                    </Flex>
+                  )}
+
                   <Box sx={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr' }}>
                     {headerColumns.map((setting) => {
                       const isAvailable = fieldsAllowed.includes(setting.id)

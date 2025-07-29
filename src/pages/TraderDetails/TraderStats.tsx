@@ -49,6 +49,8 @@ const StatsWrapper = styled.div`
     }
   }
 `
+
+const IGNORED_FIELDS = ['labels', 'ifLabels', 'ifGoodMarkets', 'ifBadMarkets']
 interface StatProps {
   id: string
   label: ReactNode
@@ -345,7 +347,7 @@ const AccountStats = memo(function AccountStatsMemo({
           }}
         >
           {customizeStats
-            .filter((key) => key !== 'labels' && key !== 'ifLabels')
+            .filter((key) => !IGNORED_FIELDS.includes(key))
             .map((key, index) => {
               const stat = statsObj[key]
               if (!stat) return <Box display="none" key={key}></Box>
@@ -422,7 +424,7 @@ const AccountStats = memo(function AccountStatsMemo({
         <>
           <StatsWrapper>
             {customizeStats
-              .filter((key) => key !== 'labels' && key !== 'ifLabels')
+              .filter((key) => !IGNORED_FIELDS.includes(key))
               .map((key, index) => {
                 const stat = statsObj[key]
                 if (!stat) return <div key={key} style={{ display: 'none' }}></div>

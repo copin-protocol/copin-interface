@@ -8,8 +8,15 @@ import { LABEL_TOOLTIP_TRANSLATION, LABEL_TRANSLATION } from 'utils/config/trans
 
 import LabelWithTooltip from './LabelWithTooltip'
 
-const getLabelColor = (key: string, isIF?: boolean) => {
-  if (isIF) return '#422c54'
+const IF_BG_COLOR = '#422c54'
+const IF_COLOR = '#a05fd3'
+
+const getLabelColor = (key: string | undefined, { isIF, isPositive }: { isIF?: boolean; isPositive?: boolean }) => {
+  if (isIF) return IF_BG_COLOR
+  if (isPositive != null) {
+    if (isPositive) return '#7ce45b'
+    return '#f37b53'
+  }
   switch (key) {
     case VOLUME_TIER_KEY.VOLUME_TIER1:
       return `${themeColors.primary1}20`
@@ -52,18 +59,21 @@ const TraderLabels = ({
   tooltipPlacement,
   shouldShowTooltip = true,
   isIF,
+  isPositive,
 }: {
   labels: { key: string; title?: React.ReactNode; tooltip?: React.ReactNode }[]
   showedItems?: number
   tooltipPlacement?: string
   shouldShowTooltip?: boolean
   isIF?: boolean
+  isPositive?: boolean
 }) => {
   if (!showedItems) {
     showedItems = labels.length
   }
 
   const tagSx = isIF ? { px: '4px', py: 0, borderRadius: '2px' } : { px: '4px', py: 0 }
+  const textColor = isPositive != null ? '#000' : undefined
 
   return (
     <>
@@ -75,27 +85,27 @@ const TraderLabels = ({
             id={`tt_label_${label.key}`}
             tooltip={label.tooltip || LABEL_TOOLTIP_TRANSLATION[label.key]}
           >
-            <Tag sx={tagSx} bg={getLabelColor(label.key, isIF)}>
-              <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
+            <Tag sx={tagSx} bg={getLabelColor(label.key, { isIF, isPositive })}>
+              <Type.Caption color={textColor}>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
             </Tag>
           </LabelWithTooltip>
         ) : (
-          <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
+          <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, { isIF, isPositive })}>
             {isIF && (
               <Box
                 width={10}
                 height={10}
-                sx={{ fontSize: '8px', lineHeight: '10px', color: '#a05fd3', fontWeight: 'bold' }}
+                sx={{ fontSize: '8px', lineHeight: '10px', color: IF_COLOR, fontWeight: 'bold' }}
               >
                 IF
               </Box>
             )}
-            <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
+            <Type.Caption color={textColor}>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
           </Tag>
         )
       )}
       {labels.length > showedItems && (
-        <Tag sx={tagSx} bg={isIF ? '#422c54' : undefined}>
+        <Tag sx={tagSx} bg={getLabelColor(undefined, { isIF, isPositive })}>
           <LabelWithTooltip
             tooltipClickable
             id="tt_more_labels"
@@ -109,20 +119,20 @@ const TraderLabels = ({
                       id={`tt_label_${label.key}`}
                       tooltip={label.tooltip || LABEL_TOOLTIP_TRANSLATION[label.key]}
                     >
-                      <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
-                        <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
+                      <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, { isIF, isPositive })}>
+                        <Type.Caption color={textColor}>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
                       </Tag>
                     </LabelWithTooltip>
                   ) : (
-                    <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, isIF)}>
-                      <Type.Caption>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
+                    <Tag key={label.key} sx={tagSx} bg={getLabelColor(label.key, { isIF, isPositive })}>
+                      <Type.Caption color={textColor}>{label.title || LABEL_TRANSLATION[label.key]}</Type.Caption>
                     </Tag>
                   )
                 )}
               </Flex>
             }
           >
-            <Type.Caption>+{labels.length - showedItems}</Type.Caption>
+            <Type.Caption color={textColor}>+{labels.length - showedItems}</Type.Caption>
           </LabelWithTooltip>
         </Tag>
       )}

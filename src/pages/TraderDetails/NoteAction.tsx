@@ -19,8 +19,9 @@ import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ToastBody from 'components/@ui/ToastBody'
 import TraderLabels from 'components/@ui/TraderLabels'
-import { TraderNoteData } from 'entities/trader'
+import { IFLabelKey, TraderNoteData } from 'entities/trader'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
+import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
@@ -171,17 +172,30 @@ const NoteItem = ({
   )
 }
 
-const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum }) => {
+const Labels = ({
+  account,
+  protocol,
+  labelKey,
+  canCreateLabel,
+  shouldValidateLabel,
+  labelOptions,
+  refetchAllLabels,
+}: {
+  account: string
+  protocol: ProtocolEnum
+  labelKey: IFLabelKey
+  canCreateLabel: boolean
+  shouldValidateLabel: boolean
+  labelOptions?: { label: string; value: string }[]
+  refetchAllLabels?: () => void
+}) => {
   const [creatingLabel, setCreatingLabel] = useState(false)
   const [newLabel, setNewLabel] = useState<string | undefined>(undefined)
   const [selectedLabels, setSelectedLabels] = useState<string[]>([])
   const [isEditingLabels, setIsEditingLabels] = useState<boolean>(false)
   const refetchQueries = useRefetchQueries()
   const newLabelRef = useRef<HTMLInputElement>(null)
-  const { data: allLabels, refetch: refetchAllLabels } = useQuery(QUERY_KEYS.GET_ALL_NOTE_LABELS, () =>
-    getAllNoteLabelsApi()
-  )
-  const { data: labels, refetch: refetchLabels } = useQuery(
+  const { data, refetch: refetchLabels } = useQuery(
     [QUERY_KEYS.GET_TRADER_IF_LABELS, account, protocol],
     () => {
       return getTraderLabelsApi({ account, protocol, limit: 1, offset: 0 })
@@ -198,7 +212,7 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
       setCreatingLabel(false)
 
       setNewLabel(undefined)
-      refetchAllLabels()
+      refetchAllLabels?.()
       refetchLabels()
       setTimeout(() => {
         refetchQueries([QUERY_KEYS.GET_TRADER_DETAIL])
@@ -209,52 +223,78 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
     },
   })
 
-  const traderLabel = labels?.[0]
+  const traderLabel = data?.[0]
 
-  const labelOptions = allLabels?.map((label) => ({
-    label,
-    value: label,
-  }))
+  if (traderLabel && !traderLabel?.[labelKey]) {
+    traderLabel[labelKey] = []
+  }
 
   useEffect(() => {
     if (traderLabel) {
-      setSelectedLabels(traderLabel.labels.filter((label) => allLabels?.includes(label)))
+      setSelectedLabels(
+        traderLabel[labelKey].filter(
+          (label) => !shouldValidateLabel || labelOptions?.some((option) => option.value === label)
+        )
+      )
     }
-  }, [traderLabel, allLabels])
+  }, [traderLabel, labelOptions, shouldValidateLabel, labelKey])
 
   const hasChangedLabels = useMemo(() => {
-    return !isEqual(selectedLabels, traderLabel?.labels)
-  }, [selectedLabels, traderLabel])
+    return !isEqual(selectedLabels, traderLabel?.[labelKey])
+  }, [selectedLabels, traderLabel, labelKey])
+
+  const labelTitle = useMemo(() => {
+    if (labelKey === 'labels') return 'IF Tags'
+    if (labelKey === 'goodMarkets') return 'Good Markets'
+    if (labelKey === 'badMarkets') return 'Bad Markets'
+    return ''
+  }, [labelKey])
+
+  const selectClassName = useMemo(() => {
+    if (labelKey === 'labels') return 'if-tag-select'
+    if (labelKey === 'goodMarkets') return 'good-market-select'
+    if (labelKey === 'badMarkets') return 'bad-market-select'
+    return ''
+  }, [labelKey])
+
+  const { isIF, isPositive } = useMemo(() => {
+    if (labelKey === 'labels') return { isIF: true, isPositive: undefined }
+    if (labelKey === 'goodMarkets') return { isIF: false, isPositive: true }
+    if (labelKey === 'badMarkets') return { isIF: false, isPositive: false }
+    return { isIF: false, isPositive: undefined }
+  }, [labelKey])
 
   if (!isEditingLabels) {
     return (
       <>
-        <Box>
+        <Box mb={2}>
           <Flex flex="1" sx={{ gap: 1, alignItems: 'center' }}>
-            <Type.Caption color="neutral2">IF Tags</Type.Caption>
+            <Type.Caption color="neutral2">{labelTitle}</Type.Caption>
             <ButtonWithIcon
               icon={<Pencil size={16} />}
               size="xs"
               variant="ghostPrimary"
               onClick={() => setIsEditingLabels(true)}
             >
-              {traderLabel?.labels?.length ? 'Edit' : 'Add'}
+              {traderLabel?.[labelKey]?.length ? 'Edit' : 'Add'}
             </ButtonWithIcon>
           </Flex>
-          <Flex sx={{ flexWrap: 'wrap', gap: 2, mt: 2, mb: 3 }}>
-            <TraderLabels
-              labels={
-                traderLabel?.labels?.map((label) => ({
-                  key: label,
-                  title: label,
-                })) ?? []
-              }
-              isIF
-              shouldShowTooltip={false}
-            />
-          </Flex>
+          {!!traderLabel?.[labelKey]?.length && (
+            <Flex sx={{ flexWrap: 'wrap', gap: 2, mt: 2, mb: 2 }}>
+              <TraderLabels
+                labels={
+                  traderLabel?.[labelKey]?.map((label) => ({
+                    key: label,
+                    title: label,
+                  })) ?? []
+                }
+                isIF={isIF}
+                isPositive={isPositive}
+                shouldShowTooltip={false}
+              />
+            </Flex>
+          )}
         </Box>
-        <Divider mb={16} />
       </>
     )
   }
@@ -263,17 +303,19 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
     <>
       {!creatingLabel && (
         <Flex alignItems="center" justifyContent="space-between" mb={2}>
-          <Type.Caption color="neutral2">Edit IF Tags</Type.Caption>
+          <Type.Caption color="neutral2">Edit {labelTitle}</Type.Caption>
 
-          <ButtonWithIcon
-            icon={<Plus />}
-            size="xs"
-            variant="outline"
-            sx={{ mb: 0 }}
-            onClick={() => setCreatingLabel(true)}
-          >
-            New Label
-          </ButtonWithIcon>
+          {canCreateLabel && (
+            <ButtonWithIcon
+              icon={<Plus />}
+              size="xs"
+              variant="outline"
+              sx={{ mb: 0 }}
+              onClick={() => setCreatingLabel(true)}
+            >
+              New Label
+            </ButtonWithIcon>
+          )}
         </Flex>
       )}
       {creatingLabel ? (
@@ -284,15 +326,15 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
             createLabelMutation.mutate({
               account,
               protocol,
-              labels: [...(traderLabel?.labels || []), newLabel.trim()],
+              [labelKey]: [...(traderLabel?.[labelKey] || []), newLabel.trim()],
             })
           }}
         >
           <InputField
             block
-            placeholder="Enter label name"
+            placeholder={`Enter ${labelTitle}`}
             ref={newLabelRef}
-            label="New Labels"
+            label={`New ${labelTitle}`}
             suffix={
               <Flex sx={{ gap: 2 }}>
                 <IconButton
@@ -327,23 +369,23 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
       ) : labelOptions ? (
         <>
           <Select
-            className="select-container if-tag-select pad-right-0"
+            className={`select-container ${selectClassName} pad-right-0`}
             closeMenuOnSelect={false}
             options={labelOptions}
             value={labelOptions?.filter?.((option) => selectedLabels.includes(option.value))}
             onChange={(newValue: any) => {
               setSelectedLabels(newValue.map((option: any) => option.value))
             }}
-            placeholder="Select labels"
+            placeholder={`Select ${labelTitle}`}
             components={{
               DropdownIndicator: () => <div></div>,
             }}
             isClearable={false}
             isSearchable
-            menuIsOpen={labelOptions.length === traderLabel?.labels?.length ? false : undefined}
+            menuIsOpen={labelOptions.length === traderLabel?.[labelKey]?.length ? false : undefined}
             isMulti
           />
-          <Flex sx={{ justifyContent: 'end', gap: 2, mt: 2 }}>
+          <Flex sx={{ justifyContent: 'end', gap: 2, my: 2 }}>
             {/* <Button
               variant="ghost"
               size="xs"
@@ -364,19 +406,18 @@ const Labels = ({ account, protocol }: { account: string; protocol: ProtocolEnum
                 createLabelMutation.mutate({
                   account,
                   protocol,
-                  labels: selectedLabels,
+                  [labelKey]: selectedLabels,
                 })
                 setIsEditingLabels(false)
               }}
             >
-              Save Labels
+              Save
             </Button>
           </Flex>
         </>
       ) : (
-        <Box height={32}></Box>
+        <div></div>
       )}
-      <Divider my={16} />
     </>
   )
 }
@@ -408,6 +449,12 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
     }
   )
 
+  const { data: allLabels, refetch: refetchAllLabels } = useQuery(QUERY_KEYS.GET_ALL_NOTE_LABELS, () =>
+    getAllNoteLabelsApi()
+  )
+
+  const { getListSymbolOptions } = useMarketsConfig()
+
   const createNoteMutation = useMutation({
     mutationFn: createTraderNoteApi,
     onSuccess: () => {
@@ -429,6 +476,11 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
     },
   })
 
+  const tagOptions = allLabels?.map((label) => ({
+    label,
+    value: label,
+  }))
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchText(searchText)
@@ -438,9 +490,43 @@ const NoteActionContent = ({ account, protocol }: { account: string; protocol: P
 
   const searchTerms = debouncedSearchText === '' ? undefined : debouncedSearchText.trim().toLowerCase().split(' ')
 
+  const symbolOptions = useMemo(() => {
+    return getListSymbolOptions?.()
+  }, [])
+
   return (
     <Flex flexDirection="column" px={16} height="100%">
-      <Labels account={account} protocol={protocol} />
+      <Labels
+        account={account}
+        protocol={protocol}
+        labelKey="labels"
+        shouldValidateLabel
+        labelOptions={tagOptions}
+        canCreateLabel
+        refetchAllLabels={refetchAllLabels}
+      />
+      {symbolOptions && (
+        <Labels
+          account={account}
+          protocol={protocol}
+          labelKey="goodMarkets"
+          shouldValidateLabel
+          labelOptions={symbolOptions}
+          canCreateLabel={false}
+        />
+      )}
+      {symbolOptions && (
+        <Labels
+          account={account}
+          protocol={protocol}
+          labelKey="badMarkets"
+          shouldValidateLabel
+          labelOptions={symbolOptions}
+          canCreateLabel={false}
+        />
+      )}
+      <Divider mb={16} />
+
       <Textarea
         ref={noteInputRef}
         placeholder="Enter note"

@@ -4,12 +4,18 @@ export interface ConditionFilterProps {
   filters: TradersContextData['filters']
   rankingFilters: TradersContextData['rankingFilters']
   labelsFilters: TradersContextData['labelsFilters']
-  ifLabelsFilters: TradersContextData['ifLabelsFilters']
+  ifFilters: TradersContextData['ifFilters']
   changeFilters: TradersContextData['changeFilters']
   changeLabels: TradersContextData['changeLabels']
-  changeIFLabels: TradersContextData['changeIFLabels']
+  changeIFFilters: TradersContextData['changeIFFilters']
   tab: TradersContextData['filterTab']
   onCancel?: () => void
   filtersExpanded?: boolean
   onClickTitle?: () => void
+}
+
+export interface IFFilterParams {
+  ifLabels?: string[]
+  ifGoodMarkets?: string[]
+  ifBadMarkets?: string[]
 }

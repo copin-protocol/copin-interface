@@ -193,6 +193,94 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
       )
     },
   },
+  ifGoodMarkets: {
+    style: { minWidth: '180px', width: '180px' },
+    text: 'Good Markets',
+    searchText: 'Good Markets',
+    label: (
+      <LabelWithTooltip id="tt_if_good_markets_label" tooltip="Good Markets">
+        Good Markets
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    filter: {
+      conditionType: 'in',
+      in: [],
+    },
+    id: 'ifGoodMarkets',
+    render: (item) => {
+      if (!item.ifGoodMarkets || item.ifGoodMarkets.length === 0)
+        return (
+          <Flex height={56} alignItems="center" justifyContent="end">
+            <Type.Caption color="neutral3">--</Type.Caption>
+          </Flex>
+        )
+      const labels = item.ifGoodMarkets.map((label) => {
+        return {
+          key: label,
+          title: label,
+        }
+      })
+      return (
+        <Flex
+          sx={{
+            gap: 1,
+            flexWrap: 'wrap',
+            py: 2,
+            justifyContent: ['start', 'end'],
+            height: ['auto', 56],
+            alignItems: 'center',
+          }}
+        >
+          <TraderLabels labels={labels} showedItems={3} shouldShowTooltip={false} isPositive />
+        </Flex>
+      )
+    },
+  },
+  ifBadMarkets: {
+    style: { minWidth: '180px', width: '180px' },
+    text: 'Bad Markets',
+    searchText: 'Bad Markets',
+    label: (
+      <LabelWithTooltip id="tt_if_bad_markets_label" tooltip="Bad Markets">
+        Bad Markets
+      </LabelWithTooltip>
+    ),
+    visible: true,
+    filter: {
+      conditionType: 'in',
+      in: [],
+    },
+    id: 'ifBadMarkets',
+    render: (item) => {
+      if (!item.ifBadMarkets || item.ifBadMarkets.length === 0)
+        return (
+          <Flex height={56} alignItems="center" justifyContent="end">
+            <Type.Caption color="neutral3">--</Type.Caption>
+          </Flex>
+        )
+      const labels = item.ifBadMarkets.map((label) => {
+        return {
+          key: label,
+          title: label,
+        }
+      })
+      return (
+        <Flex
+          sx={{
+            gap: 1,
+            flexWrap: 'wrap',
+            py: 2,
+            justifyContent: ['start', 'end'],
+            height: ['auto', 56],
+            alignItems: 'center',
+          }}
+        >
+          <TraderLabels labels={labels} showedItems={3} shouldShowTooltip={false} isPositive={false} />
+        </Flex>
+      )
+    },
+  },
   pnlStatistics: {
     style: { minWidth: ['120px', '150px'], textAlign: 'right' },
     text: <Trans>Pnl Overtime</Trans>,
@@ -1004,6 +1092,8 @@ const tableColumnKeys: (keyof TraderData)[] = [
   'pnlStatistics',
   'lastTradeAtTs',
   'ifLabels',
+  'ifGoodMarkets',
+  'ifBadMarkets',
   'labels',
   'indexTokens',
   'pnl',
@@ -1062,6 +1152,8 @@ const mobileTableColumnKeys: (keyof TraderData)[] = [
   'runTimeDays',
   'lastTradeAtTs',
   'ifLabels',
+  'ifGoodMarkets',
+  'ifBadMarkets',
   'indexTokens',
   'totalGain',
   'totalLoss',

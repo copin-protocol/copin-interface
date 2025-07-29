@@ -8,6 +8,8 @@ import {
   VOLUME_TIER_KEY,
 } from 'utils/config/enums'
 
+import { IFFilterParams } from '../ConditionFilter/types'
+
 export function formatRankingRanges(ranges: FilterValues[]) {
   return ranges.map((values) => {
     const newValues = { ...values }
@@ -16,9 +18,11 @@ export function formatRankingRanges(ranges: FilterValues[]) {
   })
 }
 
-export function formatIFLabelsRanges(values: any[]) {
-  if (values?.length === 0) {
-    return [
+export function formatIFRanges({ ifLabels, ifGoodMarkets, ifBadMarkets }: IFFilterParams) {
+  const conditions: FilterValues[] = []
+  const marketConditions: { field: string; in?: string[] }[] = []
+  if (!ifLabels || ifLabels?.length === 0) {
+    conditions.push(
       {
         fieldName: 'ifLabels',
         nin: [],
@@ -26,26 +30,62 @@ export function formatIFLabelsRanges(values: any[]) {
       {
         fieldName: 'ifLabels',
         exists: true,
-      },
-    ]
+      }
+    )
+  } else {
+    conditions.push({
+      fieldName: 'ifLabels',
+      in: ifLabels,
+    })
   }
-
-  return [{ fieldName: 'ifLabels', in: values }]
+  if (ifGoodMarkets?.length) {
+    marketConditions.push({
+      field: 'ifGoodMarkets',
+      in: ifGoodMarkets,
+    })
+  }
+  if (ifBadMarkets?.length) {
+    marketConditions.push({
+      field: 'ifBadMarkets',
+      in: ifBadMarkets,
+    })
+  }
+  return marketConditions.length === 1
+    ? [...conditions, ...marketConditions]
+    : [...conditions, { or: marketConditions }]
 }
 
-export function formatIFLabelsRangesWithAnd(values: any[]) {
-  if (values?.length === 0) {
-    return [
-      {
-        and: [
-          { fieldName: 'ifLabels', nin: [] },
-          { fieldName: 'ifLabels', exists: true },
-        ],
-      },
-    ]
+export function formatIFRangesWithAnd({ ifLabels, ifGoodMarkets, ifBadMarkets }: IFFilterParams) {
+  const conditions: FilterValues[] = []
+  const marketConditions: FilterValues[] = []
+  if (ifLabels?.length === 0) {
+    conditions.push({
+      and: [
+        { fieldName: 'ifLabels', nin: [] },
+        { fieldName: 'ifLabels', exists: true },
+      ],
+    })
+  } else {
+    conditions.push({
+      fieldName: 'ifLabels',
+      in: ifLabels,
+    })
   }
-
-  return [{ fieldName: 'ifLabels', in: values }]
+  if (ifGoodMarkets?.length) {
+    marketConditions.push({
+      fieldName: 'ifGoodMarkets',
+      in: ifGoodMarkets,
+    })
+  }
+  if (ifBadMarkets?.length) {
+    marketConditions.push({
+      fieldName: 'ifBadMarkets',
+      in: ifBadMarkets,
+    })
+  }
+  return marketConditions.length === 1
+    ? [...conditions, ...marketConditions]
+    : [...conditions, { or: marketConditions }]
 }
 
 export function formatLabelsRanges(values: any[], pnlWithFeeEnabled?: boolean) {
