@@ -78,7 +78,6 @@ export default function TraderAddress({
           sx={{ '&:hover': protocol && hasHover ? { opacity: 0.25 } : {} }}
         />
       </Box>
-
       <Flex
         as={isLink ? Link : undefined}
         to={isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeType } }) : ''}

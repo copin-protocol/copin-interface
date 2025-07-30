@@ -20,7 +20,9 @@ export interface UpdateTraderNotePayload {
 export interface CreateTraderLabelPayload {
   account: string
   protocol: ProtocolEnum
-  labels: string[]
+  labels?: string[]
+  goodMarkets?: string[]
+  badMarkets?: string[]
 }
 
 export interface UpdateTraderLabelPayload {

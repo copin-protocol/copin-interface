@@ -21,6 +21,8 @@ export interface TraderData {
   smartAccount: string
   labels: string[]
   ifLabels: string[]
+  ifGoodMarkets: string[]
+  ifBadMarkets: string[]
   statisticLabels: string[]
   aggregatedLabels: string[]
   protocol: ProtocolEnum
@@ -360,6 +362,18 @@ export type PnlStatisticsResponse = {
   [account: string]: TraderPnlStatisticData
 }
 
+export interface TraderDataStatus {
+  traderAddress: string
+  canRefresh: boolean
+  reason: TraderStatusReasonEnum
+  cooldown?: {
+    inCooldown: boolean
+    remainingMinutes?: number
+    lastRefreshTime?: string
+    nextAvailableTime?: string
+  }
+}
+
 export interface TraderNoteData {
   id: string
   account: string
@@ -376,8 +390,12 @@ export interface TraderLabelData {
   account: string
   protocol: ProtocolEnum
   labels: string[]
+  goodMarkets: string[]
+  badMarkets: string[]
   userId: string
   username: string
   createdAt: string
   updatedAt: string
 }
+
+export type IFLabelKey = 'labels' | 'goodMarkets' | 'badMarkets'

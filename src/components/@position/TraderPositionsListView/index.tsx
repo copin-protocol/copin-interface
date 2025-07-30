@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CaretRight } from '@phosphor-icons/react'
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 
 import { ShortDuration } from 'components/@position/configs/traderPositionRenderProps'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
@@ -22,6 +22,7 @@ type Props = {
   hasAccountAddress?: boolean
   isOpening?: boolean
   sx?: any
+  noDataMessage?: ReactNode
 }
 
 export default function TraderPositionListView({
@@ -31,6 +32,7 @@ export default function TraderPositionListView({
   onClickItem,
   hasAccountAddress = true,
   isOpening = true,
+  noDataMessage,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -48,7 +50,9 @@ export default function TraderPositionListView({
         '& > *': { borderBottom: 'small', borderBottomColor: 'neutral4', '&:last-child': { borderBottom: 'none' } },
       }}
     >
-      {!isLoading && data?.length === 0 && <NoDataFound message={<Trans>No position was found</Trans>} />}
+      {!isLoading && data?.length === 0 && (
+        <NoDataFound message={noDataMessage || <Trans>No position was found</Trans>} />
+      )}
       {isLoading && (
         <Flex
           sx={{

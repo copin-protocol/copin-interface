@@ -87,6 +87,8 @@ function getTraderStatisticQuery(functionName: string) {
         maxDrawdown
         maxDrawdownPnl
         ifLabels
+        ifGoodMarkets
+        ifBadMarkets
         statisticLabels
         aggregatedLabels
         realisedStatisticLabels

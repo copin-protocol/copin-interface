@@ -10,6 +10,7 @@ import {
   StatisticData,
   TraderCounter,
   TraderData,
+  TraderDataStatus,
 } from 'entities/trader.d'
 import { TraderTokenStatistic } from 'entities/trader.d'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
@@ -350,4 +351,14 @@ export async function getTraderLastOrder({
   protocol: ProtocolEnum
 }): Promise<OrderData | null> {
   return requester.get(`${protocol}/order/${account}/last-order`).then((res: any) => res.data)
+}
+
+export async function getTraderDataStatus({ account }: { account: string }): Promise<TraderDataStatus> {
+  return requester
+    .get(`/data-management/trader-status`, { params: { traderAddress: account } })
+    .then((res: any) => res.data)
+}
+
+export async function refreshTraderData({ account }: { account: string }) {
+  return requester.post(`/data-management/refresh-trader`, { traderAddress: account }).then((res: any) => res.data)
 }

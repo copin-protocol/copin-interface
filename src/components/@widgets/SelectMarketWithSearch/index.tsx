@@ -16,6 +16,8 @@ export default function SelectMarketWithSearch({
   allItems,
   selectedItems,
   keyword,
+  tagColor,
+  tagBgColor,
   handleToggleItem,
   handleSelectAllItems,
   handleChangeKeyword,
@@ -29,6 +31,8 @@ export default function SelectMarketWithSearch({
   handleToggleItem: (key: string) => void
   handleSelectAllItems: (isSelectedAll: boolean) => void
   handleChangeKeyword: (keyword?: string) => void
+  tagColor?: string
+  tagBgColor?: string
   menuSx?: SystemStyleObject & GridProps
   placement?: 'bottom' | 'top' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   limit?: number
@@ -120,14 +124,20 @@ export default function SelectMarketWithSearch({
       placement={placement}
     >
       {isSelectedAll || !selectedItems?.length ? (
-        <MarketTag label="ALL MARKETS" value="all" />
+        <MarketTag label="ALL MARKETS" value="all" bgColor={tagBgColor} color={tagColor} />
       ) : (
         <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
           {selectedItems.slice(0, limit).map((item) => {
             const market = allItems.find((e) => e.value === item)
             return (
               <Box key={item}>
-                <MarketTag label={market?.label} value={market?.value} onRemove={handleToggleItem} />
+                <MarketTag
+                  label={market?.label}
+                  value={market?.value}
+                  onRemove={handleToggleItem}
+                  bgColor={tagBgColor}
+                  color={tagColor}
+                />
               </Box>
             )
           })}
@@ -142,7 +152,19 @@ export default function SelectMarketWithSearch({
   )
 }
 
-function MarketTag({ label, value, onRemove }: { label?: string; value?: string; onRemove?: (item: string) => void }) {
+function MarketTag({
+  label,
+  value,
+  onRemove,
+  bgColor,
+  color,
+}: {
+  label?: string
+  value?: string
+  onRemove?: (item: string) => void
+  bgColor?: string
+  color?: string
+}) {
   if (!label || !value) return <></>
   return (
     <Flex
@@ -151,18 +173,18 @@ function MarketTag({ label, value, onRemove }: { label?: string; value?: string;
         borderRadius: 'xs',
         px: 2,
         py: 1,
-        backgroundColor: 'neutral5',
+        backgroundColor: bgColor ?? 'neutral5',
         lineHeight: 0,
         textTransform: 'uppercase',
         gap: 1,
       }}
     >
-      <Type.Caption>{label}</Type.Caption>
+      <Type.Caption color={color}>{label}</Type.Caption>
       {onRemove && (
         <IconButton
           variant="ghost"
           size={16}
-          icon={<X size={16} color={themeColors.neutral3} />}
+          icon={<X size={12} color={color || themeColors.neutral3} />}
           onClick={() => onRemove(value)}
         />
       )}

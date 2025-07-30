@@ -26,10 +26,10 @@ export default function ConditionFilter({
   filters,
   changeFilters,
   changeLabels,
-  changeIFLabels,
+  changeIFFilters,
   rankingFilters,
   labelsFilters,
-  ifLabelsFilters,
+  ifFilters,
   tab,
   onCancel,
   onClickTitle,
@@ -94,8 +94,8 @@ export default function ConditionFilter({
             ...(isIF
               ? [
                   {
-                    key: FilterTabEnum.IF_LABELS as unknown as string,
-                    name: <Trans>IF TAGS</Trans>,
+                    key: FilterTabEnum.IF as unknown as string,
+                    name: <Trans>IF</Trans>,
                     icon: <Tag size={20} />,
                   },
                 ]
@@ -186,13 +186,13 @@ export default function ConditionFilter({
           ) : null}
         </Box>
         {isIF && (
-          <Box display={filterTab === FilterTabEnum.IF_LABELS ? 'block' : 'none'} width="100%" height="100%">
+          <Box display={filterTab === FilterTabEnum.IF ? 'block' : 'none'} width="100%" height="100%">
             <IFLabelsFilterForm
               currentTab={filterTab}
               lastFilterTab={tab}
               key={rankingKey}
-              labels={ifLabelsFilters}
-              handleChangeOption={(labels) => changeIFLabels(labels)}
+              ifFilters={ifFilters}
+              handleChangeOption={(ifFilters) => changeIFFilters(ifFilters)}
               handleClose={onCancel}
             />
           </Box>

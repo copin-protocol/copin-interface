@@ -20,7 +20,7 @@ import { extractFiltersFromFormValues } from 'utils/helpers/graphql'
 import { pageToOffset } from 'utils/helpers/transform'
 
 import { FilterTabEnum } from '../ConditionFilter/configs'
-import { formatIFLabelsRanges, formatLabelsRanges, formatRankingRanges } from '../helpers/formatRanges'
+import { formatIFRanges, formatLabelsRanges, formatRankingRanges } from '../helpers/formatRanges'
 import { TradersContextData } from '../useTradersContext'
 import useMapPermissionData from './useMapPermissionData'
 import useTimeFilterData from './useTimeFilterData'
@@ -38,7 +38,7 @@ export default function useQueryTraders({
   rankingFilters,
   filters,
   labelsFilters,
-  ifLabelsFilters,
+  ifFilters,
   currentPage,
   currentLimit,
   currentSort,
@@ -54,7 +54,7 @@ export default function useQueryTraders({
   | 'filters'
   | 'rankingFilters'
   | 'labelsFilters'
-  | 'ifLabelsFilters'
+  | 'ifFilters'
   | 'currentPage'
   | 'currentLimit'
   | 'currentSort'
@@ -87,29 +87,33 @@ export default function useQueryTraders({
       request.ranges = formatRankingRanges(extractFiltersFromFormValues(rankingFilters))
     } else if (filterTab === FilterTabEnum.LABELS && userPermission?.isEnableLabelsFilter) {
       request.ranges = formatLabelsRanges(labelsFilters, pnlWithFeeEnabled)
-    } else if (filterTab === FilterTabEnum.IF_LABELS && isIF) {
-      request.ranges = formatIFLabelsRanges(ifLabelsFilters.filter((label) => allIFLabels?.includes(label)))
+    } else if (filterTab === FilterTabEnum.IF && isIF) {
+      request.ranges = formatIFRanges({
+        ...ifFilters,
+        ifLabels: ifFilters?.ifLabels?.filter((label) => allIFLabels?.includes(label)),
+      })
     } else {
       request.ranges = extractFiltersFromFormValues(filters)
     }
     if (accounts) transformRequestWithAccounts(request, accounts, isFavTraders)
     return request
   }, [
-    accounts,
-    currentLimit,
-    currentPage,
     currentSort?.sortBy,
     currentSort?.sortType,
-    ifLabelsFilters,
-    allIFLabels,
+    currentLimit,
+    currentPage,
     filterTab,
-    filters,
+    userPermission?.isEnableRankingFilter,
+    userPermission?.isEnableLabelsFilter,
+    isIF,
+    accounts,
     isFavTraders,
     rankingFilters,
-    pnlWithFeeEnabled,
     labelsFilters,
-    isIF,
-    userPermission,
+    pnlWithFeeEnabled,
+    ifFilters,
+    allIFLabels,
+    filters,
   ])
 
   // const { rangeTraders, loadingRangeTraders, loadingRangeProgress } = useRangeFilterData({

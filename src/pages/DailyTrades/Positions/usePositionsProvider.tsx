@@ -43,6 +43,8 @@ export interface DaliPositionsContextValues {
   changeFilters: (vars: ChangeFilterVariables) => void
   enabledLiveTrade: boolean
   toggleLiveTrade: (enabled?: boolean) => void
+  currentGroupId?: string
+  changeGroupId: (groupId: string | undefined) => void
 }
 
 export const DailyPositionsContext = createContext({} as DaliPositionsContextValues)
@@ -99,7 +101,14 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     [setSearchParams]
   )
 
-  const currentPage = Number(searchParams['page'] ?? 1)
+  // Group bookmark filtering
+  const currentGroupId = searchParams.groupId as string | undefined
+  const changeGroupId = useCallback(
+    (groupId: string | undefined) => setSearchParams({ groupId, ['page']: undefined }),
+    [setSearchParams]
+  )
+
+  const currentPage = Number(searchParams['page']) || 1
   const changeCurrentPage = useCallback(
     (page: number) => setSearchParams({ ['page']: page.toString() }),
     [setSearchParams]
@@ -206,6 +215,8 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
       changeFilters,
       enabledLiveTrade,
       toggleLiveTrade,
+      currentGroupId,
+      changeGroupId,
     }
   }, [
     ranges,
@@ -229,6 +240,8 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
     changeFilters,
     enabledLiveTrade,
     toggleLiveTrade,
+    currentGroupId,
+    changeGroupId,
   ])
 
   return <DailyPositionsContext.Provider value={contextValue}>{children}</DailyPositionsContext.Provider>

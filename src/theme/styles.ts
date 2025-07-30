@@ -567,6 +567,24 @@ input[type=number] {
       background: #422c54;
     }
   }
+  .good-market-select {
+    .select__multi-value {
+      border-radius: 2px;
+      background-color: #7ce45b!important;
+    }
+    .select__multi-value__label {
+      color: #000!important;
+    }
+  }
+  .bad-market-select {
+    .select__multi-value {
+      border-radius: 2px;
+      background-color: #f37b53!important;
+    }
+    .select__multi-value__label {
+      color: #000!important;
+    }
+  }
 
 ${drawerStyles}
 

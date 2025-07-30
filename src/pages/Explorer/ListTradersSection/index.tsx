@@ -59,7 +59,7 @@ const ListTradersSection = function ListTradersSectionMemo({
     filterTab,
     rankingFilters,
     labelsFilters,
-    ifLabelsFilters,
+    ifFilters,
     filters,
     resetFilter,
   } = contextValues
@@ -142,7 +142,7 @@ const ListTradersSection = function ListTradersSectionMemo({
     rankingFilters,
     filters,
     labelsFilters,
-    ifLabelsFilters,
+    ifFilters,
     enabled: !noDataMessage,
   })
 

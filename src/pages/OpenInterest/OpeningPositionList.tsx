@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom'
 import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDetailsDrawer'
 import PositionListCard from 'components/@position/TraderPositionsListView'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
 import TableRangeFilterIcon from 'components/@widgets/TableFilter/TableRangeFilterIcon'
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
@@ -146,6 +145,11 @@ function OpeningPositionsTable({
       onClickRow={onClickItem}
       renderRowBackground={() => 'rgb(31, 34, 50)'}
       externalSource={externalSource}
+      noDataMessage={
+        <Type.Caption>
+          <Trans>No positions matched your filters</Trans>
+        </Type.Caption>
+      }
     />
   )
 }
@@ -201,7 +205,7 @@ function OpeningPositionsWrapper({ children }: { children: any }) {
 export function ListOpeningPositions(props: OpeningPositionProps) {
   return (
     <OpeningPositionsWrapper>
-      <PositionListCard {...props} />
+      <PositionListCard {...props} noDataMessage={<Trans>No positions matched your filters</Trans>} />
     </OpeningPositionsWrapper>
   )
 }

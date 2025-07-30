@@ -9,6 +9,7 @@ import { STORAGE_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { rankingFieldOptions } from 'utils/config/options'
 
 import { FilterTabEnum, defaultFieldOptions } from '../ConditionFilter/configs'
+import { IFFilterParams } from '../ConditionFilter/types'
 import { parseParams } from './handleParams'
 
 export const getInitFilters = ({
@@ -64,18 +65,30 @@ export const getInitLabelsFilters = ({
   return []
 }
 
-export const getInitIFLabelsFilters = ({ searchParams }: { searchParams: ParsedQs }): string[] => {
-  const paramsStr = searchParams[URL_PARAM_KEYS.IF_LABELS_FILTERS] as string
-  const filtersFromParams = paramsStr?.split('__')
-  if (filtersFromParams?.length > 0) {
+export const getInitIFFilters = ({ searchParams }: { searchParams: ParsedQs }): IFFilterParams => {
+  const filtersFromParams: IFFilterParams = {}
+  const ifLabels = searchParams['ifLabels'] as string
+  const ifGoodMarkets = searchParams['ifGoodMarkets'] as string
+  const ifBadMarkets = searchParams['ifBadMarkets'] as string
+
+  if (ifLabels) {
+    filtersFromParams.ifLabels = ifLabels.split('__')
+  }
+  if (ifGoodMarkets) {
+    filtersFromParams.ifGoodMarkets = ifGoodMarkets.split('__')
+  }
+  if (ifBadMarkets) {
+    filtersFromParams.ifBadMarkets = ifBadMarkets.split('__')
+  }
+  if (Object.keys(filtersFromParams).length !== 0) {
     return filtersFromParams
   }
 
-  const ifLabelsFilters = localStorage.getItem(STORAGE_KEYS.IF_LABELS_FILTERS)
+  const ifLabelsFilters = localStorage.getItem(STORAGE_KEYS.IF_FILTERS)
   if (ifLabelsFilters) {
-    return JSON.parse(ifLabelsFilters) as string[]
+    return JSON.parse(ifLabelsFilters) as IFFilterParams
   }
-  return []
+  return {}
 }
 
 export const getInitFilterTab = ({ searchParams }: { searchParams: ParsedQs }) => {

@@ -27,10 +27,20 @@ export interface FilterValues {
   in?: string[]
   exists?: boolean
   nin?: string[]
+  or?: {
+    field?: string
+    fieldName?: string
+    nin?: string[]
+    exists?: boolean
+    gte?: number
+    lte?: number
+    in?: string[]
+  }[]
   and?: {
     field?: string
     fieldName?: string
     nin?: string[]
+    exists?: boolean
     gte?: number
     lte?: number
     in?: string[]

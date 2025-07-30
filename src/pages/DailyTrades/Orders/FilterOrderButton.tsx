@@ -19,13 +19,21 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { SubscriptionFeatureEnum } from 'utils/config/enums'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
 
+import FilterGroupBookmarkTag from '../FilterTags/FilterGroupBookmarkTag'
 import { DailyOrderContextValues, useDailyOrdersContext } from './useOrdersProvider'
 
 export default function FilterOrderButton() {
-  const { isEnabledFilterOrder, planToFilterOrder, orderFieldsAllowed } = useLiveTradesPermission()
+  const {
+    isEnabledFilterOrder,
+    planToFilterOrder,
+    orderFieldsAllowed,
+    isEnableSearchOrderTrader,
+    planToSearchOrderTrader,
+  } = useLiveTradesPermission()
   const [openModal, setOpenModal] = useState(false)
   const { setSearchParamsOnly } = useSearchParams()
-  const { ranges, pairs, excludedPairs, action, changeFilters, direction } = useDailyOrdersContext()
+  const { ranges, pairs, excludedPairs, action, changeFilters, direction, currentGroupId, changeGroupId } =
+    useDailyOrdersContext()
   const [_rangesFilter, _setRangesFilter] = useState<Record<string, DailyOrderContextValues['ranges'][0]>>(() => {
     if (ranges.length) {
       return ranges.reduce((result, values) => {
@@ -63,6 +71,7 @@ export default function FilterOrderButton() {
   }, [pairs, excludedPairs])
   const [_action, _setAction] = useState(action)
   const [_direction, _setDirection] = useState(direction)
+  const [_currentGroupId, _setCurrentGroupId] = useState(currentGroupId)
 
   const _onApply = () => {
     changeFilters({
@@ -72,17 +81,21 @@ export default function FilterOrderButton() {
       ranges: Object.values(_rangesFilter),
       direction: _direction,
     })
+    if (_currentGroupId !== currentGroupId) {
+      changeGroupId(_currentGroupId)
+    }
     setOpenModal(false)
   }
   const _onReset = () => {
     setSearchParamsOnly({})
     _setRangesFilter({})
+    _setCurrentGroupId(undefined)
     setOpenModal(false)
   }
 
   useEscapeToClose({ isOpen: openModal, onClose: () => setOpenModal(false) })
 
-  const hasFilter = !!pairs?.length || !!action || !!ranges?.length
+  const hasFilter = !!pairs?.length || !!action || !!ranges?.length || !!currentGroupId
 
   return (
     <>
@@ -108,11 +121,20 @@ export default function FilterOrderButton() {
                 <IconBox icon={<XCircle size={20} />} onClick={() => setOpenModal(false)} />
               </Flex>
               <Box flex="1 0 0" overflow="auto">
+                <Label label="Traders" labelColor="neutral1" />
+                <FilterGroupBookmarkTag
+                  currentGroupId={_currentGroupId}
+                  onChangeGroupId={_setCurrentGroupId}
+                  allowedFilter={isEnableSearchOrderTrader}
+                  planToFilter={planToSearchOrderTrader}
+                />
+                <Box mb={3} />
                 <Label label="Status" labelColor="neutral1" />
                 <OrderActionSelect currentFilter={_action} changeFilter={_setAction} />
                 <Box mb={3} />
                 <Label label="Direction" labelColor="neutral1" />
                 <DirectionSelect direction={_direction} changeDirection={_setDirection} />
+
                 <Box mb={3} />
                 <MarketSelect
                   key={openModal.toString()}

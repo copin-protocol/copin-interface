@@ -18,12 +18,13 @@ import { OrderData } from 'entities/trader'
 import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
 import useLiveTradesPermission from 'hooks/features/subscription/useLiveTradesPermission'
 import { useFilterPairs } from 'hooks/features/useFilterPairs'
+import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import Loading from 'theme/Loading'
 import { PaginationWithLimit } from 'theme/Pagination'
 import VirtualList from 'theme/VirtualList'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { MAX_LIST_DATA_LIMIT, MAX_PAGE_LIMIT } from 'utils/config/constants'
+import { BOOKMARK_NO_GROUP_KEY, MAX_LIST_DATA_LIMIT, MAX_PAGE_LIMIT, SYMBOL_ALLOWED_ALL } from 'utils/config/constants'
 import { MarginModeEnum, SortTypeEnum, SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import reorderArray from 'utils/helpers/reorderArray'
@@ -31,6 +32,7 @@ import { getPairFromSymbol, pageToOffset } from 'utils/helpers/transform'
 
 import FilterProtocols from '../FilterProtocols'
 import FilterOrderDirectionTag from '../FilterTags/FilterDirectionTag'
+import FilterGroupBookmarkTag from '../FilterTags/FilterGroupBookmarkTag'
 import FilterOrderActionTag from '../FilterTags/FilterOrderActionTag'
 import FilterOrderRangesTag from '../FilterTags/FilterOrderRangeTag'
 import FilterPairTag from '../FilterTags/FilterPairTag'
@@ -70,8 +72,11 @@ function DailyOrdersComponent() {
     changeCurrentPage,
     currentLimit,
     changeCurrentLimit,
+    currentGroupId,
+    changeGroupId,
   } = useDailyOrdersContext()
   const { md } = useResponsive()
+  const { bookmarks } = useTraderFavorites()
 
   // FETCH DATA
   const { isCopyAll, hasExcludingPairs } = useFilterPairs({ pairs, excludedPairs })
@@ -99,6 +104,17 @@ function DailyOrdersComponent() {
         match: address,
       })
     }
+
+    // Group bookmark filtering
+    if (currentGroupId && currentGroupId !== BOOKMARK_NO_GROUP_KEY && bookmarks) {
+      result.push({
+        field: 'account',
+        in: Object.keys(bookmarks)
+          .filter((account) => bookmarks[account]?.customAlertIds?.includes(currentGroupId))
+          .map((k) => k.split('-')[0]),
+      })
+    }
+
     if (protocols) {
       result.push({
         field: 'protocol',
@@ -127,7 +143,7 @@ function DailyOrdersComponent() {
     })
 
     return _parsedResult
-  }, [action, address, pairs, protocols, ranges, direction])
+  }, [action, address, pairs, protocols, ranges, direction, currentGroupId, bookmarks])
 
   // Table data
   const tableTime = useRef({
@@ -384,7 +400,11 @@ function DailyOrdersComponent() {
 
   const _orderColumns = useMemo(() => {
     return reorderArray({ source: orderFieldsAllowed, target: orderColumns, getValue: (v) => v.key }).map((v) => {
-      const isAllowed = orderFieldsAllowed == null || !v.key || orderFieldsAllowed.includes(v.key) || isEliteUser
+      const isAllowed =
+        orderFieldsAllowed == null ||
+        !v.key ||
+        orderFieldsAllowed.includes(v.key) ||
+        orderFieldsAllowed.includes(SYMBOL_ALLOWED_ALL as any)
       return {
         ...v,
         sortBy: isAllowed ? v.sortBy : undefined,
@@ -392,7 +412,7 @@ function DailyOrdersComponent() {
         style: { ...v.style, paddingRight: '8px' },
       }
     })
-  }, [isEliteUser, orderFieldsAllowed])
+  }, [orderFieldsAllowed])
 
   const overlayRef = useRef<HTMLDivElement | null>(null)
   const tableWrapperRef = useRef<HTMLDivElement | null>(null)
@@ -487,6 +507,12 @@ function DailyOrdersComponent() {
           }}
         >
           <Flex sx={{ alignItems: 'center', gap: 2, flexWrap: 'nowrap', flex: '1 0 0', overflow: 'auto hidden' }}>
+            <FilterGroupBookmarkTag
+              currentGroupId={currentGroupId}
+              onChangeGroupId={changeGroupId}
+              allowedFilter={isEnableSearchOrderTrader}
+              planToFilter={planToSearchOrderTrader}
+            />
             <Type.Caption pr={1} flexShrink={0} color="neutral2">
               FILTER:
             </Type.Caption>

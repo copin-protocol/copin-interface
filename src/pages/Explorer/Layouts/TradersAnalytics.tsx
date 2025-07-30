@@ -17,16 +17,8 @@ import SortTradersDropdown from './SortTradersDropdown'
 export default function TradersAnalytics() {
   const contextValues = useTradersContext()
 
-  const {
-    filters,
-    changeFilters,
-    rankingFilters,
-    filterTab,
-    labelsFilters,
-    ifLabelsFilters,
-    changeLabels,
-    changeIFLabels,
-  } = contextValues
+  const { filters, changeFilters, rankingFilters, filterTab, labelsFilters, ifFilters, changeLabels, changeIFFilters } =
+    contextValues
   const _filters = filterTab === FilterTabEnum.RANKING ? rankingFilters : filters
   const { lg } = useResponsive()
 
@@ -37,18 +29,34 @@ export default function TradersAnalytics() {
         <AnalyticsLayoutDesktop
           timeFilterSection={<TimeFilterSection contextValues={contextValues} />}
           filterTag={
-            filterTab === FilterTabEnum.LABELS || filterTab === FilterTabEnum.IF_LABELS ? (
+            filterTab === FilterTabEnum.LABELS || filterTab === FilterTabEnum.IF ? (
               <Flex sx={{ gap: 2, alignItems: 'center', mt: '2px' }}>
                 <TraderLabels
                   labels={
                     filterTab === FilterTabEnum.LABELS
                       ? labelsFilters.map((value) => ({ key: value }))
-                      : ifLabelsFilters.map((value) => ({ key: value, title: value }))
+                      : ifFilters?.ifLabels?.map((value) => ({ key: value, title: value })) ?? []
                   }
-                  isIF={filterTab === FilterTabEnum.IF_LABELS}
+                  isIF={filterTab === FilterTabEnum.IF}
                   shouldShowTooltip={false}
                   showedItems={3}
                 />
+                {filterTab === FilterTabEnum.IF && !!ifFilters?.ifGoodMarkets?.length && (
+                  <TraderLabels
+                    labels={ifFilters.ifGoodMarkets.map((value) => ({ key: value, title: value }))}
+                    shouldShowTooltip={false}
+                    showedItems={3}
+                    isPositive
+                  />
+                )}
+                {filterTab === FilterTabEnum.IF && !!ifFilters?.ifBadMarkets?.length && (
+                  <TraderLabels
+                    labels={ifFilters.ifBadMarkets.map((value) => ({ key: value, title: value }))}
+                    shouldShowTooltip={false}
+                    showedItems={3}
+                    isPositive={false}
+                  />
+                )}
               </Flex>
             ) : (
               <FilterTag filters={_filters} filterTab={filterTab} />
@@ -60,10 +68,10 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               changeLabels={changeLabels}
-              changeIFLabels={changeIFLabels}
+              changeIFFilters={changeIFFilters}
               rankingFilters={rankingFilters}
               labelsFilters={labelsFilters}
-              ifLabelsFilters={ifLabelsFilters}
+              ifFilters={ifFilters}
               tab={filterTab}
             />
           }
@@ -84,10 +92,10 @@ export default function TradersAnalytics() {
               filters={filters}
               changeFilters={changeFilters}
               changeLabels={changeLabels}
-              changeIFLabels={changeIFLabels}
+              changeIFFilters={changeIFFilters}
               rankingFilters={rankingFilters}
               labelsFilters={labelsFilters}
-              ifLabelsFilters={ifLabelsFilters}
+              ifFilters={ifFilters}
               tab={filterTab}
             />
           }
