@@ -9,6 +9,7 @@ import SquareIconButton from 'components/@ui/SquareIconButton'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
 import { TraderData } from 'entities/trader'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import { useUserRankingConfig } from 'hooks/store/useUserCustomize'
 import { Box, Flex, Type } from 'theme/base'
 import { linearGradient3 } from 'theme/colors'
@@ -58,6 +59,10 @@ export default function TraderRankingExpanded({
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+  useEscapeToClose({
+    onClose: () => handleExpand(false),
+    isOpen: true,
+  })
   const [selectedTrader, setSelectedTrader] = useState<TraderData | null>(null)
   const handleSelectTrader = (data: TraderData | null) => setSelectedTrader(data)
   const { customizedRanking } = useUserRankingConfig()

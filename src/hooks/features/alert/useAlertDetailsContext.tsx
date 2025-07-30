@@ -10,6 +10,7 @@ import { BotAlertData, TraderAlertData } from 'entities/alert'
 import { PlanLimitData } from 'entities/system'
 import { UserData } from 'entities/user'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
+import useDebounce from 'hooks/helpers/useDebounce'
 import usePageChange from 'hooks/helpers/usePageChange'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useMyProfile from 'hooks/store/useMyProfile'
@@ -17,6 +18,7 @@ import { FilterTabEnum } from 'pages/Explorer/ConditionFilter/configs'
 import useTradersCount from 'pages/Explorer/ConditionFilter/useTraderCount'
 import { convertRangesFromConfigs } from 'pages/Settings/AlertSettingDetails/SettingCustomAlert/helpers'
 import { TableSortProps } from 'theme/Table/types'
+import { SEARCH_DEBOUNCE_TIME } from 'utils/config/constants'
 import {
   AlertCategoryEnum,
   AlertCustomType,
@@ -54,6 +56,8 @@ export interface AlertDetailsContextData {
   changeCurrentSort: (value: TableSortProps<TraderAlertData> | undefined) => void
   onChangeStep: (step: AlertSettingsEnum) => void
   onDismiss: () => void
+  keyword?: string
+  setKeyword?: (keyword: string) => void
 }
 
 const AlertSettingDetailsContext = createContext<AlertDetailsContextData>({} as AlertDetailsContextData)
@@ -130,15 +134,23 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
     if (!initSortBy) return undefined
     return { sortBy: initSortBy as TableSortProps<TraderAlertData>['sortBy'], sortType: initSortType as SortTypeEnum }
   })
+  const [keyword, setKeyword] = useState<string>('')
+  const trimmedKeyword = keyword.trim()
+  // const debounceKeyword = useDebounce<string>(trimmedKeyword, SEARCH_DEBOUNCE_TIME)
+  const setKeywordAndReset = (keyword: string) => {
+    setKeyword(keyword)
+    changeCurrentPage(1)
+  }
 
   const { data: watchlistTraders } = useQuery(
-    [QUERY_KEYS.GET_TRADER_ALERTS, currentPage, currentSort, limit, myProfile?.id],
+    [QUERY_KEYS.GET_TRADER_ALERTS, currentPage, currentSort, limit, myProfile?.id, trimmedKeyword],
     () =>
       getTraderAlertListApi({
         limit,
         offset: pageToOffset(currentPage, limit),
         sortBy: currentSort?.sortBy,
         sortType: currentSort?.sortType,
+        keyword: trimmedKeyword,
       }),
     {
       enabled: !!myProfile?.id && botAlert?.alertType === AlertTypeEnum.TRADERS,
@@ -201,6 +213,8 @@ export const AlertSettingDetailsProvider = ({ children }: { children: ReactNode 
     changeCurrentSort: setCurrentSort,
     onChangeStep,
     onDismiss,
+    keyword,
+    setKeyword: setKeywordAndReset,
   }
 
   return <AlertSettingDetailsContext.Provider value={contextValue}>{children}</AlertSettingDetailsContext.Provider>

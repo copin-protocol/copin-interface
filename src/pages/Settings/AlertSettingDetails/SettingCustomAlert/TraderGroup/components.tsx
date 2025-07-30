@@ -176,11 +176,7 @@ export const TraderGroupList = ({
     customType === AlertCustomType.TRADER_BOOKMARK ? columns.slice(0, columns.length - 1) : columns
 
   return (
-    <Flex
-      flex={1}
-      flexDirection="column"
-      sx={{ overflow: 'auto', maxHeight: isMobile ? 'max-content' : 'calc(100vh - 280px)' }}
-    >
+    <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: 'max-content' }}>
       {isMobile ? (
         <Flex pt={2} flexDirection="column" sx={{ gap: 2, overflow: 'auto' }}>
           {paginatedTraders.data.length > 0 &&

@@ -19,6 +19,7 @@ import TraderPositionDetailsDrawer from 'components/@position/TraderPositionDeta
 import Divider from 'components/@ui/Divider'
 import { PositionData } from 'entities/trader'
 import { useHyperliquidTraderContext } from 'hooks/features/trader/useHyperliquidTraderContext'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import { usePageChangeWithLimit } from 'hooks/helpers/usePageChange'
 import { TabKeyEnum } from 'pages/Explorer/Layouts/layoutConfigs'
 import Loading from 'theme/Loading'
@@ -118,6 +119,12 @@ export default function HLTraderOpeningPositionsTableView({
     resetSortOpening()
     toggleExpand?.()
   }
+
+  useEscapeToClose({
+    isOpen: isExpanded || false,
+    onClose: handleToggleExpand,
+    disabled: isDrawer,
+  })
 
   return (
     <Box
