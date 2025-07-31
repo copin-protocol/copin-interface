@@ -234,6 +234,7 @@ TableProps<T, K>) {
             defaultColumns={columns}
             currentColumnKeys={visibleColumns}
             handleToggleColumn={handleToggleVisibleColumn}
+            keys={(item) => item.key}
           />
         </Box>
       )}

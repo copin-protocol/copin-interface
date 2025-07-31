@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { useResponsive } from 'ahooks'
-import { ReactNode, memo, useEffect, useState } from 'react'
+import { useResponsive, useSize } from 'ahooks'
+import { ReactNode, memo, useEffect, useRef, useState } from 'react'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import { CustomizeColumnWithState } from 'components/@trader/CustomizeColumnWithState'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
 import { mobileTableSettings, tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
@@ -133,6 +134,8 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
     })
 
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: formattedData })
+  const ref = useRef(null)
+  const size = useSize(ref)
 
   // if (paginatedData.data?.length === 0 && !isLoading && totalAccounts > 0) {
   //   const title = <Trans>All traders from higher plan are not shown</Trans>
@@ -206,13 +209,26 @@ const ListTraderFavorites = memo(function ListTraderFavoritesMemo({
           />
         )}
       </Box>
-      <PaginationWithLimit
-        currentPage={currentPage}
-        currentLimit={currentLimit}
-        onPageChange={changeCurrentPage}
-        onLimitChange={changeCurrentLimit}
-        apiMeta={paginatedData.meta}
-      />
+      <Flex className="pagination__wrapper" sx={{ alignItems: 'center', justifyContent: 'end' }}>
+        <PaginationWithLimit
+          currentPage={currentPage}
+          currentLimit={currentLimit}
+          onPageChange={changeCurrentPage}
+          onLimitChange={changeCurrentLimit}
+          apiMeta={paginatedData.meta}
+          my={1}
+          menuPosition="top"
+          disabledInput={size?.width && size.width < 550 ? true : false}
+        />
+        {data && (
+          <Flex alignItems={'center'}>
+            <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
+            <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: 2 }}>
+              <CustomizeColumnWithState />
+            </Flex>
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   )
 })

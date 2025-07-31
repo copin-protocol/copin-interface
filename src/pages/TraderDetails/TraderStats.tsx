@@ -164,6 +164,7 @@ const AccountStats = memo(function AccountStatsMemo({
                 currentColumnKeys={customizeStats}
                 handleToggleColumn={(key) => toggleVisibleStat(key.toString())}
                 hasLabels={false}
+                keys={(item) => item.key}
               />
               <IconButton
                 mt={'-2px'}
