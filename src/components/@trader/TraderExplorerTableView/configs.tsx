@@ -41,7 +41,7 @@ const columnsMapping: { [key in keyof TraderData]?: TableSettings<TraderData, Ex
     text: 'Account',
     searchText: 'Account',
     label: (
-      <Box textAlign="left" pl={3}>
+      <Box textAlign="left" className="account-label" pl={3}>
         <Trans>Account</Trans>
       </Box>
     ),

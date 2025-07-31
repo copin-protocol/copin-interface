@@ -26,11 +26,13 @@ export async function getTraderAlertListApi({
   protocol,
   sortBy,
   sortType,
+  keyword,
 }: {
   address?: string
   protocol?: ProtocolEnum
   sortBy?: string
   sortType?: SortTypeEnum
+  keyword?: string
 } & GetApiParams) {
   const params: Record<string, any> = {}
   if (!!protocol) params.protocols = protocol
@@ -38,6 +40,7 @@ export async function getTraderAlertListApi({
   if (!!protocol) params.protocol = protocol
   if (!!sortBy) params.sort_by = sortBy
   if (!!sortType) params.sort_type = sortType
+  if (!!keyword) params.keyword = keyword
   return requester
     .get(`${SERVICE}/trader`, { params: { limit, offset, ...params } })
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)

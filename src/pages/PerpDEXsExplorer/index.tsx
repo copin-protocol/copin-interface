@@ -781,6 +781,7 @@ function CustomizeColumnWithState() {
       onApply={(keys) => (md ? setVisibleColumnsTable(keys) : setVisibleColumnsList(keys))}
       disabledItemFn={(key) => !key || ['volume1d', 'tradeUrl'].includes(key)}
       label={md ? <Type.Caption color="inherit">Customize Columns</Type.Caption> : ''}
+      keys={(item) => item.key as keyof PerpDEXSourceResponse | undefined}
     />
   )
 }

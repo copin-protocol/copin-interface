@@ -7,10 +7,10 @@ import styled from 'styled-components/macro'
 import { ApiListResponse } from 'apis/api'
 import { CompareButton } from 'components/@backtest/BacktestPickTradersButton'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import { CustomizeColumnWithState } from 'components/@trader/CustomizeColumnWithState'
 import TraderListCard from 'components/@trader/TraderExplorerListView'
 import CustomizeColumnMobile from 'components/@trader/TraderExplorerListView/CustomizeColumnMobile'
 import TraderListTable from 'components/@trader/TraderExplorerTableView'
-import CustomizeColumn from 'components/@trader/TraderExplorerTableView/CustomizeColumn'
 import { tableSettings } from 'components/@trader/TraderExplorerTableView/configs'
 import TraderPermissionTooltip from 'components/@trader/TraderPermissionTooltip'
 import { TraderData } from 'entities/trader.d'
@@ -19,12 +19,15 @@ import useExplorerPermission from 'hooks/features/subscription/useExplorerPermis
 import useMyProfileStore from 'hooks/store/useMyProfile'
 import { useGlobalProtocolFilterStore } from 'hooks/store/useProtocolFilter'
 import { useSelectBacktestTraders } from 'hooks/store/useSelectBacktestTraders'
+import { useTraderExplorerListColumns, useTraderExplorerTableColumns } from 'hooks/store/useTraderCustomizeColumns'
 import ExportCsvButton from 'pages/Explorer/ConditionFilter/ExportCsvButton'
 import useBacktestTradersActions from 'pages/Explorer/ListTradersSection/useBacktestTradersActions'
 import useQueryTraders from 'pages/Explorer/ListTradersSection/useQueryTraders'
 import { TradersContextData } from 'pages/Explorer/useTradersContext'
 import { PaginationWithLimit } from 'theme/Pagination'
+import CustomizeColumn from 'theme/Table/CustomizeColumn'
 import { Box, Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { MEDIA_WIDTHS } from 'theme/theme'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 import { SubscriptionFeatureEnum, SubscriptionPlanEnum } from 'utils/config/enums'
@@ -264,7 +267,7 @@ function TablePagination({
                   justifyContent: 'end',
                   columnGap: 2,
                   rowGap: 0,
-                  pr: [48, 48, 48, 0],
+                  pr: [48, 48, 0, 0],
                 }}
               >
                 <Flex className="pagination__wrapper" sx={{ alignItems: 'center', gap: 0 }}>
@@ -284,9 +287,9 @@ function TablePagination({
                       <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
                       <ExportCsvButton hasTitle={size?.width && size.width > 950 ? true : false} />
                       <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-                      <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: !md ? 5 : 2 }}>
+                      <Flex sx={{ gap: 20, alignItems: 'center', px: 2, py: 2, pr: 2 }}>
                         {/* <TradersVisualizer traders={data.data} hasButtonTitle={buttonsHasTitle ? true : lg ? true : false} /> */}
-                        <CustomizeColumn hasTitle={size?.width && size.width > 950 ? true : false} />
+                        <CustomizeColumnWithState />
                       </Flex>
                     </>
                   )}
@@ -300,7 +303,7 @@ function TablePagination({
                   px: 12,
                   '& *': { fontSize: '12px' },
                   alignItems: 'center',
-                  gap: [12, 2],
+                  gap: [2, 2],
                   borderTop: ['small', 'none'],
                   borderTopColor: ['neutral4', 'none'],
                 }}
@@ -316,7 +319,8 @@ function TablePagination({
                   />
                 </Box>
                 <Box sx={{ width: 1, height: 40, bg: 'neutral4', flexShrink: 0 }} />
-                <CustomizeColumnMobile />
+                {/* dropdown */}
+                <Box sx={{ position: 'relative', bottom: 0 }}>{data && <CustomizeColumnWithState />}</Box>
               </Flex>
             </Box>
           ))}

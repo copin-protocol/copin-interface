@@ -30,7 +30,7 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
   const permission = useSystemConfigStore((s) => s.permission)
   return (
     <>
-      <Flex flexDirection="column" width="100vw" height="100vh" margin="0px auto" maxHeight="100%">
+      <Flex flexDirection="column" width="100vw" height="100dvh" margin="0px auto" maxHeight="100%">
         <Navbar height={NAVBAR_HEIGHT} />
         <WarningBanner />
         <Box id={ELEMENT_IDS.APP_MAIN_WRAPPER} width="100%" flex="1" sx={{ position: 'relative', overflowY: 'auto' }}>

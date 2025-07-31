@@ -6,6 +6,7 @@ import { createGlobalStyle } from 'styled-components/macro'
 
 import { OnboardingContent } from 'components/@copinLite/OnboardingModal'
 import SafeComponentWrapper from 'components/@widgets/SafeComponentWrapper'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useSearchParams from 'hooks/router/useSearchParams'
 import useTabHandler from 'hooks/router/useTabHandler'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -108,6 +109,11 @@ const CopinLitePage = () => {
   const onDismissOnboarding = () => {
     setShowOnboarding(false)
   }
+
+  useEscapeToClose({
+    isOpen: tableExpanded,
+    onClose: () => setTableExpanded((prev) => !prev),
+  })
 
   if (showOnboarding == null) return <></>
 

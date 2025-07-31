@@ -58,7 +58,7 @@ export const TraderFilterForm: React.FC<TraderFilterFormProps> = ({
 }) => {
   const { allowedSelectProtocols } = useProtocolPermission()
   return (
-    <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: isMobile ? '90%' : '60svh' }}>
+    <Flex flex={1} flexDirection="column" sx={{ overflow: 'auto', maxHeight: isMobile ? '90%' : '50svh' }}>
       <Type.Caption color="neutral2" mb={2}>
         <Trans>
           Please adjust your filter criteria to match{' '}

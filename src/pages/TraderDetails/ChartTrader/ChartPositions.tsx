@@ -11,6 +11,7 @@ import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { PositionData } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
+import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
 import { Box, Flex, IconBox } from 'theme/base'
@@ -104,6 +105,11 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
       return
     }
   }, [closedPositions, currentPair, openingPositions, tokensStatistic?.data])
+
+  useEscapeToClose({
+    isOpen: isExpanded,
+    onClose: handleExpand,
+  })
 
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>

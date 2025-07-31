@@ -160,7 +160,7 @@ export default function CopyTraderDrawer({
 
   return (
     <Modal
-      dismissable={false}
+      dismissable
       zIndex={Z_INDEX.TOASTIFY}
       maxWidth="520px"
       {...(modalStyles || {})}

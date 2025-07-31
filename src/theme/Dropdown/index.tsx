@@ -11,6 +11,7 @@ import { Button, ButtonVariant } from 'theme/Buttons'
 import { Box, Flex, IconBox, Type } from 'theme/base'
 import { BoxProps, Colors } from 'theme/types'
 import { FONT_FAMILY } from 'utils/config/constants'
+import { ELEMENT_IDS } from 'utils/config/keys'
 
 type Direction = 'left' | 'right'
 
@@ -39,6 +40,7 @@ type DropdownProps = {
   menuPosition?: 'top' | 'bottom'
   iconSize?: number
   menuDismissible?: boolean
+  getPopupContainer?: any
 }
 const ToggleButton = styled(Button)(({ sx }: { sx: SystemStyleObject & GridProps }) =>
   css({
@@ -97,6 +99,7 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
   onSubmit,
   onReset,
   menuDismissible = false,
+  getPopupContainer,
 }) => {
   const [_showing, _show] = useState(false)
   const showing = visible ?? _showing
@@ -114,6 +117,7 @@ const Dropdown: React.FC<LayoutProps & DropdownProps> = ({
         onVisibleChange={!dismissible ? undefined : show}
         trigger={hoveringMode ? ['hover', 'click'] : ['click']}
         visible={showing}
+        getPopupContainer={getPopupContainer}
         overlay={
           <Menu
             width={width}
