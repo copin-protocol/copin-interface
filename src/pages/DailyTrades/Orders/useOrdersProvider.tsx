@@ -144,10 +144,12 @@ export function DailyOrdersProvider({ children }: { children: JSX.Element | JSX.
           const _values = values as RangeFilterValues[] | undefined
           _values?.length
             ? _values.forEach((v) => {
+                if (!ORDER_RANGE_CONFIG_MAPPING[v.field as keyof typeof ORDER_RANGE_CONFIG_MAPPING]) return
+                const key = ORDER_RANGE_CONFIG_MAPPING[v.field as keyof typeof ORDER_RANGE_CONFIG_MAPPING].urlParamKey
                 const gte = v?.gte
                 const lte = v?.lte
-                params[`${v.field}g`] = gte ? gte.toString() : undefined
-                params[`${v.field}l`] = lte ? lte.toString() : undefined
+                params[`${key}Gte`] = gte ? gte.toString() : undefined
+                params[`${key}Lte`] = lte ? lte.toString() : undefined
               })
             : undefined
         }

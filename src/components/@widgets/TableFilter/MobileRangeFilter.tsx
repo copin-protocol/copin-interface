@@ -10,16 +10,18 @@ export function MobileRangeFilterItem({
   lte,
   onChangeGte,
   onChangeLte,
+  label,
 }: {
   configs: TableFilterConfig
   gte: number | string | undefined
   lte: number | string | undefined
   onChangeGte: (v: number | undefined) => void
   onChangeLte: (v: number | undefined) => void
+  label?: string
 }) {
   return (
     <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, '& > *': { flex: 1 } }}>
-      <Type.Caption>{configs.label}</Type.Caption>
+      <Type.Caption>{label || configs.label}</Type.Caption>
       <Input
         type="number"
         value={gte}

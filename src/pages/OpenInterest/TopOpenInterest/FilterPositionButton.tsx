@@ -47,8 +47,8 @@ export default function FilterPositionButton() {
     Object.entries(_rangesFilter).forEach(([key, values]) => {
       const gte = values?.gte
       const lte = values?.lte
-      params[`${values.field}g`] = gte ? gte.toString() : undefined
-      params[`${values.field}l`] = lte ? lte.toString() : undefined
+      params[`${values.field}Gte`] = gte ? gte.toString() : undefined
+      params[`${values.field}Lte`] = lte ? lte.toString() : undefined
     })
     setSearchParams(params)
   }, [setSearchParams, _rangesFilter])
@@ -97,6 +97,7 @@ export default function FilterPositionButton() {
                       lte={lte}
                       onChangeGte={(e) => _onChangeRangeValue({ valueKey, isGte: true, gte: e })}
                       onChangeLte={(e) => _onChangeRangeValue({ valueKey, isLte: true, lte: e })}
+                      label="Value"
                     />
                   </Box>
                 )

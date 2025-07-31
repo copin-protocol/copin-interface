@@ -1,4 +1,5 @@
 import { TableFilterConfig } from 'components/@widgets/TableFilter/types'
+import { GroupedFillsData } from 'entities/hyperliquid'
 import { OrderData, PositionData } from 'entities/trader'
 
 export type RangeValuesType = {
@@ -10,6 +11,11 @@ export enum DirectionFilterEnum {
   SHORT = '0',
 }
 
+export type FillRangeFields = Pick<
+  GroupedFillsData,
+  'totalSize' | 'totalSizeInToken' | 'avgPrice' | 'totalPnl' | 'totalFee'
+>
+
 export type PositionRangeFields = Pick<
   PositionData,
   | 'size'
@@ -18,13 +24,20 @@ export type PositionRangeFields = Pick<
   | 'durationInSecond'
   | 'realisedPnl'
   | 'realisedRoi'
-  | 'totalSize'
-  | 'totalSizeInToken'
-  | 'avgPrice'
-  | 'totalPnl'
-  | 'totalFee'
+  // | 'averagePrice'
   | 'fee'
+  // | 'totalSize'
+  // | 'totalFee'
 >
+
+export const FILL_RANGE_KEYS: { [key in keyof FillRangeFields]: keyof FillRangeFields } = {
+  totalSize: 'totalSize',
+  totalSizeInToken: 'totalSizeInToken',
+  avgPrice: 'avgPrice',
+  totalPnl: 'totalPnl',
+  totalFee: 'totalFee',
+}
+
 export const POSITION_RANGE_KEYS: { [key in keyof PositionRangeFields]: keyof PositionRangeFields } = {
   size: 'size',
   leverage: 'leverage',
@@ -32,12 +45,16 @@ export const POSITION_RANGE_KEYS: { [key in keyof PositionRangeFields]: keyof Po
   durationInSecond: 'durationInSecond',
   realisedPnl: 'realisedPnl',
   realisedRoi: 'realisedRoi',
-  totalSize: 'totalSize',
-  totalSizeInToken: 'totalSizeInToken',
-  avgPrice: 'avgPrice',
-  totalPnl: 'totalPnl',
-  totalFee: 'totalFee',
+  // averagePrice: 'averagePrice',
   fee: 'fee',
+}
+
+export const FILL_RANGE_CONFIG_MAPPING: { [key in keyof FillRangeFields]: TableFilterConfig } = {
+  totalSize: { label: 'Value', unit: '$', type: 'number', urlParamKey: 'totalSize' },
+  totalSizeInToken: { label: 'Size', unit: '$', type: 'number', urlParamKey: 'totalSizeInToken' },
+  avgPrice: { label: 'Avg. Price', unit: '$', type: 'number', urlParamKey: 'avgPrice' },
+  totalPnl: { label: 'PnL', unit: '$', type: 'number', urlParamKey: 'totalPnl' },
+  totalFee: { label: 'Fee', unit: '$', type: 'number', urlParamKey: 'totalFee' },
 }
 
 export const POSITION_RANGE_CONFIG_MAPPING: { [key in keyof PositionRangeFields]: TableFilterConfig } = {
@@ -48,11 +65,7 @@ export const POSITION_RANGE_CONFIG_MAPPING: { [key in keyof PositionRangeFields]
   realisedPnl: { label: 'PnL', unit: '$', type: 'number', urlParamKey: 'pnl' },
   realisedRoi: { label: 'ROI', unit: '%', type: 'number', urlParamKey: 'realisedRoi' },
   // realisedRoi: { label: 'ROI', unit: '%', type: 'number', urlParamKey: 'roi' },
-  totalSize: { label: 'Value', unit: '$', type: 'number', urlParamKey: 'totalSize' },
-  totalSizeInToken: { label: 'Size', unit: '$', type: 'number', urlParamKey: 'totalSizeInToken' },
-  avgPrice: { label: 'Avg. Price', unit: '$', type: 'number', urlParamKey: 'avgPrice' },
-  totalPnl: { label: 'PnL', unit: '$', type: 'number', urlParamKey: 'totalPnl' },
-  totalFee: { label: 'Fee', unit: '$', type: 'number', urlParamKey: 'totalFee' },
+  // averagePrice: { label: 'Avg. Price', unit: '$', type: 'number', urlParamKey: 'avgPrice' },
   fee: { label: 'Fee', unit: '$', type: 'number', urlParamKey: 'fee' },
 }
 

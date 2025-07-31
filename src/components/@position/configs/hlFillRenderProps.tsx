@@ -1,5 +1,5 @@
-import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
-import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
+import { FillRangeFilterIcon } from 'components/@dailyTrades/FillRangeFilterIcon'
+import { FILL_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText, RelativeShortTimeText, RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
@@ -166,15 +166,15 @@ export const fullFillColumns: ColumnData<GroupedFillsData>[] = [
   timeColumn,
   { ...pairColumn, filterComponent: <OrderFilledPairFilterIcon /> },
   { ...directionColumn, filterComponent: <HLDirectionFilterIcon /> },
-  { ...sizeTokenColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalSizeInToken} /> },
-  { ...sizeUsdColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalSize} /> },
+  { ...sizeTokenColumn, filterComponent: <FillRangeFilterIcon valueKey={FILL_RANGE_KEYS.totalSizeInToken} /> },
+  { ...sizeUsdColumn, filterComponent: <FillRangeFilterIcon valueKey={FILL_RANGE_KEYS.totalSize} /> },
   fillsColumn,
-  { ...priceColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.avgPrice} /> },
-  { ...feeColumn, filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalFee} /> },
+  { ...priceColumn, filterComponent: <FillRangeFilterIcon valueKey={FILL_RANGE_KEYS.avgPrice} /> },
+  { ...feeColumn, filterComponent: <FillRangeFilterIcon valueKey={FILL_RANGE_KEYS.totalFee} /> },
   {
     ...pnlColumn,
     style: { ...pnlColumn.style, minWidth: '100px' },
-    filterComponent: <PositionRangeFilterIcon valueKey={POSITION_RANGE_KEYS.totalPnl} />,
+    filterComponent: <FillRangeFilterIcon valueKey={FILL_RANGE_KEYS.totalPnl} />,
   },
 ]
 

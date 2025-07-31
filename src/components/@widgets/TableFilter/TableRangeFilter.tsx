@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -30,10 +30,14 @@ export default function TableRangeFilter({
     reset,
     handleSubmit,
     formState: { isDirty },
-  } = useForm<TableRangeFilterValues>()
-  useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues])
+  } = useForm<TableRangeFilterValues>({
+    defaultValues,
+    mode: 'onChange',
+  })
+  // TODO: check why use UseEffect here
+  // useEffect(() => {
+  //   reset(defaultValues)
+  // }, [defaultValues])
 
   const enableReset = [...Object.values(defaultValues).flat(Infinity)].some((v) => !!v)
   const enableApply = isDirty
