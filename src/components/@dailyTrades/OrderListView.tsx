@@ -12,7 +12,7 @@ import useBenefitModalStore from 'hooks/features/subscription/useBenefitModalSto
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
 import { TIME_FORMAT } from 'utils/config/constants'
-import { SubscriptionFeatureEnum } from 'utils/config/enums'
+import { OrderTypeEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
@@ -126,9 +126,16 @@ export default function DailyOrderListView({ data, isLoading, scrollDep, availab
                 <PermissionOverlay dataKey="type" />
                 {ORDER_TYPES[order.type].icon}{' '}
                 <Box as="span" color={'neutral1'}>
-                  {ORDER_TYPES[order.type].text}
+                  {
+                    ORDER_TYPES[
+                      order.type === OrderTypeEnum.INCREASE && order.isOpen
+                        ? OrderTypeEnum.OPEN
+                        : order.type === OrderTypeEnum.DECREASE && order.isClose
+                        ? OrderTypeEnum.CLOSE
+                        : order.type
+                    ].text
+                  }
                 </Box>
-                {/* {order.isLong ? 'Long' : 'Short'} */}
               </Type.Caption>
             </Flex>
             <Flex mt={2} sx={{ alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>

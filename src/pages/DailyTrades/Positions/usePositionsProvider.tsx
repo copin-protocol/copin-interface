@@ -147,10 +147,12 @@ export function DailyPositionsProvider({ children }: { children: JSX.Element | J
         if (key === 'ranges') {
           const _values = values as RangeFilterValues[]
           _values.forEach((v) => {
+            if (!POSITION_RANGE_CONFIG_MAPPING[v.field as keyof typeof POSITION_RANGE_CONFIG_MAPPING]) return
+            const key = POSITION_RANGE_CONFIG_MAPPING[v.field as keyof typeof POSITION_RANGE_CONFIG_MAPPING].urlParamKey
             const gte = v?.gte
             const lte = v?.lte
-            params[`${v.field}g`] = gte ? gte.toString() : undefined
-            params[`${v.field}l`] = lte ? lte.toString() : undefined
+            params[`${key}Gte`] = gte?.toString()
+            params[`${key}Lte`] = lte?.toString()
           })
         }
         if (key === 'pairs') {

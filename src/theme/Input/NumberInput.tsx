@@ -46,7 +46,7 @@ const NumberInput = ({
             <NumericFormat
               getInputRef={ref}
               disabled={props.disabled}
-              value={value}
+              value={value ?? ''}
               thousandSeparator
               decimalScale={isInteger ? 0 : undefined}
               isNumericString
@@ -55,8 +55,9 @@ const NumberInput = ({
               customInput={StyledInput}
               onBlur={onBlur}
               onValueChange={(v: any) => {
-                onChange(v?.floatValue)
-                onInputChange && onInputChange(v?.floatValue)
+                const val = v?.floatValue
+                onChange(val === undefined ? null : val)
+                onInputChange && onInputChange(val === undefined ? null : val)
               }}
             />
           )

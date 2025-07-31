@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual'
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 
 import { ApiListResponse } from 'apis/api'
 import { TraderAlertData } from 'entities/alert'
@@ -43,6 +43,10 @@ export const useTraderGroupState = ({
   })
 
   const { name, description, traderGroupAdd, traderGroupUpdate, traderGroupRemove } = state
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchText])
 
   // Check if there are unsaved changes
   const hasChange = useMemo(() => {
