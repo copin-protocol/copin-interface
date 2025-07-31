@@ -266,13 +266,15 @@ function TraderDetailsComponent({
               <Box sx={{ overflow: ['auto', 'auto', 'unset'], width: '100%' }}>
                 <TradeLabelsFrame
                   traderStats={traderData}
-                  showedItems={lg ? 3 : undefined}
+                  showedItems={md ? 3 : undefined}
+                  shouldShowExpand={false}
                   sx={{
                     width: ['max-content', 'max-content', '100%'],
                     my: [0, 0, 2],
                     px: 2,
                     py: [2, 2, 0],
-                    justifyContent: ['center', 'start'],
+                    justifyContent: 'start',
+                    maxHeight: 32,
                   }}
                 />
               </Box>

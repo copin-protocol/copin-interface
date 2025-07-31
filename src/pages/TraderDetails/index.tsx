@@ -240,7 +240,7 @@ export function TraderDetailsComponent({
                         borderColor: 'neutral4',
                       }}
                     >
-                      {!!ifLabels && (
+                      {!!ifLabels && ifLabels?.length > 0 && (
                         <Flex sx={{ flexWrap: 'wrap', gap: 2, flex: 1 }}>
                           <TraderLabels
                             labels={
@@ -259,8 +259,14 @@ export function TraderDetailsComponent({
                     </Flex>
                   )}
                   {traderData?.some((data) => data?.labels?.length) && (
-                    <Box sx={{ gap: 2, p: 2, alignItems: 'center', overflow: 'auto' }}>
-                      <TradeLabelsFrame traderStats={traderData} sx={{ width: 'max-content' }} />
+                    <Box sx={{ gap: 2, p: 2, pr: 0, alignItems: 'center', overflow: 'auto' }}>
+                      <TradeLabelsFrame
+                        traderStats={traderData}
+                        showedItems={sm ? 3 : undefined}
+                        shouldShowExpand={sm ? false : true}
+                        sx={{ width: 'max-content' }}
+                        expandSx={{ top: -1 }}
+                      />
                     </Box>
                   )}
                 </Box>
