@@ -284,7 +284,7 @@ const FavoriteNoteTooltip = () => {
           <Box mt={1} textAlign="right">
             <InputField
               ref={inputRef}
-              defaultValue={note}
+              value={note}
               label="Note (optional)"
               annotation={`${note?.length ?? 0}/${NOTE_MAX_LENGTH}`}
               block
