@@ -38,6 +38,7 @@ export default function TraderActionButtons({
   disabledActions,
   sx,
   eventCategory,
+  shoulShowGroupAlerts,
 }: {
   traderData: TraderData | undefined
   timeOption: TimeFilterProps
@@ -49,6 +50,7 @@ export default function TraderActionButtons({
   sx?: SystemStyleObject & GridProps
   disabledActions?: DisabledActionType[]
   eventCategory?: EventCategory
+  shoulShowGroupAlerts?: boolean
 }) {
   const { xl } = useResponsive()
   // const { isDA } = useCopyWalletContext()
@@ -169,9 +171,14 @@ export default function TraderActionButtons({
                   <AnalyzeAction forceDisabled={!isAllowedProtocol} />
                 </Flex>
                 {!disabledActions?.includes('alert') && (
-                  <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
-                    <AlertAction account={account} protocol={protocol} />
-                  </Box>
+                  <Flex
+                    height="40px"
+                    width="100%"
+                    justifyContent="center"
+                    sx={{ borderTop: 'small', borderColor: 'neutral4' }}
+                  >
+                    <AlertAction account={account} protocol={protocol} shoulShowGroupAlerts={shoulShowGroupAlerts} />
+                  </Flex>
                 )}
                 {!disabledActions?.includes('backtest') && (
                   <Box height="40px" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>

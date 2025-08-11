@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid'
 import IconEye from 'assets/icons/ic-eye.svg'
 import AddressAvatar from 'components/@ui/AddressAvatar'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
+import { AlertLabel } from 'components/@widgets/AlertLabel'
 import useGlobalStore from 'hooks/store/useGlobalStore'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
@@ -142,20 +143,7 @@ export function AccountInfo({
                 </>
               )}
             </Flex>
-            {label && (
-              <Type.Small
-                px={2}
-                py="2px"
-                bg="neutral4"
-                color="neutral1"
-                sx={{ borderRadius: 20, width: 'fit-content', display: 'inline-block' }}
-                // data-tip="React-tooltip"
-                // data-tooltip-id={label && label.length > 10 ? `tt_combined_${address}_${protocol}` : undefined}
-                // data-tooltip-offset={0}
-              >
-                {label}
-              </Type.Small>
-            )}
+            <AlertLabel alertLabel={label || ''} sx={{ fontSize: '10px' }} />
           </Flex>
           {/* <Tooltip id={`tt_combined_${address}_${protocol}`} clickable={false} place="bottom">
             <div>{label && <Type.Caption>{label}</Type.Caption>}</div>
