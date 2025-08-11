@@ -7,14 +7,21 @@ import ValueOrToken from 'components/@ui/ValueOrToken'
 import { renderEntry, renderSizeOpeningWithPrices } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { Box, Flex, Type } from 'theme/base'
 import { SxProps } from 'theme/types'
 import { PositionStatusEnum } from 'utils/config/enums'
+import { formatPrice } from 'utils/helpers/format'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 
 export default function HLPositionStats({ data }: { data: PositionData }) {
   const { getPricesData } = useGetUsdPrices()
   const prices = getPricesData({ protocol: data.protocol })
   const hasFundingFee = !!data?.funding
+  const symbol = getSymbolFromPair(data?.pair)
+  const markPrice = !!symbol && !!prices ? prices[symbol] : null
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
 
   return (
     <Box py={[2, 3]}>
@@ -31,7 +38,6 @@ export default function HLPositionStats({ data }: { data: PositionData }) {
         <Flex mt={3} alignItems="center" justifyContent="space-between" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
           <Flex alignItems="center" sx={{ gap: [2, 24], flexWrap: 'wrap' }}>
             <ItemInfo
-              sx={{ width: '150px' }}
               label={<Trans>Collateral:</Trans>}
               value={
                 <ValueOrToken
@@ -43,7 +49,7 @@ export default function HLPositionStats({ data }: { data: PositionData }) {
               }
             />
             <ItemInfo
-              label={<Trans>Funding:</Trans>}
+              label={<Trans>Fees & Funding:</Trans>}
               value={
                 hasFundingFee ? (
                   <ValueOrToken
@@ -64,6 +70,21 @@ export default function HLPositionStats({ data }: { data: PositionData }) {
                   '--'
                 )
               }
+            />
+            <ItemInfo
+              label={<Trans>Size:</Trans>}
+              value={
+                <ValueOrToken
+                  protocol={data.protocol}
+                  indexToken={data.collateral == null ? data.collateralToken : undefined}
+                  value={data.sizeInToken}
+                  valueInToken={data.sizeInToken}
+                />
+              }
+            />
+            <ItemInfo
+              label={<Trans>Mark Price:</Trans>}
+              value={!!markPrice ? formatPrice(markPrice, 2, 2, { hlDecimals }) : '--'}
             />
           </Flex>
         </Flex>

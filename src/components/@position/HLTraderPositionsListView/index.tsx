@@ -1,14 +1,25 @@
 import { Trans } from '@lingui/macro'
-import { CaretRight } from '@phosphor-icons/react'
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
+import styled from 'styled-components/macro'
 
-import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import { renderEntry, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
+import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import Loading from 'theme/Loading'
-import { Box, Flex, IconBox, Type } from 'theme/base'
-import { formatLeverage, formatNumber } from 'utils/helpers/format'
+import { Box, Flex, Type } from 'theme/base'
+import { ProtocolEnum } from 'utils/config/enums'
+
+import {
+  PairComponent,
+  renderEntryPrice,
+  renderLiquidPrice,
+  renderMarkPrice,
+  renderPnLWithRoi,
+  renderPositionCollateral,
+  renderPositionFunding,
+  renderSizeInToken,
+  renderValue,
+} from '../configs/hlPositionRenderProps'
 
 type Props = {
   isLoading: boolean
@@ -30,6 +41,9 @@ export default function HLTraderPositionListView({
   isOpening = true,
   totalPositionValue,
 }: Props) {
+  const { getPricesData } = useGetUsdPrices()
+  const prices = getPricesData({ protocol: ProtocolEnum.HYPERLIQUID })
+
   const wrapperRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     wrapperRef.current?.scrollTo(0, 0)
@@ -67,104 +81,55 @@ export default function HLTraderPositionListView({
         </Flex>
       )}
       {data?.map((position) => {
-        const weightPercent = totalPositionValue ? (position.size / totalPositionValue) * 100 : 0
-
         return (
           <Box role="button" sx={{ p: 2 }} key={position.id} onClick={() => onClickItem?.(position)}>
-            <Flex sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Box flex={['60%', '40%', '15%']} order={[0, 0, 0]}>
-                {renderEntry(position)}
-              </Box>
-              <Flex
-                flex={['40%', '30%', '10%']}
-                minWidth="105px"
-                sx={{ alignItems: 'center', gap: 1 }}
-                order={[0, 1, 1]}
-              >
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Weight:
-                </Type.Caption>
-                <Type.Caption>{!!weightPercent ? `${formatNumber(weightPercent, 2, 2)}%` : '--'}</Type.Caption>
-              </Flex>
-
-              <Box
-                display={['none', 'flex', 'flex']}
-                flex={['40%', '30%', '15%']}
-                sx={{ alignItems: 'center', gap: 1 }}
-                order={[5, 1, 1]}
-              >
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Funding:
-                </Type.Caption>
-                <Type.Caption>
-                  <SignedText
-                    value={position.funding * -1}
-                    minDigit={2}
-                    maxDigit={2}
-                    prefix="$"
-                    fontInherit
-                    isCompactNumber
-                  />
-                </Type.Caption>
-              </Box>
-
-              <Flex flex={['60%', '70%', '25%']} alignItems="center" my={12} order={[0, 1, 0]}>
-                {isOpening ? (
-                  <>
-                    <Box sx={{ width: [200, 250, 200], flexShrink: 0 }}>{renderSizeOpening(position)}</Box>
-                    {/* <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                      -
-                    </Type.Caption> */}
-                  </>
-                ) : (
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Size:
-                    </Box>
-                    ${formatNumber(position.size, 0, 0)}
-                    <Box as="span" color="neutral3" sx={{ mx: 1 }}>
-                      |
-                    </Box>
-                    {formatLeverage(position.marginMode, position.leverage)}
-                  </Type.Caption>
-                )}
-              </Flex>
-              <Box flex={['40%', '30%', '20%']} order={[1, 1, 1]}>
-                <Box display={['flex', 'none']} sx={{ alignItems: 'center', gap: 1 }} mb="4px">
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    Funding:
-                  </Type.Caption>
-                  <Type.Caption>
-                    <SignedText
-                      value={position.funding * -1}
-                      minDigit={2}
-                      maxDigit={2}
-                      prefix="$"
-                      fontInherit
-                      isCompactNumber
-                    />
-                  </Type.Caption>
-                </Box>
-                <Flex sx={{ alignItems: 'center', gap: 1 }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    PnL:
-                  </Type.Caption>
-                  <Type.Caption>
-                    <SignedText value={position.pnl} minDigit={1} maxDigit={1} prefix="$" fontInherit isCompactNumber />
-                  </Type.Caption>
-                  {!!position.roi && (
-                    <Type.Small color={position.roi < 0 ? 'red2' : 'green1'}>
-                      ({formatNumber(position.roi, 2, 2)}%)
-                    </Type.Small>
-                  )}
-                </Flex>
-              </Box>
-
-              {isOpening && hasAccountAddress && <IconBox icon={<CaretRight size={16} />} color="neutral3" />}
-            </Flex>
+            <RowWrapper>
+              <RowItem label={<Trans>Pair</Trans>} value={<PairComponent data={position} />} />
+              <RowItem label={<Trans>Size</Trans>} value={renderSizeInToken(position)} />
+              <RowItem label={<Trans>Value (Weight)</Trans>} value={renderValue(position, totalPositionValue)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem label={<Trans>Entry Price</Trans>} value={renderEntryPrice(position)} />
+              <RowItem label={<Trans>Mark Price</Trans>} value={renderMarkPrice(position, prices)} />
+              <RowItem label={<Trans>Liq. Price</Trans>} value={renderLiquidPrice(position)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem
+                label={<Trans>Collateral</Trans>}
+                value={renderPositionCollateral({ item: position, isCompactNumber: true })}
+              />
+              <RowItem
+                label={<Trans>Funding</Trans>}
+                value={renderPositionFunding({ item: position, isCompactNumber: true })}
+              />
+              <RowItem
+                label={<Trans>PnL (ROI)</Trans>}
+                value={renderPnLWithRoi({
+                  item: position,
+                  isCompactNumber: true,
+                  sx: { justifyContent: 'flex-start' },
+                })}
+              />
+            </RowWrapper>
           </Box>
         )
       })}
     </Flex>
+  )
+}
+
+const RowWrapper = styled(Box)`
+  display: grid;
+  grid-template-columns: 2.8fr 1.8fr 2.4fr;
+  gap: 4px;
+`
+function RowItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Box>
+      <Type.Small color="neutral3" display="block">
+        {label}
+      </Type.Small>
+      <Type.Small color="neutral1">{value}</Type.Small>
+    </Box>
   )
 }

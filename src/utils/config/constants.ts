@@ -148,6 +148,8 @@ export const WALLET_NAME_MAX_LENGTH = 32
 
 export const RISK_LEVERAGE = 20
 
+export const HYPERLIQUID_MAX_DECIMALS = 6
+
 export const MAX_PAGE_LIMIT = 500
 export const MAX_LIST_DATA_LIMIT = 10_000
 

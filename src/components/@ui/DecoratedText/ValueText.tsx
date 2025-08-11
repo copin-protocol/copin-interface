@@ -130,6 +130,7 @@ export const PriceTokenText = ({
   sx,
   suffixSx,
   prefixSx,
+  hlDecimals,
 }: {
   value: number | undefined
   maxDigit?: number
@@ -139,6 +140,7 @@ export const PriceTokenText = ({
   sx?: any
   suffixSx?: any
   prefixSx?: any
+  hlDecimals?: number
 }) => {
   if (value == null) return <>--</>
   const { formattedNumber, integerPart, zeroPart, decimalPart } = formatTokenPrices({
@@ -175,7 +177,7 @@ export const PriceTokenText = ({
     </>
   ) : (
     <ValueText
-      value={formatPrice(formattedNumber, maxDigit, minDigit)}
+      value={formatPrice(formattedNumber, maxDigit, minDigit, { hlDecimals })}
       suffix={suffix}
       prefix={prefix}
       sx={sx}

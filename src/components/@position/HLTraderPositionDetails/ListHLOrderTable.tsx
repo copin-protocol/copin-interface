@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import { HlOrderData } from 'entities/hyperliquid'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
@@ -133,10 +134,14 @@ export const renderOrderSizeInToken = (item: HlOrderData) => (
   </Type.Caption>
 )
 
-export const renderOrderPrice = (item: HlOrderData) => (
-  <Type.Caption color="neutral1">
-    {item.priceNumber && !item.isPositionTpsl
-      ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
-      : 'Market'}
-  </Type.Caption>
-)
+export const renderOrderPrice = (item: HlOrderData) => {
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
+  return (
+    <Type.Caption color="neutral1">
+      {item.priceNumber && !item.isPositionTpsl
+        ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2, hlDecimals })
+        : 'Market'}
+    </Type.Caption>
+  )
+}

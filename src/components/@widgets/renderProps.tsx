@@ -16,6 +16,7 @@ import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
@@ -45,11 +46,12 @@ function EntryComponent({
   textSx?: TextProps
   showMarketIcon?: boolean
 }) {
-  const { getSymbolByIndexToken } = useMarketsConfig()
+  const { getSymbolByIndexToken, getHlSzDecimalsByPair } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
   const symbol = data.pair
     ? getSymbolFromPair(data.pair)
     : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
 
   return (
     <Flex
@@ -72,7 +74,7 @@ function EntryComponent({
       </Type.Caption>
       <VerticalDivider />
       <Type.Caption sx={{ ...textSx, flexShrink: 0 } as any} data-key="averagePrice">
-        {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
+        {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
       </Type.Caption>
     </Flex>
   )
@@ -82,11 +84,12 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
   return <CopyEntryComponent data={data} textSx={textSx} />
 }
 function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefined; textSx?: TextProps }) {
-  const { getSymbolByIndexToken } = useMarketsConfig()
+  const { getSymbolByIndexToken, getHlSzDecimalsByPair } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
   const symbol = data.pair
     ? getSymbolFromPair(data.pair)
     : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
   return (
     <Flex
       sx={{
@@ -101,7 +104,9 @@ function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefin
       <VerticalDivider />
       <Type.Caption>{symbol}</Type.Caption>
       <VerticalDivider />
-      <Type.Caption {...textSx}>{PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
+      <Type.Caption {...textSx}>
+        {PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2, hlDecimals })}
+      </Type.Caption>
     </Flex>
   )
 }
@@ -133,6 +138,8 @@ export function renderSizeShorten(data: PositionData | undefined) {
 export function renderSize(data: PositionData | undefined, hasLiquidate?: boolean, dynamicWidth?: boolean) {
   if (!data) return <></>
   const closedPrice = calcClosedPrice(data)
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
       <Flex minWidth={190} sx={{ gap: '2px', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
@@ -168,7 +175,7 @@ export function renderSize(data: PositionData | undefined, hasLiquidate?: boolea
             style={{ flexShrink: 0 }}
           />
           <Type.Caption flexShrink={0}>
-            {closedPrice ? PriceTokenText({ value: closedPrice, maxDigit: 2, minDigit: 2 }) : '--'}
+            {closedPrice ? PriceTokenText({ value: closedPrice, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
           </Type.Caption>
         </Flex>
       </Flex>
@@ -201,7 +208,7 @@ function SizeOpening(props: Omit<SizeOpeningComponentProps, 'prices'>) {
   return <SizeOpeningComponent {...props} prices={prices} />
 }
 function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpeningComponentProps) {
-  const { getSymbolByIndexToken } = useMarketsConfig()
+  const { getSymbolByIndexToken, getHlSzDecimalsByPair } = useMarketsConfig()
   if (!data || !prices) return <></>
   // Todo: Check calc for value in rewards
   const symbol = data.pair
@@ -217,6 +224,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
   const { sx, ..._textProps } = textProps ?? {}
 
   const sizeNumber = data.maxSizeNumber ?? data.size
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
@@ -267,7 +275,7 @@ function SizeOpeningComponent({ data, prices, textProps, dynamicWidth }: SizeOpe
             }}
           >
             {liquidatePrice && liquidatePrice > 0
-              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 })
+              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2, hlDecimals })
               : '--'}
           </Type.Caption>
         </Flex>

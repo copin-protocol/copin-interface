@@ -460,3 +460,32 @@ export interface HlAccountVaultData {
   vaultAddress: string
   equity: string
 }
+
+export interface HlPerpMetaData {
+  universe: HlPerpUniverseData[]
+  marginTables: HlPerpMarginTableData[]
+}
+
+export interface HlPerpUniverseData {
+  name: string
+  szDecimals: number
+  maxLeverage: number
+  marginTableId: number
+  onlyIsolated?: boolean
+  isDelisted?: boolean
+}
+
+export interface HlPerpMarginTableData extends Array<number | HlPerpMarginTable> {
+  0: number // marginTableId
+  1: HlPerpMarginTable
+}
+
+export interface HlPerpMarginTable {
+  description: string
+  marginTiers: HlPerpMarginTier[]
+}
+
+export interface HlPerpMarginTier {
+  lowerBound: string // Amount as string to preserve precision
+  maxLeverage: number
+}

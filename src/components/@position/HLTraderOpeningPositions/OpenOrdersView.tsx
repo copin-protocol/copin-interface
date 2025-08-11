@@ -89,14 +89,14 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
   }, [currentSort, filteredData])
 
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: sortedData })
-  const dataRef = useRef(sortedData)
-  useEffect(() => {
-    if (dataRef.current !== sortedData) {
-      setCurrentPage(1)
-      onPageChange(1)
-      dataRef.current = sortedData
-    }
-  }, [sortedData, onPageChange])
+  // const dataRef = useRef(sortedData)
+  // useEffect(() => {
+  //   if (dataRef.current !== sortedData) {
+  //     setCurrentPage(1)
+  //     onPageChange(1)
+  //     dataRef.current = sortedData
+  //   }
+  // }, [sortedData, onPageChange])
 
   const handleChangePage = useCallback(
     (page: number) => {
@@ -109,7 +109,7 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
   const dataLength = filteredData?.length ?? 0
 
   const scrollDeps = useMemo(() => [currentPage, currentLimit], [currentLimit, currentPage])
-  const { lg, xl, sm } = useResponsive()
+  const { lg, xl, sm, md } = useResponsive()
 
   const [width, setWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -150,7 +150,7 @@ const OpenOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, isDrawer
       ) : null}
       {totalDataLength > 0 && (
         <>
-          {sm ? (
+          {lg ? (
             <>
               <Box ref={containerRef} flex="1 0 0" overflowX="auto" overflowY="hidden">
                 <Table

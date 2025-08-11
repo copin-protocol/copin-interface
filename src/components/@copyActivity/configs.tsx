@@ -10,6 +10,7 @@ import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
@@ -68,39 +69,43 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
   sourceAction: (item) => (
     <Type.Caption color="neutral1">{item.type ? ORDER_TYPE_TRANS[item.type] : '--'}</Type.Caption>
   ),
-  sourceDetails: (item) => (
-    <Flex
-      sx={{
-        gap: 1,
-        alignItems: 'center',
-        color: 'neutral1',
-      }}
-    >
-      <Type.Caption width={8} color={item.isLong ? 'green1' : 'red2'}>
-        {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>
-        {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2 }) : '--'}
-      </Type.Caption>
-      {item.sourceTxHash && (
-        <>
-          <Type.Caption color="neutral3">-</Type.Caption>
-          <Type.Caption>
-            <Box
-              as="a"
-              href={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.sourceTxHash}`}
-              target="_blank"
-            >
-              <Trans>TxHash</Trans>
-            </Box>
-          </Type.Caption>
-        </>
-      )}
-    </Flex>
-  ),
+  sourceDetails: (item) => {
+    const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+    const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
+    return (
+      <Flex
+        sx={{
+          gap: 1,
+          alignItems: 'center',
+          color: 'neutral1',
+        }}
+      >
+        <Type.Caption width={8} color={item.isLong ? 'green1' : 'red2'}>
+          {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
+        </Type.Caption>
+        <VerticalDivider />
+        <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
+        <VerticalDivider />
+        <Type.Caption>
+          {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
+        </Type.Caption>
+        {item.sourceTxHash && (
+          <>
+            <Type.Caption color="neutral3">-</Type.Caption>
+            <Type.Caption>
+              <Box
+                as="a"
+                href={`${PROTOCOL_PROVIDER[item.protocol]?.explorerUrl}/tx/${item.sourceTxHash}`}
+                target="_blank"
+              >
+                <Trans>TxHash</Trans>
+              </Box>
+            </Type.Caption>
+          </>
+        )}
+      </Flex>
+    )
+  },
   targetWallet: (item, _, externalSource) => {
     let walletName = '--'
     if (item.copyWalletName) {
@@ -131,6 +136,8 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         : item.errorMsg
 
     const isLong = (item.isLong ? 1 : -1) * (item.isReverse ? -1 : 1) === 1
+    const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+    const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
 
     return item.isSuccess || item.isProcessing ? (
       <Flex
@@ -147,7 +154,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
         <VerticalDivider />
         <Type.Caption>
-          {item.price ? PriceTokenText({ value: item.price, maxDigit: 2, minDigit: 2 }) : '--'}
+          {item.price ? PriceTokenText({ value: item.price, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
         </Type.Caption>{' '}
         <Type.Caption color="neutral3">
           (<Trans>slippage</Trans>{' '}

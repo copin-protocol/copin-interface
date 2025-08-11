@@ -80,14 +80,14 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: filteredData })
-  const dataRef = useRef(filteredData)
-  useEffect(() => {
-    if (dataRef.current !== filteredData) {
-      setCurrentPage(1)
-      onPageChange(1)
-      dataRef.current = filteredData
-    }
-  }, [filteredData, onPageChange])
+  // const dataRef = useRef(filteredData)
+  // useEffect(() => {
+  //   if (dataRef.current !== filteredData) {
+  //     setCurrentPage(1)
+  //     onPageChange(1)
+  //     dataRef.current = filteredData
+  //   }
+  // }, [filteredData, onPageChange])
 
   const handleChangePage = useCallback(
     (page: number) => {
@@ -138,7 +138,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
       )}
       {totalDataLength > 0 && (
         <>
-          {sm ? (
+          {lg ? (
             <>
               <Box ref={containerRef} flex="1 0 0" overflow="hidden" height="100%">
                 <Table

@@ -5,6 +5,7 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { HlTwapOrderData } from 'entities/hyperliquid'
 import useGlobalStore from 'hooks/store/useGlobalStore'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
@@ -62,34 +63,50 @@ const pairColumn: ColumnData<HlTwapOrderData> = {
   dataIndex: 'pair',
   key: 'pair',
   style: { minWidth: '75px' },
-  render: (item) => <Type.Caption color="neutral1">{getSymbolFromPair(item.pair)}</Type.Caption>,
+  render: (item) => renderPair(item),
 }
+export const renderPair = (item: HlTwapOrderData) => {
+  const symbol = getSymbolFromPair(item.pair)
+  return <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
+}
+
 const directionColumn: ColumnData<HlTwapOrderData> = {
   title: 'Direction',
   dataIndex: 'isLong',
   key: 'isLong',
   style: { minWidth: '90px' },
-  render: (item) => <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>,
+  render: (item) => renderDirection(item),
 }
+export const renderDirection = (item: HlTwapOrderData) => {
+  return <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>
+}
+
 const valueColumn: ColumnData<HlTwapOrderData> = {
   title: 'Value',
   dataIndex: 'sizeNumber',
   key: 'sizeNumber',
   style: { minWidth: '80px', textAlign: 'right' },
-  render: (item, _, externalSource: any) => (
+  render: (item, _, externalSource: any) => renderValue(item),
+}
+export const renderValue = (item: HlTwapOrderData, externalSource?: any) => {
+  return (
     <Type.Caption color="neutral1">
       {item.sizeNumber
         ? `$${externalSource?.isExpanded ? formatNumber(item.sizeNumber, 0, 0) : compactNumber(item.sizeNumber, 2)}`
         : '--'}
     </Type.Caption>
-  ),
+  )
 }
+
 const sizeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Size',
   dataIndex: 'sizeInTokenNumber',
   key: 'sizeInTokenNumber',
   style: { minWidth: '80px', textAlign: 'right' },
-  render: (item, _, externalSource: any) => (
+  render: (item, _, externalSource: any) => renderSize(item, externalSource),
+}
+export const renderSize = (item: HlTwapOrderData, externalSource?: any) => {
+  return (
     <Type.Caption color="neutral1">
       {item.sizeInTokenNumber
         ? `${
@@ -99,25 +116,36 @@ const sizeColumn: ColumnData<HlTwapOrderData> = {
           }`
         : '--'}
     </Type.Caption>
-  ),
+  )
 }
+
 const priceColumn: ColumnData<HlTwapOrderData> = {
   title: 'Price',
   dataIndex: 'priceNumber',
   key: 'priceNumber',
   style: { minWidth: '80px', textAlign: 'right' },
-  render: (item) => (
-    <Type.Caption color="neutral1">
-      {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : '--'}
-    </Type.Caption>
-  ),
+  render: (item) => renderPrice(item),
 }
+export const renderPrice = (item: HlTwapOrderData) => {
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
+
+  return (
+    <Type.Caption color="neutral1">
+      {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
+    </Type.Caption>
+  )
+}
+
 const feeColumn: ColumnData<HlTwapOrderData> = {
   title: 'Fee',
   dataIndex: 'fee',
   key: 'fee',
   style: { minWidth: '100px', textAlign: 'right' },
-  render: (item, _, externalSource: any) => (
+  render: (item, _, externalSource: any) => renderFees(item, externalSource),
+}
+export const renderFees = (item: HlTwapOrderData, externalSource?: any) => {
+  return (
     <>
       {!!item.fee ? (
         <SignedText
@@ -132,14 +160,18 @@ const feeColumn: ColumnData<HlTwapOrderData> = {
         '--'
       )}
     </>
-  ),
+  )
 }
+
 const pnlColumn: ColumnData<HlTwapOrderData> = {
   title: 'PnL',
   dataIndex: 'pnl',
   key: 'pnl',
   style: { minWidth: '85px', textAlign: 'right' },
-  render: (item, _, externalSource: any) => (
+  render: (item, _, externalSource: any) => renderPnl(item, externalSource),
+}
+export const renderPnl = (item: HlTwapOrderData, externalSource?: any) => {
+  return (
     <Type.Caption color="neutral3">
       {!!item.pnl ? (
         <SignedText
@@ -153,21 +185,29 @@ const pnlColumn: ColumnData<HlTwapOrderData> = {
         '--'
       )}
     </Type.Caption>
-  ),
+  )
 }
+
 const twapIdColumn: ColumnData<HlTwapOrderData> = {
   title: 'TWAP ID',
   dataIndex: 'twapOrderId',
   key: 'twapOrderId',
   style: { minWidth: '90px', textAlign: 'right', pr: 12 },
-  render: (item) => <Type.Caption color="neutral1">#{item.twapOrderId}</Type.Caption>,
+  render: (item) => renderTwapId(item),
 }
+export const renderTwapId = (item: HlTwapOrderData) => {
+  return <Type.Caption color="neutral1">#{item.twapOrderId}</Type.Caption>
+}
+
 const startPositionColumn: ColumnData<HlTwapOrderData> = {
   title: 'Start Position',
   dataIndex: 'startPosition',
   key: 'startPosition',
   style: { minWidth: '150px', textAlign: 'right' },
-  render: (item) => <Type.Caption color="neutral1">{item.startPosition}</Type.Caption>,
+  render: (item) => renderStartPosition(item),
+}
+export const renderStartPosition = (item: HlTwapOrderData) => {
+  return <Type.Caption color="neutral1">{item.startPosition}</Type.Caption>
 }
 
 // Main columns
@@ -176,9 +216,9 @@ export const fullTwapColumns: ColumnData<HlTwapOrderData>[] = [
   { ...pairColumn, filterComponent: <OrderTwapPairFilterIcon /> },
   { ...directionColumn, filterComponent: <HLTwapDirectionFilterIcon /> },
   { ...startPositionColumn },
+  { ...priceColumn },
   { ...sizeColumn },
   { ...valueColumn },
-  { ...priceColumn },
   { ...feeColumn },
   { ...pnlColumn },
   twapIdColumn,
@@ -188,8 +228,8 @@ export const twapColumns: ColumnData<HlTwapOrderData>[] = [
   shortTimeColumn,
   pairColumn,
   directionColumn,
-  valueColumn,
   priceColumn,
+  valueColumn,
   pnlColumn,
   twapIdColumn,
 ]
@@ -198,9 +238,9 @@ export const drawerTwapColumns: ColumnData<HlTwapOrderData>[] = [
   timeColumn,
   pairColumn,
   directionColumn,
+  priceColumn,
   sizeColumn,
   valueColumn,
-  priceColumn,
   feeColumn,
   pnlColumn,
   twapIdColumn,

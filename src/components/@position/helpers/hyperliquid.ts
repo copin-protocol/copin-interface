@@ -31,7 +31,7 @@ export function parseHLPositionData({ account, data }: { account: string; data: 
       protocol: ProtocolEnum.HYPERLIQUID,
       isLong: sizeInToken >= 0,
       pair: convertPairHL(e.position.coin),
-      marginMode: e.position.leverage.value > 0 ? MarginModeEnum.ISOLATED : MarginModeEnum.CROSS,
+      marginMode: e.position.leverage.type === 'cross' ? MarginModeEnum.CROSS : MarginModeEnum.ISOLATED,
       leverage: e.position.leverage.value,
       collateral: Number(e.position.marginUsed),
       averagePrice: Number(e.position.entryPx),

@@ -154,7 +154,7 @@ const HistoricalOrdersWrapper = ({ data, isLoading, isExpanded, toggleExpand, is
       ) : null}
       {totalDataLength > 0 && (
         <>
-          {sm ? (
+          {lg ? (
             <>
               <Box ref={containerRef} flex="1 0 0" overflowX="auto" overflowY="hidden" height="100%">
                 <Table

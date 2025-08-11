@@ -8,7 +8,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear'
 import GraphemeSplitter from 'grapheme-splitter'
 
 import { ImageData } from 'entities/image.d'
-import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
+import { DATE_FORMAT, DAYJS_FULL_DATE_FORMAT, HYPERLIQUID_MAX_DECIMALS } from 'utils/config/constants'
 import { isAddress } from 'utils/web3/contracts'
 
 import { MarginModeEnum, RewardSymbolEnum, SystemStatusTypeEnum } from '../config/enums'
@@ -97,13 +97,24 @@ export function formatNumber(num?: number | string, maxDigit = 2, minDigit?: num
   return `${num.toLocaleString('en-US', { minimumFractionDigits: minDigit, maximumFractionDigits: maxDigit })}`
 }
 
-export function formatPrice(num?: number | string, maxDigit = 2, minDigit = 2) {
+export function formatPrice(
+  num?: number | string,
+  maxDigit = 2,
+  minDigit = 2,
+  { hlDecimals }: { hlDecimals?: number } = {}
+) {
   if (num == null) return '--'
   if (typeof num === 'string') num = Number(num)
-  if (Math.abs(num) < 100) {
-    maxDigit = 4
-    minDigit = 4
+  if (hlDecimals != null) {
+    const maxDecimals = HYPERLIQUID_MAX_DECIMALS - hlDecimals
+    return hlRoundPrice(num, maxDecimals)
+  } else {
+    if (Math.abs(num) < 100) {
+      maxDigit = 4
+      minDigit = 4
+    }
   }
+
   const { integerPart, zeroPart, decimalPart } = formatTokenPrices({
     value: num,
   })
@@ -114,6 +125,25 @@ export function formatPrice(num?: number | string, maxDigit = 2, minDigit = 2) {
     )}`
   }
   return formatNumber(num, maxDigit, minDigit)
+}
+
+export function hlRoundPrice(price: number, maxDecimals: number, significantDigits = 5): string {
+  if (price === 0) {
+    return '0'
+  }
+
+  const orderOfMagnitude = Math.floor(Math.log10(Math.abs(price)))
+
+  // Calculate the number of decimal places required to maintain 5 significant digits
+  const neededDecimalPlaces = significantDigits - orderOfMagnitude - 1
+
+  // Determine actual decimal places, considering the maximum limit
+  const actualDecimalPlaces = Math.min(Math.max(neededDecimalPlaces, 0), maxDecimals)
+
+  // Round the number to the appropriate number of decimal places
+  const roundedValue = Number(price.toFixed(actualDecimalPlaces))
+
+  return formatNumber(roundedValue, actualDecimalPlaces, actualDecimalPlaces)
 }
 
 export const formatLeverage = (marginMode?: MarginModeEnum, leverage?: number) => {

@@ -1,16 +1,24 @@
 import { Trans } from '@lingui/macro'
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
+import styled from 'styled-components/macro'
 
-import { SignedText } from 'components/@ui/DecoratedText/SignedText'
-import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { HlTwapOrderData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
+
+import {
+  renderDirection,
+  renderFees,
+  renderPair,
+  renderPnl,
+  renderPrice,
+  renderSize,
+  renderTwapBlockTime,
+  renderTwapId,
+  renderValue,
+} from '../configs/hlTwapRenderProps'
 
 type Props = {
   isLoading: boolean
@@ -57,66 +65,42 @@ export default function HLOrderTwapListView({ data, isLoading, scrollDep }: Prop
         </Flex>
       )}
       {data?.map((item, index) => {
-        const symbol = getSymbolFromPair(item.pair)
         return (
-          <Box
-            sx={{ p: [2, 3] }}
-            key={index + symbol + item.orderId + item.twapOrderId + item.twapFillId + item.timestamp}
-          >
-            <Flex sx={{ alignItems: 'center', gap: '1ch', flexWrap: 'wrap' }}>
-              <Type.Caption flex={3} color="neutral3">
-                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} />
-              </Type.Caption>
-              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Flex flex={2} sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <Type.Caption color={item.isLong ? 'green1' : 'red2'}>{item.direction}</Type.Caption>
-                  <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
-                </Flex>
-                <Type.Caption flex={1} color="neutral3" textAlign="right">
-                  {!!item.twapOrderId ? `#${item.twapOrderId}` : '--'}
-                </Type.Caption>
-              </Flex>
-            </Flex>
-            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch' }}>
-              <Flex flex={3} alignItems="center">
-                <Type.Caption color="neutral1">
-                  <Box as="span" color="neutral3" mr="1ch">
-                    Size:
-                  </Box>
-                  {formatNumber(item.sizeInTokenNumber)}
-                </Type.Caption>
-              </Flex>
-              <Flex flex={5} alignItems="center">
-                <Type.Caption color="neutral1">
-                  <Box as="span" color="neutral3" mr="1ch">
-                    Value:
-                  </Box>
-                  ${compactNumber(item.sizeNumber, 2)}
-                </Type.Caption>
-              </Flex>
-            </Flex>
-            <Flex mt={1} sx={{ width: '100%', alignItems: 'center', gap: '1ch', justifyContent: 'space-between' }}>
-              <Flex flex={3} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Fees:
-                </Type.Caption>
-                <Type.Caption color="neutral3">
-                  {!!item.fee ? <SignedText value={item.fee * -1} maxDigit={2} minDigit={2} prefix="$" /> : '--'}
-                </Type.Caption>
-              </Flex>
-
-              <Flex flex={5} sx={{ alignItems: 'center', gap: '1ch' }}>
-                <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                  Price:
-                </Type.Caption>
-                <Type.Caption color="neutral1">
-                  {item.priceNumber ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 }) : 'N/A'}
-                </Type.Caption>
-              </Flex>
-            </Flex>
+          <Box sx={{ p: [2, 3] }} key={item.timestamp + item.pair + item.orderId + index}>
+            <RowWrapper>
+              <RowItem label={<Trans>Pair</Trans>} value={renderPair(item)} />
+              <RowItem label={<Trans>Direction</Trans>} value={renderDirection(item)} />
+              <RowItem label={<Trans>Price</Trans>} value={renderPrice(item)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem label={<Trans>Time</Trans>} value={renderTwapBlockTime(item)} />
+              <RowItem label={<Trans>Size</Trans>} value={renderSize(item)} />
+              <RowItem label={<Trans>Value</Trans>} value={renderValue(item)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem label={<Trans>TWAP ID</Trans>} value={renderTwapId(item)} />
+              <RowItem label={<Trans>Fees</Trans>} value={renderFees(item)} />
+              <RowItem label={<Trans>PnL</Trans>} value={renderPnl(item)} />
+            </RowWrapper>
           </Box>
         )
       })}
     </Flex>
+  )
+}
+
+const RowWrapper = styled(Box)`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+`
+function RowItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Box>
+      <Type.Small color="neutral3" display="block">
+        {label}
+      </Type.Small>
+      <Type.Small color="neutral1">{value}</Type.Small>
+    </Box>
   )
 }

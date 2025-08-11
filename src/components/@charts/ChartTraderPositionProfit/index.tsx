@@ -6,6 +6,7 @@ import { AmountText, PercentText } from 'components/@ui/DecoratedText/ValueText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Tooltip from 'theme/Tooltip'
@@ -53,6 +54,8 @@ export default function ChartProfit({
     return isOpening ? calcOpeningPnL(data, prices[symbol]) : pnl
   }, [crossMove?.pnl, data, symbol, prices, realisedPnl, isOpening, pnlWithFeeEnabled])
   const markPrice = !!symbol && !!prices ? prices[symbol] : null
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(data?.pair)
 
   const latestROI = useMemo(() => {
     if (!data || !symbol) return 0
@@ -173,7 +176,7 @@ export default function ChartProfit({
               <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
                 Mark Price:{' '}
                 <Box color="neutral1" as="span">
-                  {formatPrice(markPrice)}
+                  {formatPrice(markPrice, 2, 2, { hlDecimals })}
                 </Box>
               </Type.Body>
             ) : null}

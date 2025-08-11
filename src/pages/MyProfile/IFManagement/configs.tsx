@@ -3,11 +3,11 @@ import React from 'react'
 import {
   ExternalSourceHlPosition,
   collateralColumn,
-  entryColumn,
+  entryPriceColumn,
   fundingColumn,
-  pnlColumn,
+  pnlWithRoiColumn,
   roiColumn,
-  sizeOpeningColumn,
+  valueColumn,
 } from 'components/@position/configs/hlPositionRenderProps'
 import { PositionData } from 'entities/trader'
 import { Button } from 'theme/Buttons'
@@ -46,11 +46,11 @@ export const actionColumn: ColumnData<PositionData, ExternalSourceHlPosition> = 
 }
 
 export const hlOpeningColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
-  { ...entryColumn, style: { minWidth: 150 } },
-  { ...sizeOpeningColumn, style: { minWidth: 200 } },
+  { ...entryPriceColumn, style: { minWidth: 150 } },
+  { ...valueColumn, style: { minWidth: 200 } },
   collateralColumn,
   fundingColumn,
   roiColumn,
-  { ...pnlColumn, style: { minWidth: 100, textAlign: 'right' } },
+  { ...pnlWithRoiColumn, style: { minWidth: 100, textAlign: 'right' } },
   { ...actionColumn, style: { minWidth: 80, textAlign: 'right' } },
 ]

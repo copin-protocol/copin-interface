@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { HlOrderData } from 'entities/hyperliquid'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { themeColors } from 'theme/colors'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
 
@@ -12,6 +13,7 @@ interface Props {
 }
 export function usePlotOrderMarker({ chart, orders }: Props) {
   const orderMarker = React.useRef<IOrderLineAdapter[]>([])
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
 
   React.useEffect(() => {
     let markers: IOrderLineAdapter[] = []
@@ -24,6 +26,7 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
 
         markers = orders
           .map((order) => {
+            const hlDecimals = getHlSzDecimalsByPair?.(order.pair)
             const color = order.isLong
               ? order.reduceOnly
                 ? themeColors.red2
@@ -38,7 +41,10 @@ export function usePlotOrderMarker({ chart, orders }: Props) {
               ?.setQuantity(order.sizeNumber ? `$${formatNumber(order.sizeNumber, 0)}` : 'N/A')
               ?.setTooltip(
                 `${order.orderType}${order.triggerCondition ? ` | ${order.triggerCondition}` : ''} | ${formatPrice(
-                  order.priceNumber
+                  order.priceNumber,
+                  2,
+                  2,
+                  { hlDecimals }
                 )} | ${order.sizeNumber ? `$${formatNumber(order.sizeNumber, 0)}` : 'N/A'}`
               )
               ?.setLineStyle(2)

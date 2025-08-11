@@ -6,6 +6,7 @@ import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { OrderData } from 'entities/trader.d'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
@@ -220,15 +221,20 @@ export const renderOrderSize = (item: OrderData, defaultToken?: string) =>
     </Flex>
   )
 
-export const renderOrderPrice = (item: OrderData) => (
-  <Type.Caption color="neutral1" width="100%" textAlign="right">
-    {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
-      <>--</>
-    ) : (
-      <PriceTokenText value={item.priceNumber} maxDigit={2} minDigit={2} />
-    )}
-  </Type.Caption>
-)
+export const renderOrderPrice = (item: OrderData) => {
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
+
+  return (
+    <Type.Caption color="neutral1" width="100%" textAlign="right">
+      {item.type === OrderTypeEnum.MARGIN_TRANSFERRED ? (
+        <>--</>
+      ) : (
+        <PriceTokenText value={item.priceNumber} maxDigit={2} minDigit={2} hlDecimals={hlDecimals} />
+      )}
+    </Type.Caption>
+  )
+}
 
 export const renderOrderFee = (item: OrderData) => {
   const isFeeWithFunding = FEE_WITH_FUNDING_PROTOCOLS.includes(item.protocol)

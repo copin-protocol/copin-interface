@@ -5,10 +5,11 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { HlAccountSpotData } from 'entities/hyperliquid'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { PaginationWithSelect } from 'theme/Pagination'
 import { Box, Flex, Type } from 'theme/base'
 import { formatNumber, formatPrice } from 'utils/helpers/format'
-import { getPaginationDataFromList } from 'utils/helpers/transform'
+import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
 
 export default function HLSpotHolding({ hlAccountSpotData }: { hlAccountSpotData?: HlAccountSpotData[] }) {
   const sortedData = useMemo(
@@ -29,12 +30,18 @@ export default function HLSpotHolding({ hlAccountSpotData }: { hlAccountSpotData
       <Flex flex={1} mt="6px" flexDirection="column" overflow={xl ? 'auto' : 'hidden'}>
         {!paginatedData?.data?.length && <NoDataFound />}
         {paginatedData?.data?.map((item) => {
+          const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+          const hlDecimals = getHlSzDecimalsByPair?.(getPairFromSymbol(item.coin))
+
           return (
             <Box key={item.coin} px={2}>
               <Flex flexWrap="wrap" sx={{ gap: 1 }}>
                 <Property label="Asset" value={<Type.Caption>{item.coin}</Type.Caption>} />
                 <Property label="Total Balance" value={<Type.Caption>{formatNumber(item.total, 0)}</Type.Caption>} />
-                <Property label="Price" value={<Type.Caption>{formatPrice(item.price)}</Type.Caption>} />
+                <Property
+                  label="Price"
+                  value={<Type.Caption>{formatPrice(item.price, 2, 2, { hlDecimals })}</Type.Caption>}
+                />
               </Flex>
               <Flex mt={1} flexWrap="wrap" sx={{ gap: 1 }}>
                 <Property

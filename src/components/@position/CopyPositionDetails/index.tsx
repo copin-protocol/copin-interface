@@ -20,6 +20,7 @@ import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import Loading from 'theme/Loading'
@@ -429,6 +430,8 @@ enum TabKeyEnum {
 
 function MarkPriceItem({ copyPosition, isOpening }: { copyPosition: CopyPositionData; isOpening: boolean }) {
   const { markPrice } = useMarkPrice({ copyPosition })
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(copyPosition.pair)
 
   return (
     <>
@@ -436,7 +439,7 @@ function MarkPriceItem({ copyPosition, isOpening }: { copyPosition: CopyPosition
         <Type.Body sx={{ position: 'absolute', right: 0, top: [-4, 0] }} color="neutral3">
           Mark Price:{' '}
           <Box color="neutral1" as="span">
-            {formatPrice(markPrice)}
+            {formatPrice(markPrice, 2, 2, { hlDecimals })}
           </Box>
         </Type.Body>
       ) : null}

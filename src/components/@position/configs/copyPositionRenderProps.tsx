@@ -13,6 +13,7 @@ import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -68,6 +69,9 @@ export const renderCopyTitle = (data: CopyPositionData) => (
 )
 
 export function renderEntry(data: CopyPositionData) {
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
+
   return (
     <Flex sx={{ gap: 2, alignItems: 'center', color: 'neutral1' }}>
       <Type.Caption width={8} color={data.isLong ? 'green1' : 'red2'}>
@@ -78,7 +82,7 @@ export function renderEntry(data: CopyPositionData) {
         <SymbolComponent pair={data.pair} indexToken={data.indexToken} protocol={data.protocol} />
       </Type.Caption>
       <VerticalDivider />
-      <Type.Caption>{formatPrice(data.entryPrice)}</Type.Caption>
+      <Type.Caption>{formatPrice(data.entryPrice, 2, 2, { hlDecimals })}</Type.Caption>
     </Flex>
   )
 }
@@ -101,6 +105,8 @@ function OpeningSizeComponent({ data, dynamicWidth }: { data: CopyPositionData |
   const marketPrice: number = symbol && _prices[symbol] != null ? (_prices[symbol] as number) : 0
   const liquidatePrice = calcCopyLiquidatePrice(data)
   const riskPercent = calcRiskPercent(!!data.isLong, data.entryPrice, marketPrice, liquidatePrice ?? 0)
+  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
 
   return (
     <Flex width="100%" sx={{ flexDirection: 'column', alignItems: 'center', color: 'neutral1' }}>
@@ -133,7 +139,7 @@ function OpeningSizeComponent({ data, dynamicWidth }: { data: CopyPositionData |
             }}
           >
             {liquidatePrice && liquidatePrice > 0
-              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2 })
+              ? PriceTokenText({ value: liquidatePrice, maxDigit: 2, minDigit: 2, hlDecimals })
               : '--'}
           </Type.Caption>
         </Flex>

@@ -1,15 +1,22 @@
 import { Trans } from '@lingui/macro'
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
+import styled from 'styled-components/macro'
 
-import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import {
+  renderDirection,
+  renderOpenTime,
+  renderPrice,
+  renderReduceOnly,
+  renderSize,
+  renderSizeInToken,
+  renderSymbol,
+  renderTriggerCondition,
+  renderType,
+} from 'components/@position/configs/hlOrderRenderProps'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { HlOrderData } from 'entities/hyperliquid'
 import Loading from 'theme/Loading'
 import { Box, Flex, Type } from 'theme/base'
-import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
-import { compactNumber, formatNumber } from 'utils/helpers/format'
-import { getSymbolFromPair } from 'utils/helpers/transform'
 
 type Props = {
   isLoading: boolean
@@ -55,68 +62,43 @@ export default function HLOpenOrderListView({ data, isLoading, scrollDep }: Prop
           </Box>
         </Flex>
       )}
-      {data?.map((item) => {
-        const symbol = getSymbolFromPair(item.pair)
+      {data?.map((item, index) => {
         return (
-          <Box sx={{ p: [2, 3] }} key={item.timestamp + item.orderId}>
-            <Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-              <Type.Caption flex={1} color="neutral3">
-                <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip />
-              </Type.Caption>
-              <Box flex={1}>
-                <Type.Caption
-                  mr={2}
-                  color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}
-                >
-                  {item.reduceOnly ? 'Close ' : ''}
-                  {item.isLong ? 'Long' : 'Short'}
-                </Type.Caption>
-                <Type.Caption color="neutral1">{symbol ?? '--'}</Type.Caption>
-              </Box>
-            </Flex>
-            <Box>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between', mt: 1 }}>
-                <Flex flex={1} sx={{ alignItems: 'center', gap: '1ch' }}>
-                  <Type.Caption color="neutral3" sx={{ flexShrink: 0 }}>
-                    Type:
-                  </Type.Caption>
-                  <Type.Caption color="neutral1">
-                    <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>
-                  </Type.Caption>
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Value:
-                    </Box>
-                    ${compactNumber(item.sizeNumber)}
-                  </Type.Caption>
-                </Flex>
-              </Flex>
-              <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between', mt: 1 }}>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Size:
-                    </Box>
-                    {formatNumber(item.sizeInTokenNumber)}
-                  </Type.Caption>
-                </Flex>
-                <Flex flex={1} alignItems="center">
-                  <Type.Caption color="neutral1">
-                    <Box as="span" color="neutral3" mr="1ch">
-                      Price:
-                    </Box>
-                    {item.priceNumber && !item.isPositionTpsl
-                      ? PriceTokenText({ value: item.priceNumber, maxDigit: 2, minDigit: 2 })
-                      : 'Market'}
-                  </Type.Caption>
-                </Flex>
-              </Flex>
-            </Box>
+          <Box sx={{ p: [2, 3] }} key={item.timestamp + item.orderId + index}>
+            <RowWrapper>
+              <RowItem label={<Trans>Pair</Trans>} value={renderSymbol(item)} />
+              <RowItem label={<Trans>Time</Trans>} value={renderOpenTime(item)} />
+              <RowItem label={<Trans>Type</Trans>} value={renderType(item)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem label={<Trans>Direction</Trans>} value={renderDirection(item)} />
+              <RowItem label={<Trans>Price</Trans>} value={renderPrice(item)} />
+              <RowItem label={<Trans>Trigger Condition</Trans>} value={renderTriggerCondition(item)} />
+            </RowWrapper>
+            <RowWrapper mt={2}>
+              <RowItem label={<Trans>Size</Trans>} value={renderSizeInToken(item)} />
+              <RowItem label={<Trans>Value</Trans>} value={renderSize(item)} />
+              <RowItem label={<Trans>Reduce Only</Trans>} value={renderReduceOnly(item)} />
+            </RowWrapper>
           </Box>
         )
       })}
     </Flex>
+  )
+}
+
+const RowWrapper = styled(Box)`
+  display: grid;
+  grid-template-columns: 2fr 2fr 3fr;
+  gap: 4px;
+`
+function RowItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Box>
+      <Type.Small color="neutral3" display="block">
+        {label}
+      </Type.Small>
+      <Type.Small color="neutral1">{value}</Type.Small>
+    </Box>
   )
 }

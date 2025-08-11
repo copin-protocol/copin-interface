@@ -10,6 +10,7 @@ import {
   HlNonFundingLedgerData,
   HlOrderFillRawData,
   HlOrderRawData,
+  HlPerpMetaData,
   HlPortfolioRawData,
   HlPriceData,
   HlSpotMetaData,
@@ -146,6 +147,14 @@ export async function getHlSpotMeta() {
       type: 'spotMeta',
     })
     .then((res: any) => res.data as HlSpotMetaData)
+}
+
+export async function getHlPerpMeta() {
+  return axios
+    .post(`${HYPERLIQUID_API}/info`, {
+      type: 'meta',
+    })
+    .then((res: any) => res.data as HlPerpMetaData)
 }
 
 export async function getHlLatestPrices() {

@@ -64,14 +64,14 @@ export default function OrderTwapWrapper({ isLoading, toggleExpand, data, isExpa
   const [currentPage, setCurrentPage] = useState(1)
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT)
   const paginatedData = getPaginationDataFromList({ currentPage, limit: currentLimit, data: filteredData })
-  const dataRef = useRef(filteredData)
-  useEffect(() => {
-    if (dataRef.current !== filteredData) {
-      setCurrentPage(1)
-      onPageChange(1)
-      dataRef.current = filteredData
-    }
-  }, [filteredData, onPageChange])
+  // const dataRef = useRef(filteredData)
+  // useEffect(() => {
+  //   if (dataRef.current !== filteredData) {
+  //     setCurrentPage(1)
+  //     onPageChange(1)
+  //     dataRef.current = filteredData
+  //   }
+  // }, [filteredData, onPageChange])
 
   const handleChangePage = useCallback(
     (page: number) => {
@@ -122,7 +122,7 @@ export default function OrderTwapWrapper({ isLoading, toggleExpand, data, isExpa
       )}
       {totalDataLength > 0 && (
         <>
-          {sm ? (
+          {lg ? (
             <>
               <Box ref={containerRef} flex="1 0 0" overflow="hidden" height="100%">
                 <Table

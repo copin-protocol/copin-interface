@@ -350,7 +350,7 @@ function TraderDetailsComponent({
               <Flex flexDirection="column" height="100%">
                 <Box height={200}>
                   {protocol === ProtocolEnum.HYPERLIQUID ? (
-                    <HLTraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
+                    <HLTraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer />
                   ) : (
                     <TraderOpeningPositionsTableView address={address} protocol={protocol} isDrawer isExpanded />
                   )}

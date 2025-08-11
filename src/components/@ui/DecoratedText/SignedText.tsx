@@ -37,7 +37,7 @@ export function SignedText({
     }
   }
   const formatedValue =
-    typeof value !== 'number'
+    !value || typeof value !== 'number'
       ? '--'
       : isCompactNumber
       ? compactNumber(Math.abs(value), maxDigit)

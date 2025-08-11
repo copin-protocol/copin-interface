@@ -1,11 +1,13 @@
 import { ArrowRight } from '@phosphor-icons/react'
 import { useMemo } from 'react'
 
+import { ORDER_TYPES } from 'components/@position/configs/order'
 import { DeltaText } from 'components/@ui/DecoratedText/DeltaText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import { CopyOrderData } from 'entities/copyTrade.d'
+import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
@@ -14,8 +16,7 @@ import { CopyTradePlatformEnum, OrderTypeEnum, ProtocolEnum } from 'utils/config
 import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
-
-import { ORDER_TYPES } from '../configs/order'
+import { getPairFromSymbol } from 'utils/helpers/transform'
 
 type ExternalSource = {
   totalOrders: number
@@ -263,18 +264,22 @@ export default function ListCopyOrderTable({
         dataIndex: 'price',
         key: 'price',
         style: { minWidth: '120px', textAlign: 'right', pr: 3 },
-        render: (item) =>
-          item.price ? (
+        render: (item) => {
+          const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
+          const hlDecimals = getHlSzDecimalsByPair?.(getPairFromSymbol(symbol))
+          return item.price ? (
             <Type.Caption color="neutral1" width="100%" textAlign="right">
               {PriceTokenText({
                 value: item.price,
                 maxDigit: 2,
                 minDigit: 2,
+                hlDecimals,
               })}
             </Type.Caption>
           ) : (
             '--'
-          ),
+          )
+        },
       },
     ]
     return result
