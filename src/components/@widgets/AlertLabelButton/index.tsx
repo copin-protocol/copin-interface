@@ -1,4 +1,5 @@
 import { PencilSimpleLine } from '@phosphor-icons/react'
+import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
@@ -6,7 +7,7 @@ import { toast } from 'react-toastify'
 import { putAlertLabelApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
-import { Flex, Type } from 'theme/base'
+import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
 
 import AlertLabelTooltip from './AlertLabelNoteTooltip'
@@ -42,6 +43,8 @@ export default function AlertLabelButton({
 }) {
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null)
+  const [editModeShowed, setEditModeShowed] = useState(false)
+  const { md } = useResponsive()
 
   const handleSuccess = (newLabel: string) => {
     const message = 'Alert label updated successfully'
@@ -70,10 +73,8 @@ export default function AlertLabelButton({
         label: newLabel,
       })
     }
-  }
-
-  const handleCancelTooltip = () => {
     setShowTooltip(false)
+    setEditModeShowed(false)
   }
 
   const handleClick = (e: React.MouseEvent) => {
@@ -88,17 +89,18 @@ export default function AlertLabelButton({
       })
     } else {
       setTooltipPosition({
-        top: buttonRect.bottom + 145,
+        top: buttonRect.bottom + 5,
         left: buttonRect.left + buttonRect.width / 2 - 5,
       })
     }
 
     setShowTooltip(true)
+    setEditModeShowed(true)
   }
 
   return (
     <>
-      <div className="alert-label-btn">
+      <Box className="alert-label-btn">
         <Flex onClick={handleClick}>
           <ButtonWithIcon
             type="button"
@@ -121,18 +123,20 @@ export default function AlertLabelButton({
             </Type.Caption>
           )}
         </Flex>
-      </div>
-
+      </Box>
       <AlertLabelTooltip
+        tooltipOpen={!md && showTooltip}
         address={showTooltip ? address : undefined}
         protocol={protocol}
         position={tooltipPosition || positionTooltip}
         submitting={updatingLabel}
         currentLabel={initialLabel}
-        isEditMode={hasLabel}
+        editModeShowed={editModeShowed}
         onSave={handleSaveLabel}
-        onCancel={handleCancelTooltip}
         parentScroll={containerRef}
+        shouldShowGroupAlert={false}
+        shouldShowCloseEdit={false}
+        isAlertEnabled={true}
       />
     </>
   )

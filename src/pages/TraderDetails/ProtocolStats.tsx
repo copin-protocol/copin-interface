@@ -1,3 +1,4 @@
+import { useResponsive } from 'ahooks'
 import { useHistory } from 'react-router-dom'
 
 import ActiveDot from 'components/@ui/ActiveDot'
@@ -101,6 +102,7 @@ function StatsItem({
 
   const protocol = data.protocol
   const protocolStatus = protocolDataStatusMapping[protocol]
+  const { md } = useResponsive()
 
   return (
     <Flex
@@ -121,6 +123,7 @@ function StatsItem({
               color={getSystemStatusTypeColor(protocolStatus)}
               tooltipContent={getProtocolMessage(protocol)}
               tooltipId={`status_indicator_${protocol}`}
+              placeTooltip={md ? 'top' : 'bottom'}
             />
           )}
           <ProtocolBetaWarning protocol={data.protocol} />

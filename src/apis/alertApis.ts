@@ -46,6 +46,23 @@ export async function getTraderAlertListApi({
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
+export async function getAllGroupAlertApi({
+  address,
+  protocol,
+  type,
+}: {
+  address?: string
+  protocol?: string
+  type?: string
+}) {
+  const params: Record<string, any> = {}
+  if (!!address) params.address = address
+  if (!!protocol) params.protocol = protocol
+  return requester
+    .get(`${SERVICE}/trader/all-group`, { params: { ...params } })
+    .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
+}
+
 export async function postAlertLabelApi({ address, protocol, enableAlert, label }: TraderAlertData) {
   return requester
     .post(`${SERVICE}/trader`, { address, protocol, enableAlert, label })
@@ -156,9 +173,18 @@ export async function getCustomAlertsApi({
   name,
   type,
   showAlert,
-}: { name?: string; sortBy?: string; sortType?: string; type?: AlertCustomType; showAlert?: boolean } & GetApiParams) {
+  userId,
+}: {
+  name?: string
+  sortBy?: string
+  sortType?: string
+  type?: AlertCustomType
+  showAlert?: boolean
+  userId?: string
+} & GetApiParams) {
   const params: Record<string, any> = {}
   if (name) params.name = name
+  if (userId) params.userId = userId
   if (sortBy) params.sort_by = sortBy
   if (sortType) params.sort_type = sortType
   if (type) params.type = type

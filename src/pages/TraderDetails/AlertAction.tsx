@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { BellSimple, BellSimpleSlash } from '@phosphor-icons/react'
+import { BellSimple, BellSimpleRinging } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { toast } from 'react-toastify'
 
-import { getTraderAlertListApi, postAlertLabelApi } from 'apis/alertApis'
+import { getTraderAlertListApi, postAlertLabelApi, putAlertLabelApi } from 'apis/alertApis'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import UpgradeModal from 'components/@subscription/UpgradeModal'
@@ -14,45 +14,47 @@ import AlertLabelTooltip from 'components/@widgets/AlertLabelButton/AlertLabelNo
 import UnsubscribeAlertModal from 'components/@widgets/UnsubscribeAlertModal'
 import useBotAlertContext from 'hooks/features/alert/useBotAlertProvider'
 import useSettingWatchlistTraders from 'hooks/features/alert/useSettingWatchlistTraders'
+import { useTraderAlerts } from 'hooks/features/alert/useTraderAlerts'
 import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useAuthContext } from 'hooks/web3/useAuth'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Flex } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { AlertTypeEnum, ProtocolEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
 import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
 
-const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: string }) => {
-  const { sm, md, lg, xs } = useResponsive()
+const AlertAction = ({
+  protocol,
+  account,
+  shoulShowGroupAlerts = true,
+}: {
+  protocol: ProtocolEnum
+  account: string
+  shoulShowGroupAlerts?: boolean
+}) => {
+  const { md, lg } = useResponsive()
   const { isAllowedProtocol, requiredPlanToProtocol } = useTraderProfilePermission({ protocol })
   const { maxWatchedListQuota } = useAlertPermission()
   const { hasWatchlistChannel, handleGenerateLinkBot, isGeneratingLink, usage, maxTraderAlert } = useBotAlertContext()
   const [isOpenUnsubscribeModal, setIsOpenUnsubscribeModal] = useState(false)
   const [isOpenLimitModal, setIsOpenLimitModal] = useState(false)
   const [showAlertLabelTooltip, setShowAlertLabelTooltip] = useState(false)
-  const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null)
+  const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number }>()
   const refetchQueries = useRefetchQueries()
 
-  const { isAuthenticated, profile } = useAuthContext()
+  const { isAuthenticated } = useAuthContext()
   const handleClickLogin = useClickLoginButton()
 
   const total = usage?.watchedListAlerts ?? 0
   const limit = maxTraderAlert ?? 0
   const isLimited = total >= limit
 
-  const { data, isLoading } = useQuery(
-    [QUERY_KEYS.GET_TRADER_ALERTS, profile?.id, account, protocol],
-    () => getTraderAlertListApi({ address: account, protocol }),
-    {
-      enabled: !!profile?.id,
-      retry: 0,
-    }
-  )
-
-  const { mutate: createAlertLabel, isLoading: submittingLabel } = useMutation(postAlertLabelApi, {
+  const { currentAlert, groupAlerts } = useTraderAlerts(account, protocol)
+  const { mutate: createAlertLabel, isLoading: submittingCreate } = useMutation(postAlertLabelApi, {
     onSuccess: () => {
       toast.success(
         <ToastBody
@@ -61,7 +63,6 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
         />
       )
       refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS, QUERY_KEYS.GET_USER_SUBSCRIPTION_USAGE])
-
       setShowAlertLabelTooltip(false)
     },
     onError: (error: any) => {
@@ -73,102 +74,149 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
     },
   })
 
-  const currentAlert = data?.data?.[0]
+  const { mutate: updateAlertLabel, isLoading: submittingUpdate } = useMutation(putAlertLabelApi, {
+    onSuccess: () => {
+      toast.success(
+        <ToastBody title={<Trans>Success</Trans>} message={<Trans>Alert label updated successfully</Trans>} />
+      )
+      refetchQueries([QUERY_KEYS.GET_TRADER_ALERTS])
+      setShowAlertLabelTooltip(false)
+    },
+    onError: (error: any) => {
+      toast.error(<ToastBody title="Error" message={getErrorMessage(error)} />)
+    },
+  })
 
-  const { createTraderAlert, deleteTraderAlert, submittingDelete, submittingCreate } = useSettingWatchlistTraders({
+  const { deleteTraderAlert, submittingDelete } = useSettingWatchlistTraders({
     onSuccess: () => {
       setIsOpenUnsubscribeModal(false)
       setShowAlertLabelTooltip(false)
     },
   })
 
+  const handleRequestUnsubscribe = () => {
+    setIsOpenUnsubscribeModal(true)
+  }
+
   const handleConfirmDeleteAlert = () => {
     if (currentAlert?.id) {
       deleteTraderAlert(currentAlert.id)
     }
+    setIsOpenUnsubscribeModal(false)
+  }
+
+  const handleDismissUnsubscribeModal = () => {
+    setIsOpenUnsubscribeModal(false)
   }
 
   const handleSaveAlertLabel = async (label?: string) => {
-    // if (!label?.trim()) {
-    // createTraderAlert({ address: account, protocol })
-    // } else {
-    createAlertLabel({
-      protocol,
-      account,
-      address: account,
-      label,
-    })
-    // }
+    if (currentAlert) {
+      updateAlertLabel({
+        id: currentAlert.id,
+        address: account,
+        protocol,
+        label: label?.trim(),
+      })
+    } else {
+      createAlertLabel({
+        protocol,
+        account,
+        address: account,
+        label: label?.trim(),
+      })
+    }
+    setShowAlertLabelTooltip(false)
   }
 
   const handleCancelAlertLabel = () => {
     setShowAlertLabelTooltip(false)
   }
 
+  const setTooltipPositionByScreenSize = (buttonRect: DOMRect) => {
+    if (lg) {
+      setTooltipPosition({
+        top: buttonRect.bottom + 10,
+        left: buttonRect.left + buttonRect.width / 2 - 22,
+      })
+    } else if (md) {
+      setTooltipPosition({
+        top: buttonRect.top + buttonRect.width / 2 - 56,
+        left: buttonRect.left + buttonRect.width / 2 - 321,
+      })
+    } else {
+      setTooltipPosition({
+        top: buttonRect.bottom,
+        left: buttonRect.left,
+      })
+    }
+  }
+
   const onSubmit = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
+    setIsOpenUnsubscribeModal(false)
 
     if (!isAuthenticated) {
       handleClickLogin()
       return
     }
+
     if (!hasWatchlistChannel) {
       handleGenerateLinkBot?.(AlertTypeEnum.TRADERS)
       return
     }
+
+    const buttonRect: DOMRect = e.currentTarget.getBoundingClientRect()
+
     if (currentAlert) {
-      setIsOpenUnsubscribeModal(true)
+      setShowAlertLabelTooltip(true)
+      setTooltipPositionByScreenSize(buttonRect)
     } else {
       if (isLimited) {
         setIsOpenLimitModal(true)
       } else {
         setShowAlertLabelTooltip(true)
-        const buttonRect: DOMRect = e.currentTarget.getBoundingClientRect()
-        if (lg) {
-          setTooltipPosition({
-            top: buttonRect.bottom - 30,
-            left: buttonRect.left + buttonRect.width / 2 - 22,
-          })
-        } else if (md) {
-          setTooltipPosition({
-            top: buttonRect.top + buttonRect.width / 2 - 90,
-            left: buttonRect.left + buttonRect.width / 2 - 267,
-          })
-        } else if (sm) {
-          setTooltipPosition({
-            top: buttonRect.bottom + buttonRect.width / 2 + 55,
-            left: buttonRect.left + buttonRect.width / 2 - 268,
-          })
-        } else if (xs) {
-          setTooltipPosition({
-            top: buttonRect.bottom + 115,
-            left: buttonRect.left - 206,
-          })
-        }
+        setTooltipPositionByScreenSize(buttonRect)
       }
+    }
+  }
+
+  const handleRightClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (currentAlert) {
+      setShowAlertLabelTooltip(true)
     }
   }
 
   return (
     <>
       <Flex width={['100%', '100%', '100%', 'auto']} alignItems="center" px={3} sx={{ gap: 1 }}>
-        <ButtonWithIcon
-          width="100%"
-          sx={{
-            px: 0,
-            borderRadius: 0,
-            height: '100%',
-            color: 'neutral2',
-            '&:hover:not(:disabled)': { color: 'neutral1' },
-          }}
-          variant={currentAlert ? 'ghostDanger' : 'ghost'}
-          icon={currentAlert ? <BellSimpleSlash size={20} /> : <BellSimple size={20} />}
-          disabled={!isAllowedProtocol || isLoading || submittingCreate || submittingDelete || isGeneratingLink}
-          onClick={onSubmit}
-        >
-          {currentAlert ? <Trans>Unnotify</Trans> : <Trans>Alert</Trans>}
-        </ButtonWithIcon>
+        <Flex width="100%" flexDirection={'column'} sx={{ position: 'relative', gap: 0, px: 0 }}>
+          <ButtonWithIcon
+            width="100%"
+            sx={{
+              px: 0,
+              py: 0,
+              borderRadius: 0,
+              height: '100%',
+              color: 'neutral2',
+              '&:hover:not(:disabled)': { color: 'neutral1' },
+            }}
+            variant={currentAlert ? 'ghostPrimary' : 'ghost'}
+            icon={
+              currentAlert ? (
+                <BellSimpleRinging style={{ color: `${themeColors.primary1}` }} weight="fill" size={20} />
+              ) : (
+                <BellSimple size={20} />
+              )
+            }
+            disabled={!isAllowedProtocol || submittingCreate || submittingDelete || isGeneratingLink}
+            onClick={onSubmit}
+            onContextMenu={handleRightClick}
+          >
+            <Trans>Alert</Trans>
+          </ButtonWithIcon>
+        </Flex>
         {!isAllowedProtocol && (
           <PlanUpgradeIndicator
             requiredPlan={requiredPlanToProtocol}
@@ -176,22 +224,32 @@ const AlertAction = ({ protocol, account }: { protocol: ProtocolEnum; account: s
           />
         )}
       </Flex>
+
       <AlertLabelTooltip
-        address={showAlertLabelTooltip && !currentAlert ? account : undefined}
+        key={`${account}_${protocol}`}
+        tooltipOpen={!md && showAlertLabelTooltip}
+        address={showAlertLabelTooltip ? account : undefined}
         protocol={protocol}
         position={tooltipPosition || undefined}
-        submitting={submittingLabel || submittingCreate}
+        submitting={submittingCreate || submittingUpdate}
+        currentLabel={currentAlert?.label}
+        isEditMode={!!currentAlert}
         onSave={handleSaveAlertLabel}
         onCancel={handleCancelAlertLabel}
+        groupAlerts={shoulShowGroupAlerts ? groupAlerts : undefined}
+        onRequestUnsubscribe={handleRequestUnsubscribe}
+        isAlertEnabled={currentAlert?.enableAlert}
       />
+
       {isOpenUnsubscribeModal && currentAlert && (
         <UnsubscribeAlertModal
           data={currentAlert}
           isConfirming={submittingDelete}
           onConfirm={handleConfirmDeleteAlert}
-          onDismiss={() => setIsOpenUnsubscribeModal(false)}
+          onDismiss={handleDismissUnsubscribeModal}
         />
       )}
+
       {isOpenLimitModal && (
         <UpgradeModal
           isOpen={isOpenLimitModal}

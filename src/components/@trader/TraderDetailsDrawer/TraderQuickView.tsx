@@ -237,6 +237,7 @@ function TraderDetailsComponent({
             eventCategory={eventCategory}
             disabledActions={disabledActions}
             isDrawer
+            shoulShowGroupAlerts={false}
           />
         </Flex>
       </Box>

@@ -205,7 +205,7 @@ export default function SettingWatchlistTraders({
     const isLastVisible = index === lastVisibleIndex
     return (
       <Flex alignItems="center" sx={{ gap: 2 }} ref={(i) => (itemRefs.current[index] = i)}>
-        <Flex flexDirection="column" width={150}>
+        <Flex flexDirection="column" width={160}>
           <TraderAddress data={item} />
         </Flex>
 
@@ -217,7 +217,7 @@ export default function SettingWatchlistTraders({
             initialLabel={item.label || ''}
             hasLabel={!!item.label}
             positionTooltip={
-              (index !== undefined && index >= 7) || isLastVisible ? { top: 25, left: 0 } : { top: -135, left: 10 }
+              (index !== undefined && index >= 7) || isLastVisible ? { top: 25, left: 0 } : { top: -5, left: 10 }
             }
             containerRef={tableWrapperRef}
             onLabelChange={(newLabel) => {
@@ -338,7 +338,7 @@ export default function SettingWatchlistTraders({
             }
           />
         </Flex>
-        <Flex flex={1} justifyContent="flex-end" sx={{ pr: 3, gap: 2 }}>
+        <Flex flex={1} justifyContent="flex-end" sx={{ pr: [1, 3], gap: 2 }}>
           <SearchToAdd
             totalTrader={totalTrader}
             maxTraderAlert={maxTraderAlert ?? 0}
@@ -420,9 +420,7 @@ export default function SettingWatchlistTraders({
                                       protocol={data.protocol}
                                       initialLabel={data.label || ''}
                                       hasLabel={!!data.label}
-                                      positionTooltip={
-                                        isLastVisible ? { top: 70, left: 100 } : { top: -105, left: 100 }
-                                      }
+                                      positionTooltip={{ top: 70, left: 100 }}
                                       // containerRef={tableWrapperRef}
                                       text="EDIT LABEL"
                                       onLabelChange={(newLabel) => {

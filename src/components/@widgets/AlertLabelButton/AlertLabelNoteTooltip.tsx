@@ -1,26 +1,44 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { useEffect, useRef, useState } from 'react'
-import OutsideClickHandler from 'react-outside-click-handler'
+import React from 'react'
 
 import KeyListener from 'components/@ui/KeyListener'
-import { Button } from 'theme/Buttons'
-import InputField from 'theme/InputField'
-import { Box, Type } from 'theme/base'
+import Modal from 'theme/Modal'
+import { Box, Flex, Type } from 'theme/base'
 import { KeyNameEnum } from 'utils/config/enums'
 import { Z_INDEX } from 'utils/config/zIndex'
+import { addressShorten } from 'utils/helpers/format'
 
-const LABEL_MAX_LENGTH = 32
+import { AlertLabelForm } from './AlertLabelForm'
+
+interface GroupAlert {
+  userId: string
+  name: string
+  id?: string
+  category?: any
+  isActive?: boolean
+}
+
 interface AlertLabelTooltipProps {
   address: string | undefined
   protocol: any
   position?: { top: number; left: number } | undefined
   submitting: boolean
   onSave: (label?: string) => void
-  onCancel: () => void
-  currentLabel?: string
+  onCancel?: () => void
+  currentLabel?: any
   isEditMode?: boolean
   parentScroll?: React.RefObject<HTMLElement>
+  groupAlerts?: GroupAlert[]
+  onSelectGroupAlert?: (groupAlert: GroupAlert) => void
+  isUnsubscribe?: boolean
+  onRequestUnsubscribe?: () => void
+  editModeShowed?: boolean
+  shouldShowGroupAlert?: boolean
+  tooltipOpen?: boolean
+  shouldShowCloseEdit?: boolean
+  isAlertEnabled?: boolean
 }
 
 const AlertLabelTooltip = ({
@@ -31,144 +49,175 @@ const AlertLabelTooltip = ({
   onSave,
   onCancel,
   currentLabel = '',
-  isEditMode = false,
-  parentScroll,
+  groupAlerts = [],
+  onRequestUnsubscribe,
+  editModeShowed = false,
+  shouldShowGroupAlert = true,
+  shouldShowCloseEdit = true,
+  tooltipOpen,
+  isAlertEnabled,
 }: AlertLabelTooltipProps) => {
   const [label, setLabel] = useState<string>('')
+  const [isEditing, setIsEditing] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!!address) {
-      setLabel(currentLabel || '')
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus()
-        }
-      }, 100)
+      setLabel(currentLabel)
     }
-  }, [address, currentLabel])
+  }, [address])
 
   useEffect(() => {
-    const element = parentScroll?.current
-    if (!!address && !!position && element) {
-      const hasScrollbar = element.scrollHeight > element.clientHeight
-      element.style.overflow = 'hidden'
-      if (hasScrollbar) {
-        element.style.paddingRight = '6px'
+    if (editModeShowed) {
+      setIsEditing(true)
+    }
+  }, [editModeShowed])
+
+  const { md } = useResponsive()
+
+  useEffect(() => {
+    if (!address || !protocol || !position) return
+    function handleClickOutside(event: MouseEvent) {
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+        onCancel?.()
       }
     }
-
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
-      if (element) {
-        element.style.overflow = 'auto'
-        element.style.paddingRight = '0px'
-      }
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [address, position, parentScroll])
-
-  const reset = () => {
-    setLabel('')
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
-  }
+  }, [address, protocol, position, onCancel])
 
   const handleSave = (e: React.FormEvent) => {
     e.stopPropagation()
     e.preventDefault()
 
-    onSave(label.trim())
-    reset()
+    const value = label.trim()
+    onSave(value)
+    setIsEditing(false)
   }
 
-  const handleCancel = (e: React.MouseEvent) => {
+  const handleEditClick = () => {
+    setIsEditing(true)
+  }
+
+  const handleEditCancel = (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-
-    onCancel()
-    reset()
+    setIsEditing(false)
+    setLabel(currentLabel)
+    if (inputRef.current) {
+      inputRef.current.value = currentLabel
+    }
   }
 
-  const { sm, xs, lg } = useResponsive()
+  const handleUnotify = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    onRequestUnsubscribe?.()
+  }
 
   if (!address || !protocol || !position) {
     return null
   }
 
-  return (
-    <Box
-      tabIndex={0}
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
-      sx={{
-        display: !!address ? 'block' : 'none',
-        position: 'fixed',
-        zIndex: Z_INDEX.TOASTIFY + 1,
-        top: position?.top ?? 0,
-        left: position.left ?? 0,
-        bg: 'neutral7',
-        border: 'small',
-        borderColor: 'neutral4',
-        boxShadow: '0px 0px 12px -3px rgba(255, 255, 255, 0.1)',
-        p: 12,
-        borderRadius: 'xs',
-        transform: position && position?.top > 200 ? 'translateY(calc(-100% - 4px))' : 'translateY(28px)',
-        maxWidth: xs ? '190px' : 'auto',
-      }}
-    >
-      <OutsideClickHandler
-        onOutsideClick={(e) => {
-          e.stopPropagation()
-          handleCancel(e as any)
-        }}
-      >
-        <Type.CaptionBold textAlign="left" width="100%" color="neutral1">
-          <Trans> Label (Optional)</Trans>
-        </Type.CaptionBold>
-        <KeyListener keyName={KeyNameEnum.ESCAPE} onFire={onCancel} />
+  const alertLabelForm = (
+    <AlertLabelForm
+      label={label}
+      setLabel={setLabel}
+      isEditing={isEditing}
+      isAlertEnabled={isAlertEnabled || false}
+      editModeShowed={editModeShowed}
+      currentLabel={currentLabel}
+      inputRef={inputRef}
+      submitting={submitting}
+      shouldShowCloseEdit={shouldShowCloseEdit}
+      shouldShowGroupAlert={shouldShowGroupAlert}
+      groupAlerts={groupAlerts}
+      onSave={handleSave}
+      onEditClick={handleEditClick}
+      onEditCancel={handleEditCancel}
+      onUnotify={handleUnotify}
+    />
+  )
 
-        <form onSubmit={handleSave}>
-          <Box mt={2} textAlign="right">
-            <InputField
-              ref={inputRef}
-              value={label}
-              annotation={`${label?.length ?? 0}/${LABEL_MAX_LENGTH}`}
-              block
-              inputSx={{
-                px: 2,
-                py: 1,
-                my: 1,
-                color: 'neutral1',
-              }}
-              onChange={(event) => {
-                if (event.target.value.length <= LABEL_MAX_LENGTH) {
-                  setLabel(event.target.value)
-                } else {
-                  event.target.value = label || ''
-                }
+  return (
+    <>
+      {md ? (
+        <Box
+          ref={tooltipRef}
+          tabIndex={0}
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+          sx={{
+            display: !!address ? 'block' : 'none',
+            position: 'fixed',
+            zIndex: Z_INDEX.TOASTIFY + 1,
+            top: position?.top ?? 0,
+            left: position.left ?? 0,
+            bg: 'neutral7',
+            border: 'small',
+            borderColor: 'neutral4',
+            boxShadow: '0px 0px 12px -3px rgba(255, 255, 255, 0.1)',
+            p: 12,
+            borderRadius: 'xs',
+            width: 260,
+          }}
+        >
+          <Flex alignItems="center" width="100%" sx={{ position: 'relative' }}>
+            <Type.Caption textAlign="left" color="neutral3" sx={{ whiteSpace: 'nowrap', mr: 2 }}>
+              <Trans>Watchlist</Trans>
+            </Type.Caption>
+            <Box
+              sx={{
+                flex: 1,
+                height: '0.1px',
+                backgroundColor: 'neutral4',
               }}
             />
-
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2, ml: !isEditMode ? 0 : 'auto' }}>
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
-                sx={{ fontWeight: 'bold' }}
-                onClick={handleCancel}
-                disabled={submitting}
-              >
-                <Trans>Cancel</Trans>
-              </Button>
-              <Button type="submit" variant="ghostPrimary" size="xs" sx={{ fontWeight: 'bold' }} isLoading={submitting}>
-                <Trans>Done</Trans>
-              </Button>
-            </Box>
-          </Box>
-        </form>
-      </OutsideClickHandler>
-    </Box>
+          </Flex>
+          <KeyListener keyName={KeyNameEnum.ESCAPE} onFire={onCancel} />
+          {alertLabelForm}
+        </Box>
+      ) : (
+        <Modal isOpen={!!tooltipOpen} zIndex={Z_INDEX.TOASTIFY + 100}>
+          <Flex
+            flexDirection="column"
+            ref={tooltipRef}
+            tabIndex={0}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+            sx={{
+              // bg: 'neutral7',
+              p: 20,
+              borderRadius: 'xs',
+            }}
+          >
+            <Flex alignItems="center" width="100%" sx={{ position: 'relative' }}>
+              <Type.BodyBold textAlign="left" color="neutral3" sx={{ whiteSpace: 'nowrap', mr: 2 }}>
+                <Trans>Watchlist</Trans>
+              </Type.BodyBold>
+              <Type.BodyBold textAlign="right" color="neutral1" sx={{ whiteSpace: 'nowrap' }}>
+                {addressShorten(address)}
+              </Type.BodyBold>
+              <Box
+                sx={{
+                  ml: 2,
+                  flex: 1,
+                  height: '0.1px',
+                  backgroundColor: 'neutral4',
+                }}
+              />
+            </Flex>
+            <KeyListener keyName={KeyNameEnum.ESCAPE} onFire={onCancel} />
+            {alertLabelForm}
+          </Flex>
+        </Modal>
+      )}
+    </>
   )
 }
 

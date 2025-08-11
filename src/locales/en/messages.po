@@ -436,6 +436,10 @@ msgstr "Alert Name (Required)"
 msgid "Alert groups or trigger webhooks to stay synced with your community"
 msgstr "Alert groups or trigger webhooks to stay synced with your community"
 
+#: src/pages/TraderDetails/AlertAction.tsx
+msgid "Alert label updated successfully"
+msgstr "Alert label updated successfully"
+
 #: src/pages/Subscription/v1/Plans.tsx
 msgid "Alert traders signal"
 msgstr "Alert traders signal"
@@ -724,6 +728,10 @@ msgstr "Avg Return On Notation"
 #: src/utils/config/options.tsx
 msgid "Avg Volume"
 msgstr "Avg Volume"
+
+#: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
+msgid "BAD MARKETS"
+msgstr "BAD MARKETS"
 
 #: src/pages/Subscription/v1/Plans.tsx
 msgid "BASIC PLAN"
@@ -1014,7 +1022,6 @@ msgstr "Can't retrieve any data to export"
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
 #: src/components/@copyTrade/ListCopyTrade/SelectedCopyTradeActions.tsx
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/pages/@layouts/Navbar/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/FindAndSelectTrader.tsx
 #: src/pages/VaultDetails/VaultFundMangement/InviteCodeModal.tsx
@@ -1589,7 +1596,6 @@ msgid "Do you want to export data?"
 msgstr "Do you want to export data?"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/pages/ReferralManagement/ReferralStats.tsx
 msgid "Done"
 msgstr "Done"
@@ -2038,6 +2044,10 @@ msgstr "GLOBAL REFERRAL ACTIVITIES"
 msgid "GMX"
 msgstr "GMX"
 
+#: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
+msgid "GOOD MARKETS"
+msgstr "GOOD MARKETS"
+
 #: src/components/@widgets/LinkBotAlertModal/index.tsx
 msgid "GROUP MESSAGE"
 msgstr "GROUP MESSAGE"
@@ -2061,6 +2071,10 @@ msgstr "Go To Deposit"
 #: src/pages/Settings/AlertSettingDetails/SettingCopiedTraders.tsx
 msgid "Go to Copy Management"
 msgstr "Go to Copy Management"
+
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+msgid "Group ALerts"
+msgstr "Group ALerts"
 
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/index.tsx
 msgid "Group Bookmark"
@@ -2199,8 +2213,8 @@ msgid "Hyperliquid Vault Address"
 msgstr "Hyperliquid Vault Address"
 
 #: src/pages/Explorer/ConditionFilter/index.tsx
-msgid "IF TAGS"
-msgstr "IF TAGS"
+msgid "IF"
+msgstr "IF"
 
 #: src/pages/MyProfile/index.tsx
 msgid "IF WALLET"
@@ -2999,6 +3013,10 @@ msgstr "NFT Collection"
 #: src/pages/SystemStatus/Layouts/Layout.tsx
 msgid "NODE STATUS"
 msgstr "NODE STATUS"
+
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+msgid "NOTIFY"
+msgstr "NOTIFY"
 
 #: src/utils/config/translations.tsx
 msgid "Name"
@@ -4495,6 +4513,7 @@ msgstr "Subscription Management"
 #: src/pages/Settings/AlertLogs/configs.tsx
 #: src/pages/Settings/AlertSettingDetails/LinkWebhookAlertAction/index.tsx
 #: src/pages/TraderDetails/AlertAction.tsx
+#: src/pages/TraderDetails/AlertAction.tsx
 msgid "Success"
 msgstr "Success"
 
@@ -5216,6 +5235,10 @@ msgstr "Type"
 msgid "UNIQUE TRADERS"
 msgstr "UNIQUE TRADERS"
 
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+msgid "UNOTIFY"
+msgstr "UNOTIFY"
+
 #: src/theme/Tag/StatusTag.tsx
 msgid "UPCOMING"
 msgstr "UPCOMING"
@@ -5347,10 +5370,6 @@ msgstr "Unlocking more exchanges brings more choices for your strategies"
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderBookmark/index.tsx
 msgid "Unnotified Bookmark Groups"
 msgstr "Unnotified Bookmark Groups"
-
-#: src/pages/TraderDetails/AlertAction.tsx
-msgid "Unnotify"
-msgstr "Unnotify"
 
 #: src/pages/MyProfile/Bookmarks/components.tsx
 msgid "Unnotify Group"
@@ -5622,6 +5641,10 @@ msgstr "Wallet Watcher"
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/TraderFilter.tsx
 msgid "Warning"
 msgstr "Warning"
+
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+msgid "Watchlist"
+msgstr "Watchlist"
 
 #: src/utils/config/translations.tsx
 msgid "Watchlist Traders"
@@ -6160,6 +6183,7 @@ msgstr "year"
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
