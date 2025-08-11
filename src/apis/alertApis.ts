@@ -63,9 +63,9 @@ export async function getAllGroupAlertApi({
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 
-export async function postAlertLabelApi({ address, protocol, isAlertEnabled, label }: TraderAlertData) {
+export async function postAlertLabelApi({ address, protocol, enableAlert, label }: TraderAlertData) {
   return requester
-    .post(`${SERVICE}/trader`, { address, protocol, isAlertEnabled, label })
+    .post(`${SERVICE}/trader`, { address, protocol, enableAlert, label })
     .then((res: any) => res.data as ApiListResponse<TraderAlertData>)
 }
 

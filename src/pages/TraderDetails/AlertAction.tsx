@@ -238,7 +238,7 @@ const AlertAction = ({
         onCancel={handleCancelAlertLabel}
         groupAlerts={shoulShowGroupAlerts ? groupAlerts : undefined}
         onRequestUnsubscribe={handleRequestUnsubscribe}
-        isAlertEnabled={currentAlert?.isAlertEnabled}
+        isAlertEnabled={currentAlert?.enableAlert}
       />
 
       {isOpenUnsubscribeModal && currentAlert && (
