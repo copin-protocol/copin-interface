@@ -100,7 +100,7 @@ export const usePlanPermissions = (): PlanPermission[] => {
             ),
           },
           {
-            name: 'Token Preferences',
+            name: 'Market Stats',
             ...generatePermissionData(permission?.TRADER_PROFILE, 'isEnableTokenStats'),
           },
           {

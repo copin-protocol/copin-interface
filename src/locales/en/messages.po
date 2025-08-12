@@ -637,7 +637,7 @@ msgstr "Available from {0} plan"
 #: src/pages/Settings/AlertDashboard/DesktopView.tsx
 #: src/pages/Settings/AlertDashboard/DesktopView.tsx
 #: src/pages/Settings/AlertDashboard/MobileView.tsx
-#: src/pages/TraderDetails/ChartTrader/PermissionContainer.tsx
+#: src/pages/TraderDetails/MarketStats/PermissionContainer.tsx
 #: src/pages/TraderDetails/TraderRanking.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/PercentileRankingDetails.tsx
@@ -730,6 +730,7 @@ msgid "Avg Volume"
 msgstr "Avg Volume"
 
 #: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
+#: src/pages/TraderDetails/MarketStats/MarketPerformance.tsx
 msgid "BAD MARKETS"
 msgstr "BAD MARKETS"
 
@@ -1120,6 +1121,7 @@ msgid "Closed Type"
 msgstr "Closed Type"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Collateral"
 msgstr "Collateral"
 
@@ -1486,6 +1488,10 @@ msgstr "DIRECTION"
 msgid "DIRECTIONAL BIAS"
 msgstr "DIRECTIONAL BIAS"
 
+#: src/pages/TraderDetails/MarketStats/index.tsx
+msgid "DISTRIBUTION"
+msgstr "DISTRIBUTION"
+
 #: src/pages/@layouts/Footer/index.tsx
 #: src/pages/@layouts/Footer/index.tsx
 msgid "DOCS"
@@ -1566,6 +1572,13 @@ msgstr "Description"
 #: src/components/@copyActivity/configs.tsx
 msgid "Details"
 msgstr "Details"
+
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+msgid "Direction"
+msgstr "Direction"
 
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 msgid "Discover deeper insights with advanced filtering"
@@ -1710,6 +1723,7 @@ msgstr "Enter invite code"
 msgid "Entry"
 msgstr "Entry"
 
+#: src/components/@position/HLTraderPositionsListView/index.tsx
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
 #: src/utils/config/translations.tsx
@@ -1922,11 +1936,14 @@ msgid "Fee Schedule"
 msgstr "Fee Schedule"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 #: src/pages/TraderDetails/HyperliquidApiMode/HLPortfolio.tsx
 msgid "Fees"
 msgstr "Fees"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Fees & Funding:"
 msgstr "Fees & Funding:"
@@ -1939,6 +1956,10 @@ msgstr "Fees and Profit Sharing"
 #: src/pages/Stats/ChartComponent.tsx
 msgid "Fees are not factored into PnL"
 msgstr "Fees are not factored into PnL"
+
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+msgid "Fill Count"
+msgstr "Fill Count"
 
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
 msgid "Fills"
@@ -2023,10 +2044,10 @@ msgid "Fund:"
 msgstr "Fund:"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Funding"
 msgstr "Funding"
 
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Funding:"
@@ -2045,6 +2066,7 @@ msgid "GMX"
 msgstr "GMX"
 
 #: src/pages/Explorer/ConditionFilter/IFLabelsFilterForm.tsx
+#: src/pages/TraderDetails/MarketStats/MarketPerformance.tsx
 msgid "GOOD MARKETS"
 msgstr "GOOD MARKETS"
 
@@ -2072,7 +2094,8 @@ msgstr "Go To Deposit"
 msgid "Go to Copy Management"
 msgstr "Go to Copy Management"
 
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
 msgid "Group ALerts"
 msgstr "Group ALerts"
 
@@ -2333,16 +2356,17 @@ msgid "Join the waitlist today for exclusive early access to AI-driven insights 
 msgstr "Join the waitlist today for exclusive early access to AI-driven insights that will revolutionize the way you trade!"
 
 #: src/components/@subscription/upgradeBenefitConfig.tsx
-msgid "Know exactly which tokens this trader dominates"
-msgstr "Know exactly which tokens this trader dominates"
+msgid "Know exactly which markets this trader dominates"
+msgstr "Know exactly which markets this trader dominates"
 
-#: src/pages/TraderDetails/ChartTrader/PermissionContainer.tsx
+#: src/pages/TraderDetails/MarketStats/PermissionContainer.tsx
 msgid "Know exactly which tokens this trader dominates, and which they don’t"
 msgstr "Know exactly which tokens this trader dominates, and which they don’t"
 
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@position/configs/copyPositionRenderProps.tsx
+#: src/components/@position/configs/hlPositionRenderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/pages/Settings/AlertLogs/configs.tsx
@@ -2402,10 +2426,6 @@ msgstr "LONG/SHORT OPEN INTEREST BY PAIRS"
 #: src/utils/config/translations.tsx
 msgid "Label"
 msgstr "Label"
-
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
-msgid "Label (Optional)"
-msgstr "Label (Optional)"
 
 #: src/components/@copyTrade/BulkCopyModifyModal/ResponseContent.tsx
 msgid "Label:"
@@ -2496,6 +2516,10 @@ msgstr "Link Account"
 msgid "Link with your {0} account through API key."
 msgstr "Link with your {0} account through API key."
 
+#: src/components/@position/HLTraderPositionsListView/index.tsx
+msgid "Liq. Price"
+msgstr "Liq. Price"
+
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
 msgid "Liq.Price"
@@ -2514,6 +2538,10 @@ msgstr "Liquidation"
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 msgid "Liquidations"
 msgstr "Liquidations"
+
+#: src/pages/TraderDetails/MarketStats/index.tsx
+msgid "List"
+msgstr "List"
 
 #: src/components/@subscription/upgradeBenefitConfig.tsx
 msgid "Live Data"
@@ -2641,6 +2669,10 @@ msgstr "MARKET"
 msgid "MARKET PRICE"
 msgstr "MARKET PRICE"
 
+#: src/pages/TraderDetails/MarketStats/index.tsx
+msgid "MARKET STATS"
+msgstr "MARKET STATS"
+
 #: src/pages/CopinLite/Wallet/Withdraw.tsx
 msgid "MAX"
 msgstr "MAX"
@@ -2729,10 +2761,22 @@ msgstr "Margin Protection"
 msgid "Margin Transferred"
 msgstr "Margin Transferred"
 
+#: src/components/@position/HLTraderPositionsListView/index.tsx
+msgid "Mark Price"
+msgstr "Mark Price"
+
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+msgid "Mark Price:"
+msgstr "Mark Price:"
+
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Market Price:"
 msgstr "Market Price:"
+
+#: src/components/@subscription/upgradeBenefitConfig.tsx
+msgid "Market Stats"
+msgstr "Market Stats"
 
 #: src/pages/OpenInterest/OpenInterestByMarket/ListMarkets.tsx
 #: src/pages/OpenInterest/OpenInterestByMarkets/ListMarkets.tsx
@@ -3014,7 +3058,7 @@ msgstr "NFT Collection"
 msgid "NODE STATUS"
 msgstr "NODE STATUS"
 
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
 msgid "NOTIFY"
 msgstr "NOTIFY"
 
@@ -3444,6 +3488,7 @@ msgid "PERCENTILES"
 msgstr "PERCENTILES"
 
 #: src/pages/TraderDetails/HyperliquidApiMode/HLPerformance.tsx
+#: src/pages/TraderDetails/MarketStats/index.tsx
 #: src/pages/VaultDetails/VaultInfo/index.tsx
 msgid "PERFORMANCE"
 msgstr "PERFORMANCE"
@@ -3502,6 +3547,14 @@ msgstr "PROTOCOL STATUS"
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Paid Fees:"
 msgstr "Paid Fees:"
+
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+#: src/components/@position/HLTraderPositionsListView/index.tsx
+msgid "Pair"
+msgstr "Pair"
 
 #: src/components/@auth/LoginAction/ModalLogin.tsx
 #: src/components/@auth/LoginAction/ModalRegister.tsx
@@ -3668,11 +3721,17 @@ msgstr "Please use a valid email address."
 msgid "Please wait a few minutes before you try again"
 msgstr "Please wait a few minutes before you try again"
 
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
 #: src/utils/config/translations.tsx
 msgid "PnL"
 msgstr "PnL"
+
+#: src/components/@position/HLTraderPositionsListView/index.tsx
+msgid "PnL (ROI)"
+msgstr "PnL (ROI)"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
@@ -3753,6 +3812,10 @@ msgstr "Position not yet synced"
 msgid "Positions"
 msgstr "Positions"
 
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 msgid "Price"
 msgstr "Price"
@@ -3904,6 +3967,10 @@ msgstr "Recommend Results"
 msgid "Records to export"
 msgstr "Records to export"
 
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+msgid "Reduce Only"
+msgstr "Reduce Only"
+
 #: src/components/@auth/LoginAction/ModalRegister.tsx
 msgid "Referral Code (optional)"
 msgstr "Referral Code (optional)"
@@ -4014,6 +4081,7 @@ msgstr "Runtime (All)"
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@copyActivity/configs.tsx
 #: src/components/@position/configs/copyPositionRenderProps.tsx
+#: src/components/@position/configs/hlPositionRenderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/components/@widgets/renderProps.tsx
 #: src/pages/Settings/AlertLogs/configs.tsx
@@ -4270,6 +4338,11 @@ msgstr "Sign Message Error"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+#: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Size"
 msgstr "Size"
 
@@ -4280,6 +4353,10 @@ msgstr "Size Lower Than"
 #: src/utils/config/translations.tsx
 msgid "Size Token"
 msgstr "Size Token"
+
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+msgid "Size:"
+msgstr "Size:"
 
 #: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
@@ -4415,6 +4492,7 @@ msgid "Stats"
 msgstr "Stats"
 
 #: src/components/@copyActivity/configs.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
 #: src/pages/CopinLite/Transactions/configs.tsx
 #: src/pages/Settings/UserSubscription/PaymentHistoryPage.tsx
 #: src/utils/config/translations.tsx
@@ -4595,10 +4673,6 @@ msgstr "TIME FRAME"
 msgid "TIP: Click to trader avatar to quick view the details"
 msgstr "TIP: Click to trader avatar to quick view the details"
 
-#: src/pages/TraderDetails/ChartTrader/ChartPositions.tsx
-msgid "TOKEN PREFERENCES"
-msgstr "TOKEN PREFERENCES"
-
 #: src/pages/Home/Traders.tsx
 msgid "TOP"
 msgstr "TOP"
@@ -4680,6 +4754,10 @@ msgstr "TVL"
 #: src/components/@position/HLTraderOpeningPositions/index.tsx
 msgid "TWAP"
 msgstr "TWAP"
+
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+msgid "TWAP ID"
+msgstr "TWAP ID"
 
 #: src/pages/Settings/AlertLogs/configs.tsx
 msgid "TYPE"
@@ -4993,6 +5071,10 @@ msgid "This will help us find copy trader that fit for you"
 msgstr "This will help us find copy trader that fit for you"
 
 #: src/components/@copyActivity/configs.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/pages/CopinLite/Transactions/configs.tsx
 msgid "Time"
 msgstr "Time"
@@ -5028,10 +5110,6 @@ msgstr "To start, you need to create a smart wallet."
 #: src/pages/Subscription/v1/TermsAndConditions.tsx
 msgid "To unlock premium and VIP features, mint a Copin NFT."
 msgstr "To unlock premium and VIP features, mint a Copin NFT."
-
-#: src/components/@subscription/upgradeBenefitConfig.tsx
-msgid "Token Preference"
-msgstr "Token Preference"
 
 #: src/components/@copinLite/OnboardingModal/CopyTraderModal.tsx
 msgid "Top Highest PNL Tokens"
@@ -5213,6 +5291,11 @@ msgstr "Trading Pairs"
 msgid "Transaction has been executed successfully"
 msgstr "Transaction has been executed successfully"
 
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+msgid "Trigger Condition"
+msgstr "Trigger Condition"
+
 #: src/components/@auth/AuthWaitingWallet/index.tsx
 msgid "Try Again"
 msgstr "Try Again"
@@ -5226,6 +5309,8 @@ msgstr "Try again"
 msgid "TxHash"
 msgstr "TxHash"
 
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
 #: src/pages/ReferralManagement/ReferralHistory.tsx
 #: src/utils/config/translations.tsx
 msgid "Type"
@@ -5235,7 +5320,7 @@ msgstr "Type"
 msgid "UNIQUE TRADERS"
 msgstr "UNIQUE TRADERS"
 
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
 msgid "UNOTIFY"
 msgstr "UNOTIFY"
 
@@ -5517,9 +5602,17 @@ msgstr "VIP exclusive signal (group and APIs)"
 msgid "VOLUME"
 msgstr "VOLUME"
 
+#: src/components/@position/HLTraderOpeningPositions/HLHistoricalOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
+#: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
 #: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "Value"
 msgstr "Value"
+
+#: src/components/@position/HLTraderPositionsListView/index.tsx
+msgid "Value (Weight)"
+msgstr "Value (Weight)"
 
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
 msgid "Value Delta:"
@@ -5642,6 +5735,7 @@ msgstr "Wallet Watcher"
 msgid "Warning"
 msgstr "Warning"
 
+#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 #: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
 msgid "Watchlist"
 msgstr "Watchlist"
@@ -6183,7 +6277,7 @@ msgstr "year"
 #: src/components/@wallet/UpdateWalletModals/UpdateHyperliquidWalletModal.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
 #: src/components/@wallet/WalletDetailsCard/WalletActions.tsx
-#: src/components/@widgets/AlertLabelButton/AlertLabelNoteTooltip.tsx
+#: src/components/@widgets/GroupAlertList/index.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx
 #: src/hooks/features/useReferralActions.tsx

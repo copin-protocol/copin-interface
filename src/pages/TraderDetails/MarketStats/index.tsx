@@ -1,36 +1,34 @@
 import { Trans } from '@lingui/macro'
 import { ArrowsIn, ArrowsOutSimple, Coins } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
-import { memo, useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getTraderTokensStatistic } from 'apis/traderApis'
-import ChartPositions from 'components/@charts/ChartPositions'
 import NoDataFound from 'components/@ui/NoDataFound'
 import SectionTitle from 'components/@ui/SectionTitle'
-import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
-import { PositionData } from 'entities/trader.d'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
 import { useEscapeToClose } from 'hooks/helpers/useEscapeToClose'
 import useUserPreferencesStore from 'hooks/store/useUserPreferencesStore'
 import Loading from 'theme/Loading'
+import { TabHeader } from 'theme/Tab'
 import { Box, Flex, IconBox } from 'theme/base'
-import { DEFAULT_PROTOCOL, MAX_PAGE_LIMIT } from 'utils/config/constants'
-import { ProtocolEnum, SortTypeEnum } from 'utils/config/enums'
+import { ProtocolEnum } from 'utils/config/enums'
 import { QUERY_KEYS } from 'utils/config/keys'
-import { TokenOptionProps } from 'utils/config/trades'
-import { getSymbolFromPair } from 'utils/helpers/transform'
 
+import MarketDistribution from './MarketDistribution'
+import { MarketList } from './MarketList'
+import MarketPerformance from './MarketPerformance'
+import MarketPositions from './MarketPositions'
 import PermissionContainer from './PermissionContainer'
-import { ListTokenStatistic, TableTokenStatistic } from './TokenStatistic'
-import { useQueryInfinitePositions } from './useQueryInfinitePositions'
 
-export interface PositionSortPros {
-  sortBy: keyof PositionData
-  sortType: SortTypeEnum
+enum MarketStatsTab {
+  PERFORMANCE = 'performance',
+  DISTRIBUTION = 'distribution',
+  LIST = 'list',
 }
 
-const TraderChartPositions = memo(function TraderChartPositionsMemo({
+const MarketStats = ({
   account,
   protocol,
   isExpanded,
@@ -40,21 +38,12 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
   protocol: ProtocolEnum
   isExpanded: boolean
   handleExpand: () => void
-}) {
+}) => {
   const { isEnableTokenStats } = useTraderProfilePermission({ protocol })
-  const [currentPair, setCurrentPair] = useState<string | undefined>()
-  const currencyOption = useMemo(() => {
-    if (!currentPair) return undefined
-    const symbol = getSymbolFromPair(currentPair)
-    const result: TokenOptionProps = {
-      id: symbol,
-      label: symbol,
-      value: symbol,
-    }
-    return result
-  }, [currentPair])
-
+  const [tab, setTab] = useState<MarketStatsTab>(MarketStatsTab.PERFORMANCE)
+  const [currentPair, setCurrentPair] = useState<string | undefined>(undefined)
   const pnlWithFeeEnabled = useUserPreferencesStore((s) => s.pnlWithFeeEnabled)
+  const { xl } = useResponsive()
   const { data: tokensStatistic, isLoading: loadingTokenStatistic } = useQuery(
     [QUERY_KEYS.GET_TRADER_TOKEN_STATISTIC, protocol, account, isEnableTokenStats, pnlWithFeeEnabled],
     () => getTraderTokensStatistic({ protocol, account }),
@@ -76,41 +65,15 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
       // },
     }
   )
-
-  const { openingPositions, closedPositions, isLoadingClosed, handleFetchClosedPositions, hasNextClosedPositions } =
-    useQueryInfinitePositions({
-      address: account,
-      protocol,
-      currentPair,
-      limit: MAX_PAGE_LIMIT,
-    })
-
-  const { xl } = useResponsive()
-
-  useEffect(() => {
-    const existOpening = !!openingPositions?.find((e) => e.id === currentPair)
-    const existClosed = !!closedPositions?.find((e) => e.id === currentPair)
-    const existToken = !!tokensStatistic?.data?.find((e) => e.pair === currentPair)
-    if (currentPair && (existOpening || existClosed || existToken)) return
-    if (!!openingPositions?.length) {
-      setCurrentPair(openingPositions[0].pair)
-      return
+  const handleChangePair = (pair: string) => {
+    if (isExpanded) {
+      setCurrentPair(pair)
     }
-    if (!!closedPositions?.length) {
-      setCurrentPair(closedPositions[0].pair)
-      return
-    }
-    if (!!tokensStatistic?.data?.length) {
-      setCurrentPair(tokensStatistic?.data[0].pair)
-      return
-    }
-  }, [closedPositions, currentPair, openingPositions, tokensStatistic?.data])
-
+  }
   useEscapeToClose({
     isOpen: isExpanded,
     onClose: handleExpand,
   })
-
   return (
     <Flex sx={{ flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>
       <Flex
@@ -124,7 +87,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
           borderBottomColor: 'neutral4',
         }}
       >
-        <SectionTitle icon={Coins} title={<Trans>TOKEN PREFERENCES</Trans>} sx={{ mb: 0 }} />
+        <SectionTitle icon={Coins} title={<Trans>MARKET STATS</Trans>} sx={{ mb: 0 }} />
         {xl && isEnableTokenStats && (
           <IconBox
             icon={isExpanded ? <ArrowsIn size={20} /> : <ArrowsOutSimple size={20} />}
@@ -160,7 +123,7 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
           {loadingTokenStatistic ? (
             <Loading />
           ) : !tokensStatistic?.data?.length ? (
-            <NoDataFound message="No token preference statistic" />
+            <NoDataFound message="No market stats found" />
           ) : (
             <Flex
               sx={{
@@ -171,60 +134,80 @@ const TraderChartPositions = memo(function TraderChartPositionsMemo({
                 position: 'relative',
               }}
             >
-              <ChartPositions
+              <Flex
+                height="100%"
+                flexDirection="column"
+                width={isExpanded ? '450px' : '100%'}
                 sx={{
-                  flex: '1 0 0',
-                  overflow: 'hidden',
-                  height: '100%',
-                  order: isExpanded ? 2 : 1,
-                }}
-                protocol={protocol ?? DEFAULT_PROTOCOL}
-                timeframeOption={TIME_FILTER_OPTIONS[1]}
-                currencyOption={currencyOption}
-                openingPositions={openingPositions ?? []}
-                closedPositions={closedPositions ?? []}
-                fetchNextPage={handleFetchClosedPositions}
-                hasNextPage={hasNextClosedPositions}
-                isLoadingClosed={isLoadingClosed}
-                account={account}
-                handleExpand={handleExpand}
-                isExpanded={isExpanded}
-              />
-              <Box
-                width={isExpanded ? 500 : 'auto'}
-                height={isExpanded ? '100%' : 56}
-                order={isExpanded ? 1 : 2}
-                sx={{
-                  flexShrink: 0,
-                  bg: 'neutral8',
-                  ...(isExpanded
-                    ? {
-                        borderRight: 'small',
-                        borderRightColor: 'neutral4',
-                      }
-                    : {}),
+                  borderRight: isExpanded ? 'small' : 'none',
+                  borderRightColor: 'neutral4',
                 }}
               >
-                {isExpanded ? (
-                  <TableTokenStatistic
-                    data={tokensStatistic?.data}
+                <TabHeader
+                  configs={[
+                    {
+                      name: <Trans>PERFORMANCE</Trans>,
+                      key: MarketStatsTab.PERFORMANCE,
+                    },
+                    {
+                      name: <Trans>DISTRIBUTION</Trans>,
+                      key: MarketStatsTab.DISTRIBUTION,
+                    },
+                    {
+                      name: <Trans>List</Trans>,
+                      key: MarketStatsTab.LIST,
+                    },
+                  ]}
+                  isActiveFn={(config) => config.key === tab}
+                  onClickItem={(key) => setTab(key as MarketStatsTab)}
+                  fullWidth
+                  hasLine
+                  size="md"
+                />
+                <Box flex="1">
+                  {tab === MarketStatsTab.PERFORMANCE && (
+                    <MarketPerformance
+                      data={tokensStatistic?.data}
+                      isExpanded={isExpanded}
+                      pair={currentPair}
+                      changePair={handleChangePair}
+                    />
+                  )}
+                  {tab === MarketStatsTab.DISTRIBUTION && (
+                    <MarketDistribution
+                      isExpanded={isExpanded}
+                      data={tokensStatistic?.data}
+                      currentPair={currentPair}
+                      changePair={handleChangePair}
+                    />
+                  )}
+                  {tab === MarketStatsTab.LIST && (
+                    <MarketList
+                      isExpanded={isExpanded}
+                      data={tokensStatistic?.data}
+                      currentPair={currentPair}
+                      changePair={handleChangePair}
+                    />
+                  )}
+                </Box>
+              </Flex>
+              {isExpanded && (
+                <Box flex="1">
+                  <MarketPositions
+                    account={account}
+                    protocol={protocol}
+                    tokensStatistic={tokensStatistic?.data}
                     currentPair={currentPair}
-                    changePair={setCurrentPair}
+                    setCurrentPair={setCurrentPair}
                   />
-                ) : (
-                  <ListTokenStatistic
-                    data={tokensStatistic?.data}
-                    currentPair={currentPair}
-                    changePair={setCurrentPair}
-                  />
-                )}
-              </Box>
+                </Box>
+              )}
             </Flex>
           )}
         </Flex>
       </PermissionContainer>
     </Flex>
   )
-})
+}
 
-export default TraderChartPositions
+export default MarketStats

@@ -7,7 +7,7 @@ export type LayoutProps = {
   traderStats?: JSX.Element
   traderRanking?: JSX.Element
   traderChartPnl?: JSX.Element
-  traderChartPositions?: JSX.Element
+  marketStats?: JSX.Element
   heatmap?: JSX.Element
   openingPositions?: JSX.Element
   closedPositions?: JSX.Element

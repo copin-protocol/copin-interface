@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useResponsive } from 'ahooks'
+import { useCallback, useEffect, useState } from 'react'
 
 import useHyperliquidModeStore from 'hooks/store/useHyperliquidMode'
 import useMyProfileStore from 'hooks/store/useMyProfile'
@@ -10,6 +11,7 @@ export default function useHandleLayout() {
   const [openingPositionFullExpanded, toggleOpeningFullExpand] = useState(false)
   const { apiMode, toggleApiMode } = useHyperliquidModeStore()
   const { myProfile } = useMyProfileStore()
+  const { xl } = useResponsive()
   const logEventLayout = useCallback(
     (action: string) => {
       logEvent({
@@ -67,6 +69,12 @@ export default function useHandleLayout() {
   const handleApiMode = useCallback(() => {
     toggleApiMode()
   }, [toggleApiMode])
+
+  useEffect(() => {
+    if (!xl) {
+      toggleChartFullExpand(false)
+    }
+  }, [xl])
 
   return {
     openingPositionFullExpanded,

@@ -37,7 +37,6 @@ import { addressShorten } from 'utils/helpers/format'
 import { isAddress } from 'utils/web3/contracts'
 
 import ChartTrader from './ChartTrader'
-import TraderChartPositions from './ChartTrader/ChartPositions'
 import GeneralStats from './GeneralStats'
 import HyperliquidApiMode from './HyperliquidApiMode'
 import HLChartPnL from './HyperliquidApiMode/HLChartPnL'
@@ -48,6 +47,7 @@ import DesktopLayout from './Layouts/DesktopLayout'
 import MobileLayout from './Layouts/MobileLayout'
 import TabletLayout from './Layouts/TabletLayout'
 import useHandleLayout from './Layouts/useHandleLayout'
+import MarketStats from './MarketStats'
 import NoteAction from './NoteAction'
 import ProtocolStats from './ProtocolStats'
 import TradeLabelsFrame from './TradeLabelsFrame'
@@ -301,8 +301,8 @@ export function TraderDetailsComponent({
           traderRanking={
             <TraderRanking data={currentTraderData} timeOption={timeOption} onChangeTime={setTimeOption} />
           }
-          traderChartPositions={
-            <TraderChartPositions
+          marketStats={
+            <MarketStats
               account={address}
               protocol={protocol}
               isExpanded={chartFullExpanded}

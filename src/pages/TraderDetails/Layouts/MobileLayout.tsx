@@ -80,7 +80,7 @@ const MobileLayout = (props: LayoutProps) => {
         {tab === TabEnum.CHARTS && (
           <Box flex="1 0 0" sx={{ overflow: 'auto' }}>
             <Box
-              height={270}
+              height={250}
               sx={{
                 borderBottom: 'small',
                 borderColor: 'neutral4',
@@ -88,9 +88,7 @@ const MobileLayout = (props: LayoutProps) => {
             >
               {props.traderRanking}
             </Box>
-            <Box height="max(calc(100% - 270px), 330px)" bg="neutral5">
-              {props.traderChartPositions}
-            </Box>
+            <Box height="max(calc(100% - 250px), 330px)">{props.marketStats}</Box>
           </Box>
         )}
         {tab === TabEnum.POSITIONS && (

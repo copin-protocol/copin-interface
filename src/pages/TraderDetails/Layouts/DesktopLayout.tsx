@@ -238,7 +238,7 @@ const DesktopLayout = (props: LayoutProps) => {
                             : {}),
                         }}
                       >
-                        {props.traderChartPositions}
+                        {props.marketStats}
                       </Box>
                     </Flex>
                   </Box>

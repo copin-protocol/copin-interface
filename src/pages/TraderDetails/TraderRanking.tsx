@@ -84,12 +84,17 @@ const TraderRanking = memo(function TraderRankingMemo({
           </Flex>
         </Type.Caption>
       ) : (
-        <Box sx={{ width: '100%' }}>
+        <Box
+          sx={{ width: '100%' }}
+          display={['flex', 'flex', 'flex', 'flex', 'block']}
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <Flex
             sx={{
               flexShrink: 0,
               px: 3,
-              width: '100%',
+              width: ['fit-content', 'fit-content', 'fit-content', 'fit-content', '100%'],
               alignItems: 'center',
               height: 40,
               // borderBottom: 'small',
@@ -102,8 +107,20 @@ const TraderRanking = memo(function TraderRankingMemo({
               menuSx={{ transform: 'translateX(10px)' }}
             />
           </Flex>
-          <Type.CaptionBold mt={2} sx={{ px: 3, width: '100%', flexShrink: 0 }} color="neutral1" textAlign="center">
-            <Flex sx={{ alignItems: 'center', justifyContent: 'start', width: '100%', gap: 12 }}>
+          <Type.CaptionBold
+            mt={2}
+            sx={{ px: 3, width: ['fit-content', 'fit-content', 'fit-content', 'fit-content', '100%'], flexShrink: 0 }}
+            color="neutral1"
+            textAlign="center"
+          >
+            <Flex
+              sx={{
+                alignItems: 'center',
+                justifyContent: 'start',
+                width: ['fit-content', 'fit-content', 'fit-content', 'fit-content', '100%'],
+                gap: 12,
+              }}
+            >
               <Box as="span">Better than {avgScore.toFixed(0)}% traders</Box>
               <CustomizeRankingColumns />
             </Flex>

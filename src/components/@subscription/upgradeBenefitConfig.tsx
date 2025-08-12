@@ -111,8 +111,8 @@ export const UPGRADE_BENEFIT_CONFIG: Partial<Record<SubscriptionFeatureEnum, Upg
         imageSrc: '/images/subscriptions/subscription_trader_profile_benefit_1.png',
       },
       {
-        title: <Trans>Token Preference</Trans>,
-        description: <Trans>Know exactly which tokens this trader dominates</Trans>,
+        title: <Trans>Market Stats</Trans>,
+        description: <Trans>Know exactly which markets this trader dominates</Trans>,
         imageSrc: '/images/subscriptions/subscription_trader_profile_benefit_2.png',
       },
       {

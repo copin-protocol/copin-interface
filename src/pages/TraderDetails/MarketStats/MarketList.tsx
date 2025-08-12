@@ -13,16 +13,17 @@ import { SortTypeEnum } from 'utils/config/enums'
 import { compactNumber, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 
-type TokenStatisticProps = {
+type MarketListProps = {
   data: TraderTokenStatistic[] | undefined
   currentPair: string | undefined
   changePair: (symbol: string) => void
+  isExpanded: boolean
 }
 
 const SLIDES_TO_SCROLL = 3
 const PIXEL_TOLERANCE = 20
 
-export function ListTokenStatistic({ data, currentPair, changePair }: TokenStatisticProps) {
+export function ListTokenStatistic({ data, currentPair, changePair }: MarketListProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollPositionsRef = useRef<number[]>([])
   const lastScrollPositionRef = useRef<number>(0)
@@ -232,7 +233,7 @@ const ScrollNavigator = styled(IconBox)({
   cursor: 'pointer',
   transition: '0.3s',
 })
-export function TableTokenStatistic({ data, currentPair, changePair }: TokenStatisticProps) {
+export function MarketList({ data, currentPair, changePair, isExpanded }: MarketListProps) {
   const [currentSort, setCurrentSort] = useState<TableSortProps<TraderTokenStatistic> | undefined>(() => {
     const initSortBy = 'totalTrade'
     const initSortType = SortTypeEnum.DESC
@@ -273,7 +274,7 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
             }}
           >
             <Image src={icon} sx={{ width: 24, height: 24, borderRadius: '50%' }} alt={symbol} />
-            <Type.Caption>{symbol}</Type.Caption>
+            <Type.Caption color="neutral1">{symbol}</Type.Caption>
           </Flex>
         )
       },
@@ -307,11 +308,11 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       dataIndex: 'totalVolume',
       key: 'totalVolume',
       sortBy: 'totalVolume',
-      style: { minWidth: '100px', textAlign: 'right' },
+      style: { minWidth: '70px', textAlign: 'right' },
       render: (item) => {
         return (
           <Type.Caption color="neutral1">
-            {item.totalVolume ? `$${formatNumber(item.totalVolume, 0, 0)}` : '--'}
+            {item.totalVolume ? `$${compactNumber(item.totalVolume, 2)}` : '--'}
           </Type.Caption>
         )
       },
@@ -321,11 +322,11 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
       dataIndex: 'realisedPnl',
       key: 'realisedPnl',
       sortBy: 'realisedPnl',
-      style: { minWidth: '110px', textAlign: 'right' },
+      style: { minWidth: '70px', textAlign: 'right' },
       render: (item) => {
         return (
           <Type.Caption>
-            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} prefix="$" />
+            <SignedText value={item.realisedPnl} fontInherit minDigit={2} maxDigit={2} prefix="$" isCompactNumber />
           </Type.Caption>
         )
       },
@@ -346,9 +347,13 @@ export function TableTokenStatistic({ data, currentPair, changePair }: TokenStat
         },
       }}
       data={displayedData}
-      columns={tableColumns}
+      columns={tableColumns.filter((column) =>
+        isExpanded ? true : ['indexToken', 'totalVolume', 'winRate', 'realisedPnl'].includes(column.key ?? '')
+      )}
       isLoading={false}
-      renderRowBackground={(data) => (currentPair && data.pair === currentPair ? themeColors.neutral5 : 'transparent')}
+      renderRowBackground={(data) =>
+        currentPair && data.pair === currentPair && isExpanded ? themeColors.neutral5 : 'transparent'
+      }
       restrictHeight
       onClickRow={(data) => changePair(data.pair)}
       currentSort={currentSort}

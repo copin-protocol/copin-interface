@@ -91,7 +91,7 @@ const TabletLayout = (props: LayoutProps) => {
                       <Flex flexDirection="column" width="100%" height="100%">
                         {tab === TabEnum.CHARTS ? (
                           <Box height="100%" sx={{ borderTop: 'small', borderColor: 'neutral4' }}>
-                            {props.traderChartPositions}
+                            {props.marketStats}
                           </Box>
                         ) : (
                           <Box sx={{ pb: 3 }}>{props.traderStats}</Box>
