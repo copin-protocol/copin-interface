@@ -1,10 +1,11 @@
 import { SystemStyleObject } from '@styled-system/css'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { GridProps } from 'styled-system'
 import { v4 as uuid } from 'uuid'
 
 import Tooltip from 'theme/Tooltip'
 import { Flex, Image, Type } from 'theme/base'
+import { FALLBACK_IMAGE_URL } from 'utils/config/constants'
 import { formatSymbol, parseMarketImage } from 'utils/helpers/transform'
 
 export default function Market({
@@ -25,6 +26,7 @@ export default function Market({
   symbolNameSx?: any
 }) {
   const tooltipId = useMemo(() => uuid(), [])
+  const [img, setImg] = useState(() => imageUriFactory(symbol))
   if (!symbol) return <></>
   return (
     <Flex alignItems="center" sx={{ gap: 1 }} data-key="pair">
@@ -45,7 +47,11 @@ export default function Market({
         data-tooltip-id={hasTooltip ? tooltipId : undefined}
         data-tooltip-delay-show={360}
       >
-        <Image src={imageUriFactory(symbol)} sx={{ width: size, height: size }} />
+        <Image
+          src={img}
+          onError={() => setImg(FALLBACK_IMAGE_URL)}
+          sx={{ width: size, height: size, objectFit: 'cover' }}
+        />
       </Flex>
       {hasName && !!symbol && (
         <Type.Small fontSize="10px" sx={symbolNameSx}>
@@ -56,8 +62,16 @@ export default function Market({
         <Tooltip id={tooltipId} clickable>
           <Flex alignItems="center" justifyContent="center" sx={{ gap: 1 }}>
             <Image
-              src={imageUriFactory(symbol)}
-              sx={{ width: size, height: size, borderRadius: size / 2, border: 'small', borderColor: 'neutral4' }}
+              src={img}
+              onError={() => setImg(FALLBACK_IMAGE_URL)}
+              sx={{
+                width: size,
+                height: size,
+                borderRadius: size / 2,
+                border: 'small',
+                borderColor: 'neutral4',
+                objectFit: 'cover',
+              }}
             />
             <Type.Small fontSize="10px">{formatSymbol(symbol)}</Type.Small>
           </Flex>

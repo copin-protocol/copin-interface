@@ -95,6 +95,8 @@ export const LINKS = {
   hyperformance: 'https://hyperformance.xyz/trade',
 }
 
+export const FALLBACK_IMAGE_URL = 'https://api.copin.io/storage/image/markets__QuestionMark'
+
 export const NAVBAR_HEIGHT = 56
 export const PAGE_TITLE_HEIGHT = 48
 export const TAB_HEIGHT = 40
