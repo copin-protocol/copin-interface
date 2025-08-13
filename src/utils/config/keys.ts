@@ -203,6 +203,7 @@ export const STORAGE_KEYS = {
   PRIVY_CONNECTIONS: 'privy:connections',
   PAYMENT_ID: 'payment-id',
   HYPERLIQUID_MODE: 'hyperliquid-mode',
+  PROFILE_STAT_EXPANDED: 'profile_stat_expanded',
 }
 
 export const URL_PARAM_KEYS = {

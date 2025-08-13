@@ -151,6 +151,8 @@ export const EVENT_ACTIONS = {
     HIDE_OPENING_POSITION_FULL: 'hide_trader_opening_position_full',
     EXPAND_CHART_POSITION_FULL: 'expand_chart_position_full',
     HIDE_CHART_POSITION_FULL: 'hide_chart_position_full',
+    EXPAND_STAT_FULL: 'expand_trader_stat_full',
+    HIDE_STAT_FULL: 'hide_trader_stat_full',
   },
   [EventCategory.COMPETITION]: {
     HOME_CLICK_NAV: 'comp_home_click_nav',

@@ -179,6 +179,8 @@ export function TraderDetailsComponent({
     handlePositionsExpand,
     chartFullExpanded,
     handleChartFullExpand,
+    statExpanded,
+    handleStatExpand,
     apiMode,
     handleApiMode,
   } = useHandleLayout()
@@ -203,6 +205,8 @@ export function TraderDetailsComponent({
           protocolStats={
             <ProtocolStats address={address} protocol={protocol} page="details" exchangeStats={exchangeStats} />
           }
+          handleStatExpand={handleStatExpand}
+          statExpanded={statExpanded}
           traderInfo={
             <Box>
               <Flex
@@ -274,7 +278,13 @@ export function TraderDetailsComponent({
             </Box>
           }
           traderChartPnl={
-            <ChartTrader protocol={protocol} account={address} timeOption={timeOption} onChangeTime={setTimeOption} />
+            <ChartTrader
+              protocol={protocol}
+              account={address}
+              timeOption={timeOption}
+              onChangeTime={setTimeOption}
+              statExpanded={statExpanded}
+            />
           }
           traderStatsSummary={
             <GeneralStats

@@ -19,6 +19,8 @@ export type LayoutProps = {
   openingPositionFullExpanded?: boolean
   positionFullExpanded?: boolean
   chartFullExpanded?: boolean
+  statExpanded?: boolean
+  handleStatExpand?: () => void
   apiMode?: boolean
   protocol?: ProtocolEnum
   address?: string

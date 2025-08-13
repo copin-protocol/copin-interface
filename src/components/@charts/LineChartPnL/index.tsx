@@ -1,3 +1,4 @@
+import { useSize } from 'ahooks'
 import {
   ColorType,
   CrosshairMode,
@@ -61,6 +62,9 @@ export default function LineChartPnL({
   protocol?: ProtocolEnum
 } & CommonProps) {
   const [crossMovePnL, setCrossMovePnL] = useState<number | undefined>()
+  const chartContainerRef = useRef<HTMLDivElement | null>(null)
+  const size = useSize(chartContainerRef.current)
+  const widthRef = useRef(0)
   let _from = from,
     _to = to
   if (dayCount) {
@@ -110,17 +114,21 @@ export default function LineChartPnL({
         setCrossMovePnL(data?.value)
       })
     }
-    window.addEventListener('resize', handleResize)
+
+    if (size && widthRef.current !== size.width) {
+      widthRef.current = size.width
+      handleResize()
+    }
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      // window.removeEventListener('resize', handleResize)
 
       chart.remove()
     }
-  }, [chartData, isSimple, lineWidth])
+  }, [chartData, isSimple, lineWidth, size])
 
   return (
-    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }}>
+    <Flex sx={{ width: '100%', height: '100%', flexDirection: 'column' }} ref={chartContainerRef}>
       {data && chartData && !isLoading && (
         <>
           {hasBalanceText && (

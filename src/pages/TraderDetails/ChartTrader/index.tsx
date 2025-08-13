@@ -29,6 +29,7 @@ const ChartTrader = ({
   onChangeTime,
   isShowTimeFilter = true,
   chartTraderSx,
+  statExpanded,
 }: {
   protocol: ProtocolEnum
   account: string
@@ -36,6 +37,7 @@ const ChartTrader = ({
   onChangeTime: (option: TimeFilterProps) => void
   isShowTimeFilter?: boolean
   chartTraderSx?: any
+  statExpanded?: boolean
 }) => {
   const { unrealisedPnl } = useTraderProfitStore()
   const [isBarChart, setIsBarChart] = useState(false)
@@ -94,42 +96,17 @@ const ChartTrader = ({
       {stats && !loadingStats && (
         <>
           <Flex width="100%" flexDirection={['column', 'column', 'column', 'column', 'row']} alignItems="start">
-            {isBarChart && (
-              <Flex
-                flexWrap="wrap"
-                alignItems="center"
-                color="neutral3"
-                width="100%"
-                sx={{
-                  minWidth: lg ? '230px' : 'auto',
-                  pl: '12px',
-                  gap: 2,
-                  order: [2, 2, 2, 2, 1],
-                }}
+            <Flex
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ order: [1, 1, 1, 1, 2], gap: 3 }}
+            >
+              <Box
+                display={['block', 'block', 'block', 'block', statExpanded ? 'block' : 'none']}
+                width={80}
+                sx={{ flexShrink: 0 }}
               >
-                <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <ActiveDot color="green1" />
-                  <Type.Caption>Daily Profit</Type.Caption>
-                </Flex>
-                <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <ActiveDot color="red2" />
-                  <Type.Caption>Daily Loss</Type.Caption>
-                </Flex>
-                <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <ActiveDot color={`${themeColors.red1}80`} />
-                  <Type.Caption>Daily Fees</Type.Caption>
-                </Flex>
-                <Flex alignItems="center" sx={{ gap: 1 }}>
-                  <ActiveDot color="orange1" />
-                  <Type.Caption>Cumulative PnL: </Type.Caption>
-                  <Type.Caption color={cumulativePnL > 0 ? 'green1' : cumulativePnL < 0 ? 'red2' : 'neutral1'}>
-                    {`${cumulativePnL < 0 ? '-' : ''}$${formatNumber(Math.abs(cumulativePnL), 2)}`}
-                  </Type.Caption>
-                </Flex>
-              </Flex>
-            )}
-            <Flex width="100%" alignItems="center" justifyContent="space-between" sx={{ order: [1, 1, 1, 1, 2] }}>
-              <Box display={['block', 'block', 'block', 'block', 'none']}>
                 {isShowTimeFilter && (
                   <TimeDropdown
                     timeOption={timeOption}
@@ -138,13 +115,43 @@ const ChartTrader = ({
                   />
                 )}
               </Box>
-              <Box width={56} display={['none', 'none', 'none', 'none', 'block']} />
+              {!statExpanded && !isBarChart && <Box width={80} display={['none', 'none', 'none', 'none', 'block']} />}
+              {isBarChart && (
+                <Flex
+                  flexWrap="wrap"
+                  alignItems="center"
+                  color="neutral3"
+                  sx={{
+                    gap: 2,
+                  }}
+                >
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="green1" />
+                    <Type.Caption>Daily Profit</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="red2" />
+                    <Type.Caption>Daily Loss</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color={`${themeColors.red1}80`} />
+                    <Type.Caption>Daily Fees</Type.Caption>
+                  </Flex>
+                  <Flex alignItems="center" sx={{ gap: 1 }}>
+                    <ActiveDot color="orange1" />
+                    <Type.Caption>Cumulative PnL: </Type.Caption>
+                    <Type.Caption color={cumulativePnL > 0 ? 'green1' : cumulativePnL < 0 ? 'red2' : 'neutral1'}>
+                      {`${cumulativePnL < 0 ? '-' : ''}$${formatNumber(Math.abs(cumulativePnL), 2)}`}
+                    </Type.Caption>
+                  </Flex>
+                </Flex>
+              )}
               {!isBarChart && (
                 <Type.Caption color="neutral3" sx={{ textAlign: 'center' }}>
                   PnL
                 </Type.Caption>
               )}
-              <Flex alignItems="center">
+              <Flex alignItems="center" width={80} justifyContent="flex-end" sx={{ flexShrink: 0 }}>
                 <ButtonWithIcon
                   sx={{ border: 'none' }}
                   icon={

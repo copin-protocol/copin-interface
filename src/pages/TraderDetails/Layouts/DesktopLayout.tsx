@@ -18,7 +18,7 @@ import { LayoutProps } from './types'
 
 const DesktopLayout = (props: LayoutProps) => {
   const size = useSize(document.body)
-  const { openingPositionFullExpanded, positionFullExpanded, chartFullExpanded } = props
+  const { openingPositionFullExpanded, positionFullExpanded, chartFullExpanded, statExpanded, handleStatExpand } = props
   const { myProfile } = useMyProfile()
   const { isEnablePosition, requiredPlanToViewPosition } = useTraderProfilePermission({ protocol: props.protocol })
 
@@ -94,6 +94,7 @@ const DesktopLayout = (props: LayoutProps) => {
                     sx={{
                       minWidth: 350,
                       maxWidth: 350,
+
                       gridArea: 'CHARTS / CHARTS',
                       overflow: 'hidden',
                       display: 'grid',
@@ -185,8 +186,8 @@ const DesktopLayout = (props: LayoutProps) => {
                   <Box
                     id="CHARTS"
                     sx={{
-                      minWidth: 350,
-                      maxWidth: 350,
+                      minWidth: statExpanded ? 0 : 350,
+                      maxWidth: statExpanded ? 0 : 350,
                       gridArea: 'CHARTS / CHARTS',
                       overflow: 'hidden',
                       display: 'grid',
@@ -205,10 +206,20 @@ const DesktopLayout = (props: LayoutProps) => {
                           position: 'relative',
                         }}
                       >
+                        <DirectionButton
+                          onClick={() => handleStatExpand?.()}
+                          buttonSx={{
+                            display: statExpanded ? 'none' : 'block',
+                            right: statExpanded ? '0px' : '-10px',
+                            top: 68,
+                            transform: 'translateX(-50%)',
+                          }}
+                          direction={statExpanded ? 'right' : 'left'}
+                        />
                         {props.traderRanking}
                         <Box
                           sx={{
-                            height: 'calc(100% - 72px)',
+                            height: '100%',
                             width: '1px',
                             bg: 'neutral4',
                             position: 'absolute',
@@ -221,6 +232,7 @@ const DesktopLayout = (props: LayoutProps) => {
                         sx={{
                           gridArea: 'CANDLESTICK',
                           borderRight: 'small',
+                          position: 'relative',
                           borderTop: chartFullExpanded ? 'none' : 'small',
                           borderColor: 'neutral4',
                           height: `max(calc(100% - ${rowOneHeight}),200px)`,
@@ -261,11 +273,24 @@ const DesktopLayout = (props: LayoutProps) => {
                             overflow: 'hidden',
                             // bg: 'neutral5',
                             flexShrink: 0,
+                            position: 'relative',
                           }}
                         >
+                          <DirectionButton
+                            onClick={() => handleStatExpand?.()}
+                            buttonSx={{
+                              display: statExpanded ? 'block' : 'none',
+                              left: statExpanded ? '10px' : '0px',
+                              top: 60,
+                              zIndex: 10,
+                              transform: 'translateX(-50%)',
+                              bg: 'neutral5',
+                            }}
+                            direction={statExpanded ? 'right' : 'left'}
+                          />
                           <Box flex="1 0 0">{props.traderChartPnl}</Box>
                         </Flex>
-                        <Box overflow="auto" flex="1 0 0" mr={'-1px'} sx={{ position: 'relative' }}>
+                        <Box overflow="auto" width="100%" height="100%" mr={'-1px'} sx={{ position: 'relative' }}>
                           <Box height="100%">{props.traderStats}</Box>
                         </Box>
                       </Box>
