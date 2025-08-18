@@ -7,9 +7,9 @@ import tokenNotFound from 'assets/images/token-not-found.png'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import LineChartTraderPnl from 'components/@charts/LineChartPnL'
 import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { PnlStatisticsResponse, ResponseTraderData } from 'entities/trader'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import { useAuthContext } from 'hooks/web3/useAuth'
@@ -330,14 +330,16 @@ function TraderItem({
         mb={24}
         sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between', '& *': { fontWeight: 600 } }}
       >
-        <TraderAddress
+        <AccountInfo
+          address={account}
+          protocol={protocol}
+          avatarSize={32}
+          textSx={{ width: 'fit-content' }}
+          linkTarget="_blank"
+          type={type}
           onPreview={() => {
             logEventLite({ event: EVENT_ACTIONS[EventCategory.LITE].LITE_PREVIEW_TRADER })
           }}
-          address={account}
-          protocol={protocol}
-          options={{ timeType: type, size: 32, textSx: { width: 77 } }}
-          linkTarget="_blank"
           quickViewDisabledActions={['copy-trade']}
           quickViewDisabledLinkAccount
         />

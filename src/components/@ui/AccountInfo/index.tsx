@@ -1,4 +1,5 @@
 import { SystemStyleObject } from '@styled-system/css'
+import { HTMLAttributeAnchorTarget } from 'react'
 import Highlighter from 'react-highlight-words'
 import { Link } from 'react-router-dom'
 import { GridProps } from 'styled-system'
@@ -12,6 +13,7 @@ import useGlobalStore from 'hooks/store/useGlobalStore'
 import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import { useEnsName } from 'hooks/useEnsName'
+import { DisabledActionType } from 'pages/TraderDetails/TraderActionButtons'
 // import CopyButton from 'theme/Buttons/CopyButton'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
@@ -21,36 +23,56 @@ import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 // import ProtocolLogo from '../ProtocolLogo'
 
+export type AvatarSize = 40 | 32 | 24 | 18
+
 export function AccountInfo({
-  isOpenPosition,
   address,
   protocol,
   type,
+  addressFormatter: AddressFormatter = Type.Caption,
   note,
-  size = 40,
+  avatarSize = 40,
   smartAccount,
   keyword,
-  hasHover = true,
+  hasQuickView = true,
   shouldShowProtocol = true,
-  sx,
+  shouldShowFullText = false,
+  hasLink = true,
+  hasAddressTooltip = true,
+  textSx,
   addressWidth = 80,
-  wrapperSx,
+  wrapperSx = {},
   label,
+  labelSx = {},
+  addressProps = {},
+  onPreview,
+  linkTarget,
+  quickViewDisabledActions,
+  quickViewDisabledLinkAccount,
 }: {
-  isOpenPosition: boolean
   address: string
   protocol: ProtocolEnum
   type?: TimeFrameEnum
   note?: string
-  size?: number
+  avatarSize?: AvatarSize
   smartAccount?: string
   keyword?: string
-  hasHover?: boolean
+  hasQuickView?: boolean
   shouldShowProtocol?: boolean
-  sx?: SystemStyleObject & GridProps
+  shouldShowFullText?: boolean
+  hasLink?: boolean
+  hasAddressTooltip?: boolean
+  textSx?: SystemStyleObject & GridProps
   addressWidth?: number | string
   wrapperSx?: any
   label?: string
+  labelSx?: SystemStyleObject & GridProps
+  addressFormatter?: React.ElementType
+  addressProps?: any
+  onPreview?: () => void
+  linkTarget?: HTMLAttributeAnchorTarget
+  quickViewDisabledActions?: DisabledActionType[]
+  quickViewDisabledLinkAccount?: boolean
 }) {
   const protocolTooltipId = uuid()
   const ensTooltipId = uuid()
@@ -70,62 +92,90 @@ export function AccountInfo({
         color: 'inherit',
         font: 'inherit !important',
         py: 1,
-        ...(wrapperSx || {}),
+        ...wrapperSx,
       }}
     >
       <Box
-        width={size}
-        height={size}
+        width={avatarSize}
+        height={avatarSize}
         sx={{
-          '&:hover': hasHover
+          '&:hover': hasQuickView
             ? {
                 cursor: 'pointer',
                 backgroundImage: `url(${IconEye})`,
-                backgroundSize: '24px',
+                backgroundSize: `${avatarSize / 1.5}px`,
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
               }
             : {},
         }}
-        onClick={(event) => {
-          event.stopPropagation()
-          setTrader({ address, protocol, type })
-        }}
+        onClick={
+          hasQuickView
+            ? (event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                onPreview?.()
+                setTrader(
+                  { address, protocol, type },
+                  {
+                    disabledActions: quickViewDisabledActions,
+                    disabledLinkAccount: quickViewDisabledLinkAccount,
+                  }
+                )
+              }
+            : undefined
+        }
       >
-        <AddressAvatar address={address} size={size} sx={{ '&:hover': hasHover ? { opacity: 0.25 } : {} }} />
+        <AddressAvatar address={address} size={avatarSize} sx={{ '&:hover': hasQuickView ? { opacity: 0.25 } : {} }} />
       </Box>
       <Flex
-        as={Link}
-        to={generateTraderMultiExchangeRoute({ protocol, address, params: { time: type } })}
+        as={hasLink ? Link : 'div'}
+        to={hasLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: type } }) : undefined}
+        target={linkTarget}
         onClick={(e: any) => e.stopPropagation()}
         flex="1"
         flexDirection="column"
         sx={{
           color: 'inherit',
           textAlign: 'left',
-          ...sx,
+          ...textSx,
         }}
       >
         <Flex alignItems="center" sx={{ gap: 1, alignItems: 'start' }}>
           <Flex flexDirection={'column'} justifyContent={'start'}>
-            <Flex alignItems="center">
-              <Type.Caption
+            <Flex alignItems="center" sx={{ gap: 1 }}>
+              <AddressFormatter
                 width={addressWidth}
                 color={isCopying ? 'orange1' : 'inherit'}
                 sx={{
                   lineHeight: '24px',
-                  ':hover': {
-                    color: 'primary1',
-                    textDecoration: 'underline',
-                  },
-                  ...sx,
+                  ...(hasLink && {
+                    ':hover': {
+                      color: 'primary1',
+                      textDecoration: 'underline',
+                    },
+                  }),
+                  ...textSx,
                 }}
                 data-tip="React-tooltip"
                 data-tooltip-id={ensTooltipId}
                 data-tooltip-offset={0}
+                {...addressProps}
               >
-                {ensName ? shortenEnsName(ensName) : <HighlightKeyword text={address} keyword={keyword} />}
-              </Type.Caption>
+                {ensName ? (
+                  shouldShowFullText ? (
+                    ensName
+                  ) : (
+                    shortenEnsName(ensName)
+                  )
+                ) : keyword ? (
+                  <HighlightKeyword text={address} keyword={keyword} shouldShowFullText={shouldShowFullText} />
+                ) : shouldShowFullText ? (
+                  address
+                ) : (
+                  addressShorten(address)
+                )}
+              </AddressFormatter>
 
               {shouldShowProtocol && (
                 <>
@@ -143,13 +193,13 @@ export function AccountInfo({
                 </>
               )}
             </Flex>
-            <AlertLabel alertLabel={label || ''} sx={{ fontSize: '10px' }} />
+            <AlertLabel alertLabel={label || ''} sx={{ fontSize: '10px', ...labelSx }} />
           </Flex>
           {/* <Tooltip id={`tt_combined_${address}_${protocol}`} clickable={false} place="bottom">
             <div>{label && <Type.Caption>{label}</Type.Caption>}</div>
           </Tooltip> */}
 
-          {ensName && (
+          {ensName && hasAddressTooltip && (
             <Tooltip id={ensTooltipId} clickable={false}>
               <Flex flexDirection="column" sx={{ gap: 1 }}>
                 <Type.Caption>{ensName}</Type.Caption>
@@ -232,17 +282,25 @@ export function AccountInfo({
   )
 }
 
-function HighlightKeyword({ text, keyword }: { text: string; keyword?: string }) {
+function HighlightKeyword({
+  text,
+  keyword,
+  shouldShowFullText = false,
+}: {
+  text: string
+  keyword?: string
+  shouldShowFullText?: boolean
+}) {
   return keyword ? (
     <Highlighter
       searchWords={[keyword, addressShorten(keyword, 3, 5), shortenText(keyword, 5), keyword.slice(-3, keyword.length)]}
-      textToHighlight={addressShorten(text, 3, 5)}
+      textToHighlight={shouldShowFullText ? text : addressShorten(text, 3, 5)}
       highlightStyle={{
         backgroundColor: 'rgba(78, 174, 253, 0.3)',
         color: 'white',
       }}
     />
   ) : (
-    <>{addressShorten(text, 3, 5)}</>
+    <>{shouldShowFullText ? text : addressShorten(text, 3, 5)}</>
   )
 }

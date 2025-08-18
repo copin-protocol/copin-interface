@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { TraderData } from 'entities/trader'
 import useGetTokensTraded from 'hooks/features/trader/useGetTokensTraded'
 import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
@@ -25,7 +25,7 @@ export default function Stats({
     <Box sx={{ p: 3, width: '100%', height: '100%', overflow: 'auto' }}>
       <Flex sx={{ alignItems: 'center', gap: 2 }}>
         <Box sx={{ width: '4px', height: 24, bg: indicatorColor }} />
-        <TraderAddress address={account} protocol={protocol} options={{ isLink: isLinkAddress }} />
+        <AccountInfo address={account} protocol={protocol} hasLink={isLinkAddress} avatarSize={24} />
       </Flex>
       <Flex mt={3} sx={{ width: '100%', flexDirection: 'column', gap: 12 }}>
         <StatsRow

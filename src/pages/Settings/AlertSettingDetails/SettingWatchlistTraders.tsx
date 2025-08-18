@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ApiListResponse } from 'apis/api'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
 import UpgradeButton from 'components/@subscription/UpgradeButton'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import BadgeWithLimit from 'components/@ui/BadgeWithLimit'
 import InputSearchText from 'components/@ui/InputSearchText'
 import NoDataFound from 'components/@ui/NoDataFound'
@@ -30,7 +31,7 @@ import { AlertSettingsEnum } from 'utils/config/enums'
 import { goToPreviousPage } from 'utils/helpers/transform'
 
 import SearchToAdd from './SearchToAdd'
-import { MobileRowItem, Trader24hTrades, TraderAddress, TraderCreatedAt, TraderStatus } from './config'
+import { MobileRowItem, Trader24hTrades, TraderCreatedAt, TraderStatus } from './config'
 
 export default function SettingWatchlistTraders({
   botAlert,
@@ -206,7 +207,13 @@ export default function SettingWatchlistTraders({
     return (
       <Flex alignItems="center" sx={{ gap: 2 }} ref={(i) => (itemRefs.current[index] = i)}>
         <Flex flexDirection="column" width={160}>
-          <TraderAddress data={item} />
+          <AccountInfo
+            address={item.address}
+            protocol={item.protocol}
+            avatarSize={32}
+            textSx={{ color: 'neutral1' }}
+            label={item.label}
+          />
         </Flex>
 
         <Box className="alert-label-btn" pt={2}>
@@ -380,7 +387,13 @@ export default function SettingWatchlistTraders({
                         sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
                       >
                         <Flex flexDirection="column" sx={{ gap: 1 }}>
-                          <TraderAddress data={data} />
+                          <AccountInfo
+                            address={data.address}
+                            protocol={data.protocol}
+                            avatarSize={32}
+                            label={data.label}
+                            textSx={{ color: 'neutral1' }}
+                          />
                         </Flex>
 
                         <Flex alignItems="center" sx={{ gap: 3 }}>

@@ -1,15 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Square } from '@phosphor-icons/react'
-import { Link } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 
-import IconEye from 'assets/icons/ic-eye.svg'
-import AddressAvatar from 'components/@ui/AddressAvatar'
-import AddressText from 'components/@ui/AddressText'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Market from 'components/@ui/MarketGroup/Market'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -20,7 +15,6 @@ import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
-import Tooltip from 'theme/Tooltip'
 import { Box, Flex, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -29,7 +23,6 @@ import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 import { formatSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
@@ -388,80 +381,27 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
   })
 }
 
-export function renderTrader(
-  address: string,
-  protocol: ProtocolEnum,
-  hasCopy?: boolean,
-  enableProtocolLogo?: boolean,
-  onQuickView?: ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => void
-) {
-  const protocolTooltipId = uuid()
-
+export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean, enableProtocolLogo?: boolean) {
   return (
     <Flex sx={{ gap: 1, px: 1 }} alignItems="center">
-      <Box
-        width={24}
-        height={24}
-        sx={{
-          '&:hover': onQuickView
-            ? {
-                cursor: 'pointer',
-                backgroundImage: `url(${IconEye})`,
-                backgroundSize: '20px',
-                backgroundPosition: 'center center',
-                backgroundRepeat: 'no-repeat',
-              }
-            : {},
-        }}
-        onClick={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          onQuickView?.({ address, protocol })
-        }}
-      >
-        <AddressAvatar address={address} size={24} sx={{ '&:hover': onQuickView ? { opacity: 0.25 } : {} }} />
-      </Box>
-
-      <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
-        <Flex sx={{ gap: 1 }} alignItems="center">
-          <AddressText
-            address={address}
-            sx={{
-              ...overflowEllipsis(),
-              width: '85px',
-              display: 'flex',
-              ':hover': { textDecoration: 'underline' },
-            }}
-          />
-
-          {enableProtocolLogo && (
-            <>
-              <ProtocolLogo
-                protocol={protocol}
-                size={22}
-                hasText={false}
-                data-tip="React-tooltip"
-                data-tooltip-id={`tt_protocol_${protocolTooltipId}`}
-                data-tooltip-offset={0}
-              />
-              <Tooltip id={`tt_protocol_${protocolTooltipId}`} clickable={false}>
-                <ProtocolLogo protocol={protocol} />
-              </Tooltip>
-            </>
-          )}
-          {hasCopy && (
-            <CopyButton
-              type="button"
-              variant="ghost"
-              value={address}
-              size="sm"
-              sx={{ color: 'neutral3', p: 0 }}
-              iconSize={14}
-              className={'hiding-btn'}
-            ></CopyButton>
-          )}
-        </Flex>
-      </Link>
+      <AccountInfo
+        address={address}
+        protocol={protocol}
+        shouldShowProtocol={enableProtocolLogo}
+        avatarSize={24}
+        textSx={{ color: 'neutral1' }}
+      />
+      {hasCopy && (
+        <CopyButton
+          type="button"
+          variant="ghost"
+          value={address}
+          size="sm"
+          sx={{ color: 'neutral3', p: 0 }}
+          iconSize={14}
+          className={'hiding-btn'}
+        ></CopyButton>
+      )}
     </Flex>
   )
 }

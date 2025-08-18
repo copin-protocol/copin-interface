@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Square } from '@phosphor-icons/react'
-import { Link } from 'react-router-dom'
 
-import AddressAvatar from 'components/@ui/AddressAvatar'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Market from 'components/@ui/MarketGroup/Market'
@@ -11,16 +9,13 @@ import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
-import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
 import { Flex, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
-import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
-import { addressShorten, compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
@@ -310,27 +305,4 @@ function OpeningRoiComponent({ data, prices, ignoreFee, sx }: OpeningRoiComponen
     suffix: '%',
     sx: { textAlign: 'right', width: '100%', ...sx },
   })
-}
-
-export function renderTrader(address: string, protocol: ProtocolEnum, hasCopy?: boolean) {
-  return (
-    <Link to={generateTraderMultiExchangeRoute({ protocol, address })} onClick={(e) => e.stopPropagation()}>
-      <Flex sx={{ gap: 2 }} alignItems="center">
-        <AddressAvatar address={address} size={24} />
-        <Type.Caption color="neutral1" sx={{ ':hover': { textDecoration: 'underline' } }}>
-          {addressShorten(address, 3, 5)}
-        </Type.Caption>
-        {hasCopy && (
-          <CopyButton
-            type="button"
-            variant="ghost"
-            value={address}
-            size="sm"
-            sx={{ color: 'neutral3', p: 0 }}
-            iconSize={14}
-          ></CopyButton>
-        )}
-      </Flex>
-    </Link>
-  )
 }

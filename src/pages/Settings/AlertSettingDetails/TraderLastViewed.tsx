@@ -7,6 +7,7 @@ import { normalizeTraderData } from 'apis/normalize'
 import { RequestBodyApiData } from 'apis/types'
 import { useClickLoginButton } from 'components/@auth/LoginAction'
 import UpgradeButton from 'components/@subscription/UpgradeButton'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import SectionTitle from 'components/@ui/SectionTitle'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import { TraderAlertData } from 'entities/alert'
@@ -25,14 +26,7 @@ import { AlertTypeEnum, ProtocolEnum } from 'utils/config/enums'
 import { getRequiredPlan } from 'utils/helpers/permissionHelper'
 
 import NoAlertList from './NoAlertList'
-import {
-  MobileRowItem,
-  Trader24hTrades,
-  Trader30dTrades,
-  TraderAddress,
-  TraderLastTradeAt,
-  TraderStatus,
-} from './config'
+import { MobileRowItem, Trader24hTrades, Trader30dTrades, TraderLastTradeAt, TraderStatus } from './config'
 
 export default function TraderLastViewed() {
   const { lg } = useResponsive()
@@ -132,7 +126,9 @@ export default function TraderLastViewed() {
         dataIndex: 'address',
         key: 'address',
         style: { minWidth: '150px' },
-        render: (item) => <TraderAddress data={item} />,
+        render: (item) => (
+          <AccountInfo address={item.address} protocol={item.protocol} avatarSize={32} textSx={{ color: 'neutral1' }} />
+        ),
       },
       {
         title: 'LAST TRADE',
@@ -197,7 +193,12 @@ export default function TraderLastViewed() {
                       sx={{ py: 2, gap: 2, borderTop: index > 0 ? 'small' : 'none', borderColor: 'neutral4' }}
                     >
                       <Flex alignItems="center" justifyContent="space-between">
-                        <TraderAddress data={data} />
+                        <AccountInfo
+                          address={data.address}
+                          protocol={data.protocol}
+                          avatarSize={32}
+                          textSx={{ color: 'neutral1' }}
+                        />
                         <Flex alignItems="center" sx={{ gap: 3 }}>
                           <TraderStatus data={data} />
                           <TraderActions data={data} />

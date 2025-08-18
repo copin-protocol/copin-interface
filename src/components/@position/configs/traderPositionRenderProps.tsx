@@ -5,10 +5,10 @@ import { PositionPairFilterIcon } from 'components/@dailyTrades/PositionPairFilt
 import { PositionRangeFilterIcon } from 'components/@dailyTrades/PositionRangeFilterIcon'
 import { PositionStatusFilterIcon } from 'components/@dailyTrades/PositionStatusFilterIcon'
 import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Market from 'components/@ui/MarketGroup/Market'
-import TraderAddress from 'components/@ui/TraderAddress'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { PairFilterIcon } from 'components/@widgets/PairFilterIcon'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
@@ -407,7 +407,7 @@ const accountColumn: ColumnData<PositionData> = {
   render: (item) => {
     return (
       <Flex sx={{ width: '100%', '& > *': { width: 'max-content' } }}>
-        <TraderAddress address={item.account} protocol={item.protocol} />
+        <AccountInfo address={item.account} protocol={item.protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
       </Flex>
     )
   },

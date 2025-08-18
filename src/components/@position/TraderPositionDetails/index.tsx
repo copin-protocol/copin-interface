@@ -1,12 +1,10 @@
 import { memo } from 'react'
 import { useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
 
 import { getPositionDetailByIdApi } from 'apis/positionApis'
 import ChartTraderPositionProfit from 'components/@charts/ChartTraderPositionProfit'
-import AddressAvatar from 'components/@ui/AddressAvatar'
+import ChainAccountInfo from 'components/@ui/AccountInfo/ChainAccountInfo'
 import Divider from 'components/@ui/Divider'
-import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import useSearchParams from 'hooks/router/useSearchParams'
@@ -14,18 +12,13 @@ import useMyProfileStore from 'hooks/store/useMyProfile'
 import useTraderCopying from 'hooks/store/useTraderCopying'
 import useVaultCopying from 'hooks/store/useVaultCopying'
 import { useEnsName } from 'hooks/useEnsName'
-import { Button } from 'theme/Buttons'
-import CopyButton from 'theme/Buttons/CopyButton'
 import Loading from 'theme/Loading'
 import StatusTag from 'theme/Tag/StatusTag'
-import Tooltip from 'theme/Tooltip'
-import { Box, Flex, Type } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { DEFAULT_PROTOCOL, LINKS } from 'utils/config/constants'
 import { PositionStatusEnum, ProtocolEnum, TraderStatusEnum } from 'utils/config/enums'
 import { QUERY_KEYS, URL_PARAM_KEYS } from 'utils/config/keys'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
-import { addressShorten } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import ListOrderTable from './ListOrderTable'
 import PositionStats from './PositionStats'
@@ -89,43 +82,7 @@ const TraderPositionDetails = memo(function PositionDetailsMemo({
         >
           <Flex p={12} alignItems="center" justifyContent="space-between" flexWrap="wrap" sx={{ gap: 2 }}>
             <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 12 }}>
-              <AddressAvatar address={data.account} size={40} />
-              <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
-                <Button type="button" variant="ghost" sx={{ p: 0 }}>
-                  <Flex flexDirection="column" textAlign="left">
-                    <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                      <Type.BodyBold sx={{ textTransform: 'none' }}>
-                        {ensName || addressShorten(data.account)}
-                      </Type.BodyBold>
-
-                      {isDrawer && (
-                        <>
-                          <ProtocolLogo
-                            protocol={data.protocol}
-                            size={24}
-                            hasText={false}
-                            data-tip="React-tooltip"
-                            data-tooltip-id={`tt_protocol_${data.protocol}`}
-                            data-tooltip-offset={0}
-                          />
-                          <Tooltip id={`tt_protocol_${data.protocol}`} clickable={false}>
-                            <ProtocolLogo protocol={data.protocol} />
-                          </Tooltip>
-                        </>
-                      )}
-
-                      <CopyButton
-                        type="button"
-                        variant="ghost"
-                        value={data.account}
-                        size="sm"
-                        sx={{ color: 'neutral3', p: 0 }}
-                      />
-                      <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
-                    </Flex>
-                  </Flex>
-                </Button>
-              </Link>
+              <ChainAccountInfo address={data.account} protocol={data.protocol} shouldShowProtocol={isDrawer} />
 
               {isCopying && <StatusTag width={70} status={TraderStatusEnum.COPYING} />}
               {/*{isVaultCopying && <Tag width={100} status={TraderStatusEnum.VAULT_COPYING} />}*/}

@@ -101,12 +101,11 @@ const NoteItem = ({
                 return (
                   <Flex key={`${word}-${index}`} sx={{ alignItems: 'center' }}>
                     <AccountInfo
-                      size={24}
-                      isOpenPosition
+                      avatarSize={24}
                       address={address}
                       protocol={protocol.toUpperCase() as ProtocolEnum}
-                      hasHover={false}
-                      sx={{
+                      hasQuickView={false}
+                      textSx={{
                         backgroundColor: isHighlighted ? 'neutral4' : 'transparent',
                       }}
                     />
@@ -646,7 +645,7 @@ const NoteAction = ({ account, protocol }: { account: string; protocol: Protocol
         title={
           <Flex alignItems="center" sx={{ gap: 2 }}>
             <Type.BodyBold>Trader Notes</Type.BodyBold>
-            <AccountInfo size={32} isOpenPosition address={account} protocol={protocol} hasHover={false} />
+            <AccountInfo avatarSize={32} address={account} protocol={protocol} hasQuickView={false} />
           </Flex>
         }
       >

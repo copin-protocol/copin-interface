@@ -34,7 +34,7 @@ const TraderInfo = ({
   protocol,
   timeOption,
   traderStats,
-  isLink = true,
+  hasLink = true,
   target,
   hasLabels = true,
 }: {
@@ -43,7 +43,7 @@ const TraderInfo = ({
   timeOption: TimeFilterProps
   traderStats: (TraderData | undefined)[] | undefined
   target?: HTMLAttributeAnchorTarget
-  isLink?: boolean
+  hasLink?: boolean
   hasLabels?: boolean
 }) => {
   const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
@@ -69,9 +69,9 @@ const TraderInfo = ({
       <Box>
         <Flex sx={{ gap: 2, alignItems: 'center' }}>
           <Box
-            as={isLink ? Link : undefined}
-            to={isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } }) : ''}
-            onClick={isLink ? onViewTrader : undefined}
+            as={hasLink ? Link : undefined}
+            to={hasLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } }) : ''}
+            onClick={hasLink ? onViewTrader : undefined}
             target={target}
           >
             <AddressAvatar address={address} size={40} />
@@ -79,11 +79,13 @@ const TraderInfo = ({
           <Box>
             <Flex mb={1} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
               <Box
-                as={isLink ? Link : undefined}
+                as={hasLink ? Link : undefined}
                 to={
-                  isLink ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } }) : ''
+                  hasLink
+                    ? generateTraderMultiExchangeRoute({ protocol, address, params: { time: timeOption.id } })
+                    : ''
                 }
-                onClick={isLink ? onViewTrader : undefined}
+                onClick={hasLink ? onViewTrader : undefined}
                 target={target}
                 data-tip="React-tooltip"
                 data-tooltip-id={`note-${address}-${protocol}`}

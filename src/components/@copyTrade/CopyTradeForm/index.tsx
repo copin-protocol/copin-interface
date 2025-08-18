@@ -8,12 +8,12 @@ import { toast } from 'react-toastify'
 import { getCopyTradeSettingsListApi } from 'apis/copyTradeApis'
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
 import UpgradeModal from 'components/@subscription/UpgradeModal'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { parseInputValue } from 'components/@ui/TextWithEdit'
 import ToastBody from 'components/@ui/ToastBody'
-import { renderTrader } from 'components/@widgets/renderProps'
 import { ProtocolPermission, ProtocolPermissionConfig } from 'entities/permission'
 import useCheckCopyTradeExchange from 'hooks/features/copyTrade/useCheckCopyExchange'
 import useCopyTradePermission from 'hooks/features/subscription/useCopyTradePermission'
@@ -423,19 +423,6 @@ const CopyTraderForm = ({
     },
     [register, isEnableMultiAccount]
   )
-  const SourceTrader = useCallback(() => {
-    if (!account || !protocol) return null
-    return (
-      <Flex mb={1} sx={{ alignItems: 'center', gap: 2 }}>
-        {renderTrader(account, protocol)}
-        <Type.Caption>-</Type.Caption>
-        <Flex sx={{ alignItems: 'center', gap: 2 }}>
-          <ProtocolLogo protocol={protocol} size={16} />
-          <Type.Caption>{protocolOptions?.find((e) => e.value === protocol)?.label}</Type.Caption>
-        </Flex>
-      </Flex>
-    )
-  }, [account, protocol])
 
   const volumeError = errors.volume?.message
 
@@ -489,7 +476,14 @@ const CopyTraderForm = ({
     <>
       {!isBulkEdit && !isOnboarding && account && protocol && (
         <Flex mb={1} px={[12, 3]} sx={{ alignItems: 'center', gap: 2 }}>
-          {renderTrader(account, protocol, true)}
+          <AccountInfo
+            address={account}
+            protocol={protocol}
+            hasQuickView={false}
+            hasLink={false}
+            avatarSize={32}
+            shouldShowProtocol={false}
+          />
           <Type.Caption>-</Type.Caption>
           <Flex sx={{ alignItems: 'center', gap: 2 }}>
             <ProtocolLogo protocol={protocol} size={24} />

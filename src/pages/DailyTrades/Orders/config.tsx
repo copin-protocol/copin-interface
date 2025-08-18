@@ -1,4 +1,3 @@
-import { gql } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 
 import { OrderDirectionFilterIcon } from 'components/@dailyTrades/DirectionFilterIcon'
@@ -14,10 +13,10 @@ import {
   renderOrderPrice,
 } from 'components/@position/TraderPositionDetails/ListOrderTable'
 import { ORDER_TYPES } from 'components/@position/configs/order'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Market from 'components/@ui/MarketGroup/Market'
-import TraderAddress from 'components/@ui/TraderAddress'
 import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { OrderData } from 'entities/trader'
 import useGlobalStore from 'hooks/store/useGlobalStore'
@@ -65,11 +64,7 @@ export const orderColumns: ColumnData<OrderData>[] = [
     key: 'account',
     style: { flex: [2, 2, 1.8, 2] },
     render: (item) => (
-      <TraderAddress
-        address={item.account}
-        protocol={item.protocol}
-        options={{ wrapperSx: { width: 'max-content' } }}
-      />
+      <AccountInfo address={item.account} protocol={item.protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
     ),
   },
   {

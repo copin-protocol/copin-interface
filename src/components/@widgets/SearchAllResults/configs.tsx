@@ -1,13 +1,10 @@
-import { useResponsive } from 'ahooks'
-
-import AddressAvatar from 'components/@ui/AddressAvatar'
-import AddressText from 'components/@ui/AddressText'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
 import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TraderData } from 'entities/trader'
-import useTraderCopying from 'hooks/store/useTraderCopying'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Flex, Type } from 'theme/base'
+import { Flex, Type } from 'theme/base'
+import { themeColors } from 'theme/colors'
 import { addressShorten, formatNumber } from 'utils/helpers/format'
 
 export type ExternalSource = {
@@ -20,7 +17,19 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
     key: 'account',
     sortBy: 'account',
     style: { minWidth: ['236px', '236px', '236px', '400px'] },
-    render: (item, _, externalSource) => <AccountInfo data={item} keyword={externalSource?.keyword ?? ''} />,
+    render: (item, _, externalSource) => (
+      <AccountInfo
+        address={item.account}
+        protocol={item.protocol}
+        hasLink={false}
+        shouldShowFullText
+        shouldShowProtocol={false}
+        textSx={{ color: 'neutral1', width: 'fit-content' }}
+        keyword={externalSource?.keyword ?? ''}
+        label={item.smartAccount ? `Smart Wallet: ${addressShorten(item.smartAccount)}` : 'EOA Account'}
+        labelSx={{ p: 0, bg: 'transparent', color: `${themeColors.neutral3} !important` }}
+      />
+    ),
   },
   {
     title: 'Protocol',
@@ -84,22 +93,22 @@ export const searchResultsColumn: ColumnData<TraderData, ExternalSource>[] = [
   },
 ]
 
-function AccountInfo({ data, keyword }: { data: TraderData; keyword: string }) {
-  const { isCopying } = useTraderCopying(data.account, data.protocol)
-  const { lg } = useResponsive()
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="start"
-      sx={{ color: 'neutral1', gap: 2, position: 'relative', py: '2px' }}
-    >
-      <AddressAvatar address={data.account} size={40} />
-      <Box>
-        <AddressText shouldShowFullText={lg} address={data.account} sx={{ fontWeight: 'bold', display: 'block' }} />
-        <Type.Caption color="neutral3">
-          {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA Account'}
-        </Type.Caption>
-      </Box>
-    </Flex>
-  )
-}
+// function AccountInfo({ data, keyword }: { data: TraderData; keyword: string }) {
+//   const { isCopying } = useTraderCopying(data.account, data.protocol)
+//   const { lg } = useResponsive()
+//   return (
+//     <Flex
+//       alignItems="center"
+//       justifyContent="start"
+//       sx={{ color: 'neutral1', gap: 2, position: 'relative', py: '2px' }}
+//     >
+//       <AddressAvatar address={data.account} size={40} />
+//       <Box>
+//         <AddressText shouldShowFullText={lg} address={data.account} sx={{ fontWeight: 'bold', display: 'block' }} />
+//         <Type.Caption color="neutral3">
+//           {data.smartAccount ? `Smart Wallet: ${addressShorten(data.smartAccount)}` : 'EOA Account'}
+//         </Type.Caption>
+//       </Box>
+//     </Flex>
+//   )
+// }

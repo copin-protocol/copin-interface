@@ -5,10 +5,10 @@ import { toast } from 'react-toastify'
 
 import BacktestFormSimple from 'components/@backtest/BacktestFormSimple'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import Divider from 'components/@ui/Divider'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import ToastBody from 'components/@ui/ToastBody'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { BackTestResultData, RequestBackTestData } from 'entities/backTest'
 import useBacktestRequest from 'hooks/features/backtest/useBacktestRequest'
 import Alert from 'theme/Alert'
@@ -77,7 +77,9 @@ export default function BacktestSimpleModal({
           onClose={onDismiss}
         />
         <Divider my={3} />
-        <TraderAddress address={account} protocol={protocol} />
+        {!!account && !!protocol && (
+          <AccountInfo address={account} protocol={protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
+        )}
         <Box mb={20} />
         {protocol && account && (
           <BacktestFormSimple
@@ -117,7 +119,9 @@ export default function BacktestSimpleModal({
           </Flex>
           <Divider my={3} />
 
-          <TraderAddress address={account} protocol={protocol} />
+          {!!account && !!protocol && (
+            <AccountInfo address={account} protocol={protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
+          )}
           <Box mb={20} />
 
           {backtestData && <BacktestSimpleResult {...backtestData} />}

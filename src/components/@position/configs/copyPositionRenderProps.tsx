@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import { renderCopyWalletLabel } from 'components/@copyTrade/renderProps/copyTradeColumns'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Divider from 'components/@ui/Divider'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { SymbolComponent } from 'components/@widgets/renderProps'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -273,8 +273,8 @@ export function renderValueWithColor(value: number | undefined, textSx?: any) {
 }
 
 export function renderTrader(address: string | undefined, protocol: ProtocolEnum | undefined) {
-  if (address == null) return <>--</>
-  return <TraderAddress address={address} protocol={protocol} />
+  if (address == null || !protocol) return <>--</>
+  return <AccountInfo address={address} protocol={protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
 }
 
 export const renderOpenTime = (data: CopyPositionData) => (
@@ -417,121 +417,3 @@ export function renderSLTPSetting(item: CopyTradeData, ignoreDisable?: boolean) 
     </Flex>
   )
 }
-
-// export const renderWalletName = (item: CopyPositionData, externalSource: any) => {
-//     let walletName = '--'
-//     const walletFromContext = externalSource?.copyWallets?.find((wallet) => wallet.id === item.)
-//     if (walletFromContext) {
-//         walletName = parseWalletName(walletFromContext)
-//     }
-//     return (
-//         <Flex sx={{ alignItems: 'center', gap: 2 }}>
-//             <Type.Caption
-//                 color="neutral1"
-//                 sx={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-//             >
-//                 {walletName}
-//             </Type.Caption>
-//             <VerticalDivider />
-//             <Image src={parseExchangeImage(item.exchange)} width={20} height={20} />
-//         </Flex>
-//     )
-// }
-// export function OrderTxHashes({ data }: { data: CopyPositionData }) {
-//   const [isExpand, setIsExpand] = useState(false)
-//   const tokenTrade = useMemo(() => TOKEN_TRADE_SUPPORT[data.indexToken], [data.indexToken])
-//
-//   const { data: positionDetail, isLoading } = useQuery(
-//     [QUERY_KEYS.GET_MY_COPY_POSITION_DETAIL, data?.id,],
-//     () =>
-//       data.status === PositionStatusEnum.CLOSE
-//         ? getMyCopySourcePositionDetailApi({ copyId: data?.id ?? '' })
-//         : getOpeningPositionDetailApi({
-//             protocol: ProtocolEnum.GMX,
-//             account: data.copyAccount,
-//             indexToken: data.indexToken,
-//             key: data.key,
-//           }),
-//     {
-//       retry: 0,
-//       enabled: (!!data?.id || (!!data.indexToken && !!data.copyAccount && !!data.key)) && isExpand,
-//     }
-//   )
-//
-//   return (
-//     <Flex flexDirection="column">
-//       {isExpand && (
-//         <Flex
-//           py={2}
-//           flexDirection="column"
-//           sx={{
-//             gap: 2,
-//             borderBottom: '1px solid',
-//             borderColor: 'neutral4',
-//           }}
-//         >
-//           <Flex alignItems="center" sx={{ gap: 3 }}>
-//             <Type.Caption width={110} textAlign="left">
-//               <Trans>Source Order</Trans>
-//             </Type.Caption>
-//             <Type.Caption width={110} textAlign="left">
-//               <Trans>Copy Order</Trans>
-//             </Type.Caption>
-//             <Type.Caption width={150} textAlign="left">
-//               <Trans>Position Details</Trans>
-//             </Type.Caption>
-//           </Flex>
-//           <Flex alignItems="flex-start" sx={{ gap: 3 }}>
-//             <Flex width={110} flexDirection="column" alignItems="flex-start">
-//               {data.sourceOrderTxHashes.map((txHash, index) => {
-//                 return (
-//                   <a key={index} href={`${LINKS.arbitrumExplorer}/tx/${txHash}`} target="_blank" rel="noreferrer">
-//                     <Type.Caption color="primary1" textAlign="left" sx={{ ':hover': { textDecoration: 'underline' } }}>
-//                       {addressShorten(txHash, 3, 3)}
-//                     </Type.Caption>
-//                   </a>
-//                 )
-//               })}
-//             </Flex>
-//             <Flex width={110} flexDirection="column" alignItems="flex-start">
-//               {data.orderTxHashes.map((txHash, index) => {
-//                 return (
-//                   <a key={index} href={`${LINKS.arbitrumExplorer}/tx/${txHash}`} target="_blank" rel="noreferrer">
-//                     <Type.Caption color="primary1" textAlign="left" sx={{ ':hover': { textDecoration: 'underline' } }}>
-//                       {addressShorten(txHash, 3, 3)}
-//                     </Type.Caption>
-//                   </a>
-//                 )
-//               })}
-//             </Flex>
-//             <Flex width={150} flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
-//               <a
-//                 href={
-//                   isLoading
-//                     ? ''
-//                     : positionDetail && data.status === PositionStatusEnum.CLOSE
-//                     ? // TODO: 2
-//                       generateClosedPositionRoute(ProtocolEnum.GMX, { id: positionDetail.id })
-//                     : generateOpeningPositionRoute(ProtocolEnum.GMX, data)
-//                 }
-//                 target="_blank"
-//                 rel="noreferrer"
-//               >
-//                 <Type.Caption color="primary1" textAlign="left" sx={{ ':hover': { textDecoration: 'underline' } }}>
-//                   {isLoading ? <Trans>Loading...</Trans> : <Trans>View</Trans>}
-//                 </Type.Caption>
-//               </a>
-//             </Flex>
-//           </Flex>
-//         </Flex>
-//       )}
-//       <Flex width="100%">
-//         <Button width="100%" py={0} pt={2} type="button" variant="ghost" onClick={() => setIsExpand(!isExpand)}>
-//           <Type.CaptionBold color="neutral3" sx={{ ':hover': { color: 'neutral2' } }}>
-//             {isExpand ? <Trans>Collapse</Trans> : <Trans>View Order Detail</Trans>}
-//           </Type.CaptionBold>
-//         </Button>
-//       </Flex>
-//     </Flex>
-//   )
-// }

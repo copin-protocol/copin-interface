@@ -17,10 +17,10 @@ import LineChartTraderPnl from 'components/@charts/LineChartPnL'
 import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import CopyTraderButton from 'components/@copyTrade/CopyTraderButton'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { TIME_FILTER_OPTIONS, TimeFilterProps } from 'components/@ui/TimeFilter'
 import ToastBody from 'components/@ui/ToastBody'
-import TraderAddress from 'components/@ui/TraderAddress'
 import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { GlobalProtocolFilter, GlobalProtocolFilterProps } from 'components/@widgets/ProtocolFilter'
 import { PnlTitle } from 'components/@widgets/SwitchPnlButton'
@@ -550,7 +550,8 @@ function TraderItem({
       }}
     >
       <Flex sx={{ alignItems: 'center', width: '100%', justifyContent: 'space-between', '& *': { fontWeight: 600 } }}>
-        <TraderAddress address={account} protocol={protocol} options={{ timeType: type, size: 32 }} />
+        <AccountInfo address={account} protocol={protocol} avatarSize={32} type={type} textSx={{ color: 'neutral1' }} />
+
         <Flex sx={{ alignItems: 'center', gap: 3 }}>
           <FavoriteButton
             address={account}

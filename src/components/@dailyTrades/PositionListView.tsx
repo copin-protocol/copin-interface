@@ -3,11 +3,11 @@ import { CaretRight } from '@phosphor-icons/react'
 import { MouseEvent, useEffect, useRef } from 'react'
 
 import { ShortDuration } from 'components/@position/configs/traderPositionRenderProps'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Market from 'components/@ui/MarketGroup/Market'
 import NoDataFound from 'components/@ui/NoDataFound'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { PositionData } from 'entities/trader'
 import useBenefitModalStore from 'hooks/features/subscription/useBenefitModalStore'
 import Loading from 'theme/Loading'
@@ -117,7 +117,13 @@ export default function DailyPositionListView({ data, isLoading, scrollDep, onCl
               </Type.Caption>
               <Box flex="1" data-value-key={'account'} sx={getItemWrapperSx('account')}>
                 <PermissionOverlay dataKey="account" />
-                <TraderAddress address={position.account} protocol={position.protocol} />
+                <AccountInfo
+                  address={position.account}
+                  protocol={position.protocol}
+                  avatarSize={24}
+                  textSx={{ color: 'neutral1' }}
+                  wrapperSx={{ width: 'fit-content' }}
+                />
               </Box>
               <Flex sx={{ alignItems: 'center', gap: 1, ...getItemWrapperSx('durationInSecond') }}>
                 <PermissionOverlay dataKey="durationInSecond" />

@@ -49,8 +49,7 @@ const TraderBookmark = ({ onBack, onSelect }: { onBack: () => void; onSelect: (i
                   <Box>
                     {traders.slice(0, 5).map((trader) => (
                       <AccountInfo
-                        size={24}
-                        isOpenPosition={false}
+                        avatarSize={24}
                         key={trader}
                         address={trader.split('-')[0]}
                         protocol={trader.split('-')[1] as ProtocolEnum}

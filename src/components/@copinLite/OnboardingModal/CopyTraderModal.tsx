@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { XCircle } from '@phosphor-icons/react'
 import { Fragment, ReactNode, useMemo, useRef } from 'react'
 import { useMutation, useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { v4 as uuid } from 'uuid'
 
@@ -14,20 +13,16 @@ import CopyTraderForm from 'components/@copyTrade/CopyTradeForm'
 import { defaultCopyTradeFormValues } from 'components/@copyTrade/configs'
 import { getRequestDataFromForm } from 'components/@copyTrade/helpers'
 import { CopyTradeFormValues } from 'components/@copyTrade/types'
-import AddressAvatar from 'components/@ui/AddressAvatar'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import ToastBody from 'components/@ui/ToastBody'
-import { QUICKVIEW_HOVER_STYLE } from 'components/@ui/TraderAddress'
 import Icon from 'components/@widgets/IconGroup/Icon'
 import { RequestCopyTradeData } from 'entities/copyTrade'
 import { ResponseTraderData, TraderTokenStatistic } from 'entities/trader'
 import useCopyWalletContext from 'hooks/features/useCopyWalletContext'
 import useRefetchQueries from 'hooks/helpers/ueRefetchQueries'
 import { useGetProtocolOptionsMapping } from 'hooks/helpers/useGetProtocolOptions'
-import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
-import CopyButton from 'theme/Buttons/CopyButton'
 import Modal from 'theme/Modal'
 import Tooltip from 'theme/Tooltip'
 import { Box, Flex, IconBox, Image, Type } from 'theme/base'
@@ -37,8 +32,7 @@ import { QUERY_KEYS } from 'utils/config/keys'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { TIME_TRANSLATION_FULL } from 'utils/config/translations'
 import { Z_INDEX } from 'utils/config/zIndex'
-import { addressShorten, formatNumber } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { formatNumber } from 'utils/helpers/format'
 import { getErrorMessage } from 'utils/helpers/handleError'
 import { getSymbolFromPair, parseMarketImage } from 'utils/helpers/transform'
 import { logEventLite } from 'utils/tracking/event'
@@ -182,9 +176,15 @@ function TraderStats({
   return (
     <Box sx={{ p: 3, position: 'relative' }}>
       <Image mb={48} height={40} src={logo} width="auto" />
-      <Box mb={3}>
-        <DetailsTraderAddress traderData={traderData} />
-      </Box>
+      <Flex mb={3} justifyContent="center">
+        <AccountInfo
+          address={traderData.account}
+          protocol={traderData.protocol}
+          addressFormatter={Type.BodyBold}
+          addressWidth="fit-content"
+          hasQuickView={false}
+        />
+      </Flex>
 
       <Flex
         mb={24}
@@ -305,65 +305,6 @@ function PerformanceItem({
       <Type.Caption mt={1} color="neutral1">
         {value}
       </Type.Caption>
-    </Flex>
-  )
-}
-
-function DetailsTraderAddress({ traderData }: { traderData: ResponseTraderData }) {
-  const { account: address, protocol, type } = traderData
-
-  const tooltipId = uuid()
-
-  const { setTrader } = useQuickViewTraderStore()
-  return (
-    <Flex sx={{ width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <Box
-        mb={12}
-        onClick={() =>
-          setTrader({ address, protocol, type }, { disabledActions: ['copy-trade'], disabledLinkAccount: true })
-        }
-        sx={{
-          '&:hover': { ...QUICKVIEW_HOVER_STYLE, '& > *': { opacity: 0.25, transition: '0.3s' } },
-        }}
-      >
-        <AddressAvatar address={traderData.account} size={65} />
-      </Box>
-
-      <Flex
-        //@ts-ignore
-        as={Link}
-        to={generateTraderMultiExchangeRoute({ protocol, address })}
-        target="_blank"
-        onClick={(e) => e.stopPropagation()}
-        alignItems="center"
-        sx={{ gap: 1 }}
-      >
-        <Type.BodyBold
-          minWidth="fit-content"
-          color="inherit"
-          sx={{
-            flexShrink: 0,
-            color: 'neutral1',
-            ':hover': { textDecoration: 'underline' },
-            minWidth: 74,
-          }}
-          data-tooltip-id={tooltipId}
-          data-tooltip-delay-show={360}
-        >
-          {addressShorten(address, 3, 5)}
-        </Type.BodyBold>
-        <CopyButton
-          type="button"
-          variant="ghost"
-          value={address}
-          size="sm"
-          sx={{ color: 'neutral3', p: 0 }}
-          iconSize={18}
-        ></CopyButton>
-
-        <Type.Body color="neutral4">|</Type.Body>
-        <ProtocolLogo protocol={protocol} hasText={true} size={20} />
-      </Flex>
     </Flex>
   )
 }

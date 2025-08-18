@@ -66,7 +66,8 @@ export default function CopyManagementDrawer({
                   <Flex as="span" sx={{ gap: '1ch' }}>
                     <TraderAddress
                       address={address}
-                      options={{ isLink: false, textSx: { fontSize: 'inherit', width: 'auto', fontWeight: 'bold' } }}
+                      textSx={{ fontSize: 'inherit', width: 'auto', fontWeight: 'bold' }}
+                      hasAddressTooltip={false}
                     />
                     <Box as="span">COPY-TRADES ON</Box>
                   </Flex>

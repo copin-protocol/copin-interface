@@ -1,6 +1,6 @@
 import { CaretDown, CaretUp, Minus } from '@phosphor-icons/react'
 
-import { AccountInfo } from 'components/@ui/AccountInfo'
+import { AccountInfo, AvatarSize } from 'components/@ui/AccountInfo'
 import { TopTraderData } from 'entities/trader'
 import CopyButton from 'theme/Buttons/CopyButton'
 import { Flex, IconBox, Type } from 'theme/base'
@@ -12,7 +12,7 @@ export default function LeaderInfo({
   isCurrentLeaderboard,
 }: {
   info: TopTraderData
-  size?: number
+  size?: AvatarSize
   isCurrentLeaderboard?: boolean
   hasHover?: boolean
 }) {
@@ -39,10 +39,9 @@ export default function LeaderInfo({
         }}
       >
         <AccountInfo
-          isOpenPosition={false}
           address={info.account}
           protocol={info.protocol}
-          size={size}
+          avatarSize={size}
           wrapperSx={{ width: 'fit-content' }}
           addressWidth={'100%'}
           shouldShowProtocol={false}

@@ -8,14 +8,14 @@ import FavoriteButton from 'components/@widgets/FavoriteButton'
 import FavoriteEditButton from 'components/@widgets/FavoriteButton/FavoriteEditButton'
 import FavoriteRemoveButton from 'components/@widgets/FavoriteButton/FavoriteRemoveButton'
 import { PnlTitle, PnlTitleWithTooltip } from 'components/@widgets/SwitchPnlButton'
-import { MyCopyTraderData, TraderData } from 'entities/trader.d'
+import { TraderData } from 'entities/trader.d'
 import CopyButton from 'theme/Buttons/CopyButton'
 import ProgressBar from 'theme/ProgressBar'
 import { Box, Flex, Type } from 'theme/base'
-import { LABEL_TOOLTIP_TRANSLATION, LABEL_TRANSLATION, PLATFORM_TRANS } from 'utils/config/translations'
+import { LABEL_TOOLTIP_TRANSLATION, LABEL_TRANSLATION } from 'utils/config/translations'
 import { compactNumber, formatDuration, formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
 
-import { AccountCell, AccountCellMobile, MyCopyAccountCell } from './AccountCell'
+import { AccountCell, AccountCellMobile } from './AccountCell'
 import { LoadingChartExplorer } from './ChartExplorer'
 import Text from './Text'
 import { ExternalTraderListSource, TableSettings, TableSettingsProps } from './types'
@@ -1226,62 +1226,4 @@ export const mobileTableSettings: TableSettingsProps<TraderData> = [
       }
       return data
     }),
-]
-
-export const myTradersTableSettings: TableSettingsProps<MyCopyTraderData> = [
-  {
-    style: {
-      minWidth: '180px',
-    },
-    label: <Box textAlign="left">Account</Box>,
-    visible: true,
-    id: 'account',
-    freezeLeft: 180,
-    freezeIndex: 3,
-    render: (item) => <MyCopyAccountCell data={item} />,
-  },
-  {
-    style: { minWidth: ['110px', '140px'] },
-    label: <Trans>Last Trade</Trans>,
-    unit: 'd',
-    visible: true,
-    id: 'lastTradeAt',
-    render: (item) => {
-      return <Type.Caption>{item.lastTradeAt ? formatLocalRelativeDate(item.lastTradeAt) : '--'}</Type.Caption>
-    },
-  },
-  {
-    style: { minWidth: ['100px', '120px'] },
-    label: <Trans>7D PnL</Trans>,
-    unit: '$',
-    sortBy: 'pnl7D',
-    visible: true,
-    id: 'pnl7D',
-    render: (item) => <SignedText value={item.pnl7D} maxDigit={2} minDigit={2} prefix="$" />,
-  },
-  {
-    style: { minWidth: ['100px', '120px'] },
-    label: <Trans>30D PnL</Trans>,
-    unit: '$',
-    sortBy: 'pnl30D',
-    visible: true,
-    id: 'pnl30D',
-    render: (item) => <SignedText value={item.pnl30D} maxDigit={2} minDigit={2} prefix="$" />,
-  },
-  {
-    style: { minWidth: ['100px', '120px'] },
-    label: <Trans>PnL</Trans>,
-    unit: '$',
-    sortBy: 'pnl',
-    visible: true,
-    id: 'pnl',
-    render: (item) => <SignedText value={item.pnl} maxDigit={2} minDigit={2} prefix="$" />,
-  },
-  {
-    style: { minWidth: ['100px', '111px'] },
-    label: <Trans>Platform</Trans>,
-    visible: true,
-    id: 'exchange',
-    render: (item) => <Type.Caption>{PLATFORM_TRANS[item.exchange]}</Type.Caption>,
-  },
 ]

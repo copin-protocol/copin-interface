@@ -2,7 +2,7 @@ import { BellSimple, BellSimpleSlash } from '@phosphor-icons/react'
 import { ReactNode, useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 
-import TraderCopyAddress from 'components/@copyTrade/TraderCopyAddress'
+import CopiedTraderInfo from 'components/@copyTrade/CopiedTraderInfo'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
 import { TraderAlertData } from 'entities/alert'
 import TagWrapper from 'theme/Tag/TagWrapper'
@@ -34,11 +34,11 @@ export default function TradersTag({
           {traders?.map((trader) => {
             return (
               <Flex key={trader.address + trader.protocol} alignItems="center" sx={{ gap: 2 }}>
-                <TraderCopyAddress
+                <CopiedTraderInfo
                   address={trader.address}
                   protocol={trader.protocol}
                   options={{
-                    size: 18,
+                    avatarSize: 18,
                     hasCopyAddress: true,
                     hasAddressTooltip: true,
                   }}

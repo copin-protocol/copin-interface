@@ -1,8 +1,9 @@
 import { Trash } from '@phosphor-icons/react'
 import React, { useCallback, useMemo } from 'react'
 
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { TraderAlertData } from 'entities/alert'
-import { Trader24hTrades, TraderAddress, TraderCreatedAt } from 'pages/Settings/AlertSettingDetails/config'
+import { Trader24hTrades, TraderCreatedAt } from 'pages/Settings/AlertSettingDetails/config'
 import IconButton from 'theme/Buttons/IconButton'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { ColumnData } from 'theme/Table/types'
@@ -60,7 +61,15 @@ export const useTraderGroupTable = (
           key: 'address',
           sortBy: 'address',
           style: { width: '120px' },
-          render: (item) => <TraderAddress data={item} />,
+          render: (item) => (
+            <AccountInfo
+              address={item.address}
+              protocol={item.protocol}
+              avatarSize={32}
+              label={item.label}
+              textSx={{ color: 'neutral1' }}
+            />
+          ),
         },
         {
           title: 'LATEST ADDED',

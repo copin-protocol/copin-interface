@@ -2,10 +2,10 @@ import { Trans } from '@lingui/macro'
 
 import { ApiMeta } from 'apis/api'
 import { LayoutType } from 'components/@copyActivity/types'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import ReverseTag from 'components/@ui/ReverseTag'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
@@ -64,7 +64,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
     </Type.CaptionBold>
   ),
   sourceTrader: (item) => (
-    <TraderAddress address={item.sourceAccount} protocol={item.protocol} options={{ size: 24 }} />
+    <AccountInfo address={item.sourceAccount} protocol={item.protocol} avatarSize={24} textSx={{ color: 'neutral1' }} />
   ),
   sourceAction: (item) => (
     <Type.Caption color="neutral1">{item.type ? ORDER_TYPE_TRANS[item.type] : '--'}</Type.Caption>

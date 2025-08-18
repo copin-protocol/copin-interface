@@ -5,9 +5,9 @@ import styled from 'styled-components/macro'
 
 import UpgradeButton from 'components/@subscription/UpgradeButton'
 import UpgradeModal from 'components/@subscription/UpgradeModal'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { LastTrade, TotalPnL, TotalVolume } from 'components/@widgets/SearchTraderResultItem'
 import { TraderData } from 'entities/trader'
 import useAlertPermission from 'hooks/features/subscription/useAlertPermission'
@@ -364,13 +364,12 @@ function SearchResult({
                   }}
                 >
                   <Flex alignItems="center" justifyContent="space-between">
-                    <TraderAddress
+                    <AccountInfo
                       address={traderData.account}
                       protocol={traderData.protocol}
-                      options={{
-                        isLink: false,
-                        textSx: { width: 80 },
-                      }}
+                      textSx={{ width: 'fit-content' }}
+                      hasLink={false}
+                      avatarSize={24}
                     />
                     {!!traderData.lastTradeAt && <LastTrade value={traderData.lastTradeAt} sx={{ flexShrink: 0 }} />}
                   </Flex>

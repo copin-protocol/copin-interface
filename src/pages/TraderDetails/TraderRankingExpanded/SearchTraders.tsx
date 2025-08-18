@@ -3,8 +3,8 @@ import { Trans, t } from '@lingui/macro'
 import React from 'react'
 
 import PlanUpgradeIndicator from 'components/@subscription/PlanUpgradeIndicator'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
-import TraderAddress from 'components/@ui/TraderAddress'
 import useProtocolPermission from 'hooks/features/subscription/useProtocolPermission'
 import useSearchAllData from 'hooks/features/trader/useSearchAllData'
 import { InputSearch } from 'theme/Input'
@@ -87,13 +87,12 @@ export default function SearchTraders({
                     onClick={() => (isAllowed ? props.onSelect(traderData) : undefined)}
                     sx={{ py: '6px', px: 2, borderRadius: 'sm', '&:hover': { bg: 'neutral6' } }}
                   >
-                    <TraderAddress
+                    <AccountInfo
                       address={traderData.account}
                       protocol={traderData.protocol}
-                      options={{
-                        isLink: false,
-                        textSx: { width: 80 },
-                      }}
+                      hasLink={false}
+                      avatarSize={24}
+                      textSx={{ width: 'fit-content' }}
                     />
                     {isAllowed ? (
                       props.addWidget

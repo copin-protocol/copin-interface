@@ -63,7 +63,7 @@ export default function SharedBacktestMultiplePage() {
         const { account = '' } = item
         return (
           <Box color="neutral1">
-            <AccountInfo isOpenPosition={false} address={account} protocol={protocol} />
+            <AccountInfo address={account} protocol={protocol} />
           </Box>
         )
       },

@@ -1,23 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { Link } from 'react-router-dom'
 
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
-import AddressAvatar from 'components/@ui/AddressAvatar'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import Container from 'components/@ui/Container'
-import ExplorerLogo from 'components/@ui/ExplorerLogo'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { PositionData } from 'entities/trader'
 import useTraderProfilePermission from 'hooks/features/subscription/useTraderProfilePermission'
-import { Button } from 'theme/Buttons'
-import CopyButton from 'theme/Buttons/CopyButton'
-import Tooltip from 'theme/Tooltip'
 import { Box, Flex, Type } from 'theme/base'
 import { LINKS } from 'utils/config/constants'
 import { ProtocolEnum, SubscriptionFeatureEnum } from 'utils/config/enums'
 import { PROTOCOL_PROVIDER } from 'utils/config/protocolProviderConfig'
 import { SUBSCRIPTION_PLAN_TRANSLATION } from 'utils/config/translations'
-import { addressShorten } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
 
 import nonPermissionImage from '/images/subscriptions/position-details-protocol-permission.png'
 
@@ -51,48 +43,13 @@ export default function PermissionContainer({
         }}
       >
         {data && (
-          <Flex
-            p={12}
-            width="100%"
-            alignItems="center"
-            justifyContent="space-between"
-            flexWrap="wrap"
-            sx={{ gap: 2, borderBottom: 'small', borderColor: 'neutral4' }}
-          >
-            <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 12 }}>
-              <AddressAvatar address={data.account} size={40} />
-              <Link to={generateTraderMultiExchangeRoute({ protocol, address: data.account })}>
-                <Button type="button" variant="ghost" sx={{ p: 0 }}>
-                  <Flex flexDirection="column" textAlign="left">
-                    <Flex alignItems="center" flexWrap="wrap" sx={{ gap: 2 }}>
-                      <Type.BodyBold>{addressShorten(data.account)}</Type.BodyBold>
-                      <ProtocolLogo
-                        protocol={data.protocol}
-                        size={24}
-                        hasText={false}
-                        data-tip="React-tooltip"
-                        data-tooltip-id={`tt_protocol_${data.protocol}`}
-                        data-tooltip-offset={0}
-                      />
-                      <Tooltip id={`tt_protocol_${data.protocol}`} clickable={false}>
-                        <ProtocolLogo protocol={data.protocol} />
-                      </Tooltip>
-
-                      <CopyButton
-                        type="button"
-                        variant="ghost"
-                        value={data.account}
-                        size="sm"
-                        sx={{ color: 'neutral3', p: 0 }}
-                      />
-                      <ExplorerLogo protocol={data.protocol} explorerUrl={`${explorerUrl}/address/${data.account}`} />
-                    </Flex>
-                  </Flex>
-                </Button>
-              </Link>
-            </Flex>
-            <ProtocolLogo size={24} protocol={data.protocol} textSx={{ fontSize: '14px' }} />
-          </Flex>
+          <AccountInfo
+            address={data.account}
+            protocol={data.protocol}
+            hasQuickView={false}
+            addressFormatter={Type.BodyBold}
+            addressWidth="fit-content"
+          />
         )}
         <Box
           sx={{

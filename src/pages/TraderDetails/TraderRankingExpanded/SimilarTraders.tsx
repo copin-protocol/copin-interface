@@ -6,9 +6,9 @@ import styled from 'styled-components/macro'
 import { getTradersApi } from 'apis/traderApis'
 import defaultImage from 'assets/images/similar-trader.png'
 import PlanUpgradePrompt from 'components/@subscription/PlanUpgradePrompt'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { FilterValues, RankingFieldOption } from 'components/@widgets/ConditionFilterForm/types'
 import { TraderData } from 'entities/trader'
 import useCheckFeature from 'hooks/features/subscription/useCheckFeature'
@@ -200,7 +200,12 @@ export default function SimilarTraders({
                 }
               >
                 <Flex sx={{ width: '100%', alignItems: 'center', gap: 3, justifyContent: 'space-between' }}>
-                  <TraderAddress address={traderData.account} protocol={traderData.protocol} />
+                  <AccountInfo
+                    address={traderData.account}
+                    protocol={traderData.protocol}
+                    avatarSize={24}
+                    textSx={{ width: 'fit-content' }}
+                  />
                   <Button
                     variant="ghostPrimary"
                     onClick={() => onClickCompareButton(traderData)}

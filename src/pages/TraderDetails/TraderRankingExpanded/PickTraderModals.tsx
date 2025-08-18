@@ -7,9 +7,9 @@ import styled from 'styled-components/macro'
 
 import { getAllFavoritesApi } from 'apis/favoriteApis'
 import UpgradeButton from 'components/@subscription/UpgradeButton'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { TimeFilterProps } from 'components/@ui/TimeFilter'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyTradeData } from 'entities/copyTrade'
 import { FavoritedTrader } from 'entities/trader'
 import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
@@ -92,14 +92,12 @@ export function PickFromFavoritesModal({
                   role="button"
                   onClick={() => (isAllowed ? setSelectedTrader(data) : undefined)}
                 >
-                  <TraderAddress
+                  <AccountInfo
                     address={data.account}
+                    hasLink={false}
+                    avatarSize={32}
+                    textSx={{ width: 'fit-content' }}
                     protocol={data.protocol ?? DEFAULT_PROTOCOL}
-                    options={{
-                      isLink: false,
-                      size: 32,
-                      textSx: { width: 80 },
-                    }}
                   />
                   {isAllowed && data.note && <ModalItemTag className="favorite_note">{data.note}</ModalItemTag>}
                   {!isAllowed && (
@@ -179,10 +177,12 @@ export function PickFromCopyTradesModal({
                 role="button"
                 onClick={() => (isAllowed ? setSelectedCopyTrade(data) : undefined)}
               >
-                <TraderAddress
+                <AccountInfo
                   address={data.account}
                   protocol={data.protocol}
-                  options={{ isLink: false, size: 32, textSx: { width: 80 } }}
+                  hasLink={false}
+                  avatarSize={32}
+                  textSx={{ width: 'fit-content' }}
                 />
                 {isAllowed && data.title && <ModalItemTag className="favorite_note">{data.title}</ModalItemTag>}
                 {!isAllowed && (

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import AvatarGroup from 'components/@ui/Avatar/AvatarGroup'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { CopyTradeData } from 'entities/copyTrade.d'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
@@ -43,7 +43,14 @@ export default function CopyTradeDataTable({
           item.multipleCopy ? (
             item.accounts && (
               <>
-                <Flex data-tooltip-id={item.id} sx={{ alignItems: 'center', gap: 2 }}>
+                <Flex
+                  data-tooltip-id={item.id}
+                  sx={{
+                    alignItems: 'center',
+                    gap: 2,
+                    filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
+                  }}
+                >
                   <AvatarGroup addresses={item.accounts} size={24} />
                   <Type.Caption color="neutral4">|</Type.Caption>
                   <Image
@@ -57,19 +64,15 @@ export default function CopyTradeDataTable({
                   <Flex sx={{ flexDirection: 'column', gap: 1 }}>
                     {item.accounts.map((_a) => {
                       return (
-                        <TraderAddress
+                        <AccountInfo
                           key={_a}
+                          hasLink={false}
+                          hasQuickView={false}
                           address={_a}
                           protocol={item.protocol}
-                          options={{
-                            isLink: false,
-                            textSx: {
-                              color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
-                            },
-                            wrapperSx: {
-                              filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
-                            },
-                          }}
+                          avatarSize={24}
+                          wrapperSx={{ filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)' }}
+                          textSx={{ color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3' }}
                         />
                       )
                     })}
@@ -78,19 +81,15 @@ export default function CopyTradeDataTable({
               </>
             )
           ) : (
-            <TraderAddress
+            <AccountInfo
+              hasLink={false}
               address={item.account}
+              hasQuickView={false}
               protocol={item.protocol}
-              options={{
-                isLink: false,
-                textSx: {
-                  color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3',
-                },
-                wrapperSx: {
-                  filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)',
-                },
-                hiddenAddressTooltip: true,
-              }}
+              avatarSize={24}
+              wrapperSx={{ filter: item.status === CopyTradeStatusEnum.RUNNING ? 'none' : 'grayscale(1)' }}
+              textSx={{ color: item.status === CopyTradeStatusEnum.RUNNING ? 'neutral1' : 'neutral3' }}
+              hasAddressTooltip={false}
             />
           ),
       },

@@ -224,7 +224,7 @@ function TraderDetailsComponent({
             protocol={protocol}
             timeOption={timeOption}
             traderStats={traderData}
-            isLink={!disabledLinkAccount}
+            hasLink={!disabledLinkAccount}
             hasLabels={false}
           />
           <TraderActionButtons

@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom'
 import { ApiListResponse } from 'apis/api'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
-import ProtocolLogo from 'components/@ui/ProtocolLogo'
 import { TraderData } from 'entities/trader'
 import { PaginationWithLimit } from 'theme/Pagination'
 import Table from 'theme/Table'
@@ -125,17 +124,17 @@ function ResultItemMobile({ data, keyword }: { data: TraderData; keyword: string
     <Box sx={{ color: 'neutral1', position: 'relative', px: 3, py: '6px' }}>
       <Flex alignItems="center" sx={{ width: '100%', justifyContent: 'space-between', gap: 3 }}>
         <AccountInfo
-          isOpenPosition={data.isOpenPosition}
           keyword={keyword}
           address={data.account}
           smartAccount={data.smartAccount}
           protocol={data.protocol}
-          size={40}
-          sx={{
-            width: 168,
+          shouldShowFullText={true}
+          avatarSize={24}
+          textSx={{
+            width: 'fit-content',
           }}
         />
-        <ProtocolLogo protocol={data.protocol} isActive={true} size={24} />
+        {/* <ProtocolLogo protocol={data.protocol} isActive={true} size={24} /> */}
       </Flex>
       <Flex mt={2} sx={{ width: '100%', justifyContent: 'space-between' }}>
         <Box>

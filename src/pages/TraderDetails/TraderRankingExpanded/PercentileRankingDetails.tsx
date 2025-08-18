@@ -223,6 +223,7 @@ function TooltipContent({
   account: string
   comparedAccount: string
 }) {
+  // TODO: update protocol in comparing trader
   return (
     <Flex sx={{ gap: 3, width: 320 }}>
       <Type.Caption sx={{ flex: 1, display: 'flex', flexWrap: 'wrap' }}>

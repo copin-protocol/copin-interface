@@ -1,7 +1,6 @@
 import { Trash } from '@phosphor-icons/react'
 import React, { ReactNode } from 'react'
 
-import { AccountInfo } from 'components/@ui/AccountInfo'
 import ActiveDot from 'components/@ui/ActiveDot'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import { AlertSettingData, TraderAlertData } from 'entities/alert'
@@ -18,22 +17,6 @@ import { ChannelStatusEnum, ChannelTypeEnum } from 'utils/config/enums'
 import { CHANNEL_STATUS_TRANS } from 'utils/config/translations'
 import { overflowEllipsis } from 'utils/helpers/css'
 import { formatLocalRelativeDate, formatNumber } from 'utils/helpers/format'
-
-export const TraderAddress = ({ data }: { data: TraderAlertData }) => {
-  return (
-    <AccountInfo
-      isOpenPosition={false}
-      address={data.address}
-      protocol={data.protocol}
-      size={32}
-      sx={{
-        color: 'neutral1',
-        lineHeight: '20px',
-      }}
-      label={data.label}
-    />
-  )
-}
 
 export const TraderStatus = ({ data }: { data: TraderAlertData }) => {
   const { updateTraderAlert, submittingUpdate } = useSettingWatchlistTraders({})

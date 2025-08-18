@@ -102,26 +102,6 @@ const SearchPositionResultItem = ({
           </Flex>
           <Type.Caption color="neutral3">Position Hash: {data?.txHashes?.[0]}</Type.Caption>
         </Box>
-        {/* <Flex width="100%" flexDirection="column" sx={{ gap: 2 }}>
-          <Flex sx={{ gap: 2, alignItems: 'center', justifyContent: 'space-between' }} flexWrap="wrap">
-            <AccountWithProtocol address={data.account} protocol={data.protocol} size={32} sx={{ gap: 2 }} />
-            <Flex alignItems="center" sx={{ gap: 3 }}>
-              <Flex alignItems="center" sx={{ gap: 2 }}>
-                <Type.Caption color="neutral3">
-                  <RelativeTimeText date={isOpening ? data.openBlockTime : data.closeBlockTime} />
-                </Type.Caption>
-                <Type.Caption>
-                  <Tag
-                    minWidth={70}
-                    status={data.isLiquidate ? PositionStatusEnum.LIQUIDATE : data.status}
-                    bg="neutral4"
-                  />
-                </Type.Caption>
-              </Flex>
-              {hasArrow && <IconBox size={20} icon={<CaretRight size={20} />} color="neutral2" />}
-            </Flex>
-          </Flex>
-        </Flex> */}
       </Box>
     </Box>
   )

@@ -1,12 +1,8 @@
 import { Trash } from '@phosphor-icons/react'
 import React, { memo, useCallback } from 'react'
 
-import {
-  MobileRowItem,
-  Trader24hTrades,
-  TraderAddress,
-  TraderCreatedAt,
-} from 'pages/Settings/AlertSettingDetails/config'
+import { AccountInfo } from 'components/@ui/AccountInfo'
+import { MobileRowItem, Trader24hTrades, TraderCreatedAt } from 'pages/Settings/AlertSettingDetails/config'
 import IconButton from 'theme/Buttons/IconButton'
 import { SwitchInput } from 'theme/SwitchInput/SwitchInputField'
 import { Flex } from 'theme/base'
@@ -33,7 +29,13 @@ const MobileTraderItem = memo(({ data, onUpdateWatchlist, onRemoveWatchlist, cus
         justifyContent="space-between"
         sx={{ pb: 2, borderBottom: 'small', borderColor: 'neutral5' }}
       >
-        <TraderAddress data={data} />
+        <AccountInfo
+          address={data.address}
+          protocol={data.protocol}
+          avatarSize={32}
+          textSx={{ color: 'neutral1' }}
+          label={data.label}
+        />
         <Flex alignItems="center" sx={{ gap: 3 }}>
           <SwitchInput checked={data.enableAlert} onClick={handleUpdateWatchlist} />
           {customType !== AlertCustomType.TRADER_BOOKMARK && (

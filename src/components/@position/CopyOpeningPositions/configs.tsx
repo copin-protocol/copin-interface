@@ -1,13 +1,11 @@
-import { Trans } from '@lingui/macro'
-import { CaretRight, Warning } from '@phosphor-icons/react'
+import { CaretRight } from '@phosphor-icons/react'
 
 import { LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import LabelEPnL from 'components/@ui/LabelEPnL'
 import { CopyPositionData } from 'entities/copyTrade.d'
 import { Button } from 'theme/Buttons'
 import { ColumnData } from 'theme/Table/types'
-import Tooltip from 'theme/Tooltip'
-import { Box, IconBox, Type } from 'theme/base'
+import { IconBox, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
 
 import {
@@ -17,7 +15,6 @@ import {
   renderOpeningSize,
   renderPnL,
   renderSLTP,
-  renderSource,
   renderTrader,
 } from '../configs/copyPositionRenderProps'
 import { ExternalSourceCopyPositions, LayoutType } from '../types'
@@ -36,13 +33,6 @@ export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCo
       </Type.Caption>
     ),
   },
-  // {
-  //   title: 'Trader',
-  //   dataIndex: 'copyAccount',
-  //   key: 'copyAccount',
-  //   style: { minWidth: '160px' },
-  //   render: (item) => <Type.Caption>{addressShorten(item.copyAccount)}</Type.Caption>,
-  // },
   {
     title: 'Entry',
     dataIndex: 'sizeDelta',

@@ -3,10 +3,10 @@ import { MouseEvent, useEffect, useRef } from 'react'
 
 import { renderOrderLeverage, renderOrderPrice } from 'components/@position/TraderPositionDetails/ListOrderTable'
 import { ORDER_TYPES } from 'components/@position/configs/order'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Market from 'components/@ui/MarketGroup/Market'
 import NoDataFound from 'components/@ui/NoDataFound'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { OrderData } from 'entities/trader'
 import useBenefitModalStore from 'hooks/features/subscription/useBenefitModalStore'
 import Loading from 'theme/Loading'
@@ -112,7 +112,13 @@ export default function DailyOrderListView({ data, isLoading, scrollDep, availab
               </Type.Caption>
               <Box flex="1" sx={getItemWrapperSx('account')}>
                 <PermissionOverlay dataKey="account" />
-                <TraderAddress address={order.account} protocol={order.protocol} />
+                <AccountInfo
+                  address={order.account}
+                  protocol={order.protocol}
+                  avatarSize={24}
+                  textSx={{ color: 'neutral1' }}
+                  wrapperSx={{ width: 'fit-content' }}
+                />
               </Box>
 
               <Type.Caption

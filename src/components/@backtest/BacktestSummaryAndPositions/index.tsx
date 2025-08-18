@@ -1,16 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useResponsive } from 'ahooks'
 import { ReactElement, memo } from 'react'
-import { Link } from 'react-router-dom'
 
-import AddressAvatar from 'components/@ui/AddressAvatar'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import Divider from 'components/@ui/Divider'
 import NoDataFound from 'components/@ui/NoDataFound'
 import { renderEntry } from 'components/@widgets/renderProps'
 import { BackTestResultData, RequestBackTestData, SimulatorPosition } from 'entities/backTest.d'
-import { useEnsName } from 'hooks/useEnsName'
 import { Button } from 'theme/Buttons'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import Table from 'theme/Table'
@@ -18,8 +16,7 @@ import TableLabel from 'theme/Table/TableLabel'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
-import { addressShorten, formatLocalDate, formatNumber, shortenEnsName } from 'utils/helpers/format'
-import { generateTraderMultiExchangeRoute } from 'utils/helpers/generateRoute'
+import { formatLocalDate, formatNumber } from 'utils/helpers/format'
 
 import ShareBacktestButton from '../BacktestShareButton'
 import ResultStats from './ResultStats'
@@ -49,8 +46,6 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
   const statsColumns = xl ? 3 : md ? 2 : sm ? 1 : 1
   const totalStatsItems = 9
 
-  const { ensName } = useEnsName(account)
-
   return (
     <Box>
       <Flex
@@ -70,21 +65,15 @@ const BacktestSummaryAndPositions = memo(function BacktestSummaryAndPositionsMem
         }}
       >
         <Flex sx={{ alignItems: 'end', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: 3 }}>
-          <Flex
-            sx={{
-              alignItems: 'center',
-              gap: 3,
-              ...(disabledShare ? { color: 'neutral1', '&:hover': { color: 'primary1' } } : {}),
-            }}
-            as={disabledShare ? Link : 'div'}
-            to={disabledShare ? generateTraderMultiExchangeRoute({ protocol, address: account }) : ''}
-            target="_blank"
-          >
-            <AddressAvatar address={account} size={40} />
-            <Type.H5 sx={{ textTransform: 'unset' }}>
-              {ensName ? shortenEnsName(ensName) : addressShorten(account)}
-            </Type.H5>
-          </Flex>
+          <AccountInfo
+            addressFormatter={Type.Head}
+            address={account}
+            protocol={protocol}
+            avatarSize={32}
+            hasLink={!!disabledShare}
+            hasQuickView={false}
+            addressWidth="fit-content"
+          />
           {settings && !disabledShare ? (
             <ShareBacktestButton protocol={protocol} type="single" settings={settings} />
           ) : null}

@@ -33,8 +33,8 @@ import { overflowEllipsis } from 'utils/helpers/css'
 import { formatNumber } from 'utils/helpers/format'
 import { parseExchangeImage } from 'utils/helpers/transform'
 
+import CopiedTraderInfo from '../CopiedTraderInfo'
 import { ListCopyTradeType } from '../ListCopyTrade/types'
-import TraderCopyAddress from '../TraderCopyAddress'
 import TraderDisabledWarningIcon from '../TraderDisabledWarningIcon'
 import { isCopyTradeRunningFn, validateNumberValue } from '../helpers'
 import { CopyTradeModalType, CopyTradeWithCheckingData } from '../types'
@@ -95,7 +95,7 @@ export const renderCopyTrader = ({
                 <Flex sx={{ flexDirection: 'column', gap: 1 }}>
                   {data.accounts.map((_a) => {
                     return (
-                      <TraderCopyAddress
+                      <CopiedTraderInfo
                         key={_a}
                         address={_a}
                         protocol={data.protocol}
@@ -109,6 +109,7 @@ export const renderCopyTrader = ({
                           running: data.status === CopyTradeStatusEnum.RUNNING,
                           hasCopyTradeVolumeIcon: false, // NOTE
                           hasCopyAddress: true,
+                          hasAddressTooltip: true,
                           enabledQuickView: options?.enabledQuickView ?? true,
                         }}
                       />
@@ -120,11 +121,11 @@ export const renderCopyTrader = ({
           </>
         )
       ) : (
-        <TraderCopyAddress
+        <CopiedTraderInfo
           address={data.account}
           protocol={data.protocol}
           options={{
-            sx: { filter: isRunning ? 'none' : 'grayscale(1)' },
+            wrapperSx: { filter: isRunning ? 'none' : 'grayscale(1)' },
             hasCopyCountWarningIcon: false, // note
             hasCopyVolumeWarningIcon: false, // note
             copyVolume: data.copyVolume,
@@ -132,6 +133,7 @@ export const renderCopyTrader = ({
             isRef: data.isRef,
             plan: data.plan,
             hasDisabledWarningIcon: isNotAllowed,
+            hasAddressTooltip: true,
             disabledLabel: options?.protocolNotAllowed ? 'protocol' : 'exchange',
             running: data.status === CopyTradeStatusEnum.RUNNING,
             // hasCopyTradeVolumeIcon: isRunning && !UNLIMITED_COPY_SIZE_EXCHANGES.includes(data.exchange),

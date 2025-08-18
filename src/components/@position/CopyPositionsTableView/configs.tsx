@@ -34,13 +34,6 @@ export const simpleOpeningColumns: ColumnData<CopyPositionData, ExternalSourceCo
       </Type.Caption>
     ),
   },
-  // {
-  //   title: 'Trader',
-  //   dataIndex: 'copyAccount',
-  //   key: 'copyAccount',
-  //   style: { minWidth: '160px' },
-  //   render: (item) => <Type.Caption>{addressShorten(item.copyAccount)}</Type.Caption>,
-  // },
   {
     title: 'Entry',
     dataIndex: 'sizeDelta',

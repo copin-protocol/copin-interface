@@ -2,11 +2,11 @@ import { Trans } from '@lingui/macro'
 import DOMPurify from 'dompurify'
 import React, { ReactNode } from 'react'
 
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReverseTag from 'components/@ui/ReverseTag'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { AlertLogData } from 'entities/alertLog'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -81,7 +81,12 @@ export const renderProps: Record<string, AlertLogColumnData['render']> = {
     </Type.CaptionBold>
   ),
   sourceTrader: (item) => (
-    <TraderAddress address={item.data.account} protocol={item.data.protocol} options={{ size: 24 }} />
+    <AccountInfo
+      address={item.data.account}
+      protocol={item.data.protocol}
+      avatarSize={24}
+      textSx={{ color: 'neutral1' }}
+    />
   ),
   sourceAction: (item) => {
     const isQuotaReached = !!item.errorMsg && !!item.data?.isNeedUpgrade

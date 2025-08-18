@@ -92,14 +92,11 @@ export function SelectTradersCopiedDropdown({
   const renderOptionLabel = (option: string) => {
     const isDeleted = deletedTraderAddresses.includes(option)
     return (
-      <Box data-tooltip-id={'tt_list_trader_checkbox'} data-tooltip-delay-show={360} data-tooltip-content={option}>
+      <Box>
         <TraderAddress
           address={option}
-          options={{
-            isLink: false,
-            wrapperSx: { gap: [1, 2] },
-            textSx: { minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' },
-          }}
+          wrapperSx={{ gap: [1, 2] }}
+          textSx={{ minWidth: '71px', color: isDeleted ? 'neutral3' : 'neutral1' }}
         />
       </Box>
     )

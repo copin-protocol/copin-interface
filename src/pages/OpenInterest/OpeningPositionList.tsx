@@ -10,7 +10,6 @@ import TableRangeFilterIcon from 'components/@widgets/TableFilter/TableRangeFilt
 import { renderEntry, renderOpeningPnL, renderSizeOpening, renderTrader } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
 import useOIPermission from 'hooks/features/subscription/useOIPermission'
-import useQuickViewTraderStore from 'hooks/store/useQuickViewTraderStore'
 import Table from 'theme/Table'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Type } from 'theme/base'
@@ -34,8 +33,7 @@ const columns: ColumnData<PositionData, ExternalSource>[] = [
     dataIndex: 'account',
     key: 'account',
     style: { width: '160px' },
-    render: (item, _, externalSource) =>
-      renderTrader(item.account, item.protocol, true, true, externalSource?.onQuickView),
+    render: (item) => renderTrader(item.account, item.protocol, true, true),
   },
   {
     title: 'Entry',
@@ -158,7 +156,6 @@ function OpeningPositionsWrapper({ children }: { children: any }) {
   const history = useHistory()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<PositionData | undefined>()
-  const { setTrader } = useQuickViewTraderStore()
 
   const handleSelectItem = useCallback((data: PositionData) => {
     setCurrentPosition(data)
@@ -171,22 +168,15 @@ function OpeningPositionsWrapper({ children }: { children: any }) {
     setOpenDrawer(false)
   }
 
-  const handleQuickView = useCallback(
-    ({ address, protocol }: { address: string; protocol: ProtocolEnum }) => {
-      setTrader({ address, protocol })
-    },
-    [setTrader]
-  )
   const { allowedFilter, planToFilter } = useOIPermission()
 
   const renderedChildren = useMemo(() => {
     return cloneElement<OpeningPositionComponentProps>(children, {
       onClickItem: handleSelectItem,
-      onQuickView: handleQuickView,
       allowedFilter,
       planToFilter,
     })
-  }, [children, handleSelectItem, handleQuickView, allowedFilter, planToFilter])
+  }, [children, handleSelectItem, allowedFilter, planToFilter])
 
   return (
     <div style={{ height: '100%' }}>

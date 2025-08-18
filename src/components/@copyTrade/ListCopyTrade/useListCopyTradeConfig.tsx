@@ -277,6 +277,7 @@ export default function useListCopyTradeConfigs({
         render: (item) =>
           renderCopyTrader({
             data: item,
+
             options: {
               enabledQuickView: isDrawer ? false : true,
               protocolNotAllowed: !allowedProtocols?.includes(item.protocol),

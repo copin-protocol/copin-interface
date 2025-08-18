@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React, { useMemo } from 'react'
 
-import TraderAddress from 'components/@ui/TraderAddress'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { HlAccountData, HlAccountSpotData, HlSubAccountData, HlTokenMappingData } from 'entities/hyperliquid'
 import useHyperliquidSubAccounts from 'hooks/features/trader/useHyperliquidSubAccounts'
 import CopyButton from 'theme/Buttons/CopyButton'
@@ -46,9 +46,10 @@ export default function ModalSubAccounts({
         render: (item: HlSubAccountData) => {
           return (
             <Flex alignItems="center" sx={{ gap: 1 }}>
-              <TraderAddress
+              <AccountInfo
                 address={isAddress(item.subAccountUser)}
                 protocol={ProtocolEnum.HYPERLIQUID}
+                avatarSize={24}
                 linkTarget="_blank"
               />
               <CopyButton

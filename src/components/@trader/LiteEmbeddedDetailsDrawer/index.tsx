@@ -6,26 +6,21 @@ import { createGlobalStyle } from 'styled-components/macro'
 import HLTraderOpeningPositionsTableView, {
   HLTraderOpeningPositionsListView,
 } from 'components/@position/HLTraderOpeningPositions'
-import AddressAvatar from 'components/@ui/AddressAvatar'
+import ChainAccountInfo from 'components/@ui/AccountInfo/ChainAccountInfo'
 import Container from 'components/@ui/Container'
 import { BalanceText } from 'components/@ui/DecoratedText/ValueText'
-import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import { TIME_FILTER_OPTIONS } from 'components/@ui/TimeFilter'
 import TimeDropdown from 'components/@ui/TimeFilter/TimeDropdown'
-import FavoriteButton from 'components/@widgets/FavoriteButton'
 import { useOptionChange } from 'hooks/helpers/useOptionChange'
 import ChartTrader from 'pages/TraderDetails/ChartTrader'
 import PositionMobileView from 'pages/TraderDetails/Layouts/PositionMobileView'
-import CopyButton from 'theme/Buttons/CopyButton'
 import IconButton from 'theme/Buttons/IconButton'
 import RcDrawer from 'theme/RcDrawer'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum, TimeFilterByEnum } from 'utils/config/enums'
 import { URL_PARAM_KEYS } from 'utils/config/keys'
-import { PROTOCOL_PROVIDER } from 'utils/config/protocolProviderConfig'
 import { Z_INDEX } from 'utils/config/zIndex'
-import { addressShorten } from 'utils/helpers/format'
 
 const GlobalStyle = createGlobalStyle`
   .rc-dropdown {
@@ -52,7 +47,6 @@ export default function LiteEmbeddedDetailsDrawer({
   onDismiss: () => void
 }) {
   const { lg, sm } = useResponsive()
-  const explorerUrl = PROTOCOL_PROVIDER[protocol]?.explorerUrl
 
   const timeFilterOptions = TIME_FILTER_OPTIONS
   const { currentOption: timeOption, changeCurrentOption: setTimeOption } = useOptionChange({
@@ -100,28 +94,7 @@ export default function LiteEmbeddedDetailsDrawer({
                 }}
               >
                 <Box px={3} py={2}>
-                  <Flex sx={{ gap: 2, alignItems: 'center' }}>
-                    <AddressAvatar address={address} size={40} />
-                    <Box>
-                      <Flex mb={1} alignItems="center" flexWrap="wrap" sx={{ gap: ['6px', 2] }}>
-                        <Type.LargeBold color="neutral1" lineHeight="20px" textAlign="left" fontSize={['16px', '18px']}>
-                          {addressShorten(address, 3, 5)}
-                        </Type.LargeBold>
-                        <FavoriteButton address={address} protocol={protocol} size={16} sx={{ mb: 0 }} />
-                      </Flex>
-                      <Flex sx={{ alignItems: 'center', gap: 2 }}>
-                        <CopyButton
-                          type="button"
-                          variant="ghost"
-                          value={address}
-                          size="sm"
-                          iconSize={16}
-                          sx={{ p: 0 }}
-                        />
-                        <ExplorerLogo protocol={protocol} explorerUrl={`${explorerUrl}/address/${address}`} size={16} />
-                      </Flex>
-                    </Box>
-                  </Flex>
+                  <ChainAccountInfo address={address} protocol={protocol} />
                 </Box>
               </Flex>
             </Box>

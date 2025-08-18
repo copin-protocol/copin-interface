@@ -13,8 +13,8 @@ export const AlertLabel = ({ alertLabel, sx }: AlertLabelProps) => {
           px={2}
           py={1}
           bg="neutral5"
-          color="neutral1"
           sx={{
+            color: 'neutral1',
             borderRadius: 20,
             width: 'fit-content',
             display: 'inline-block',

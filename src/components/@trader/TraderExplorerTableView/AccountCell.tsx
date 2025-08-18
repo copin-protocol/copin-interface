@@ -8,18 +8,17 @@ import useTraderFavorites from 'hooks/store/useTraderFavorites'
 import { Box, Flex } from 'theme/base'
 
 export function AccountCell({ data, additionalComponent }: { data: TraderData; additionalComponent?: ReactElement }) {
-  const { sm } = useResponsive()
+  // const { sm } = useResponsive()
   const { bookmarks } = useTraderFavorites()
   const note = bookmarks?.[`${data.account}-${data.protocol}`]?.note
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 0, position: 'relative' }}>
       <AccountInfo
-        isOpenPosition={data.isOpenPosition}
         address={data.account}
         protocol={data.protocol}
         type={data.type}
         note={note}
-        size={sm ? 32 : 28}
+        avatarSize={32}
         wrapperSx={{ width: 'fit-content' }}
       />
       {additionalComponent ? additionalComponent : null}
@@ -38,12 +37,10 @@ export function AccountCellMobile({
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: 1, position: 'relative' }}>
       <AccountInfo
-        isOpenPosition={data.isOpenPosition}
         address={data.account}
         protocol={data.protocol}
         type={data.type}
         note={note}
-        size={40}
         wrapperSx={{ py: 0, gap: 2 }}
       />
       <Box>{additionalComponent ? additionalComponent : null}</Box>
@@ -55,7 +52,7 @@ export function MyCopyAccountCell({ data }: { data: MyCopyTraderData }) {
   const { sm } = useResponsive()
   return (
     <Flex alignItems="center" justifyContent="start" sx={{ gap: [1, 2], position: 'relative' }}>
-      <AccountInfo isOpenPosition={false} address={data.account} protocol={data.protocol} size={sm ? 40 : 28} />
+      <AccountInfo address={data.account} protocol={data.protocol} avatarSize={sm ? 40 : 32} />
       <FavoriteButton address={data.account} protocol={data.protocol} size={16} />
     </Flex>
   )

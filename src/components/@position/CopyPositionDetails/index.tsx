@@ -10,10 +10,10 @@ import CopyChartProfit from 'components/@charts/ChartCopyPositionProfit'
 import CopyRealtimeChart from 'components/@charts/ChartCopyPositionProfitRealtime'
 import PositionStatus from 'components/@position/PositionStatus'
 import { renderPnL, renderSLTPSetting } from 'components/@position/configs/copyPositionRenderProps'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { AmountText, PercentText, PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import NoDataFound from 'components/@ui/NoDataFound'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { renderCopyEntry } from 'components/@widgets/renderProps'
 import { CopyPositionData } from 'entities/copyTrade'
 import useAllCopyTrades from 'hooks/features/copyTrade/useAllCopyTrades'
@@ -197,11 +197,15 @@ export default function CopyPositionDetails({ copyPositionData }: { copyPosition
               <StatsItemWrapper>
                 <Type.Caption color="neutral3">Copy Address:</Type.Caption>
                 <Type.CaptionBold>
-                  <TraderAddress
-                    address={data.copyAccount}
-                    protocol={data.protocol}
-                    options={{ textSx: { fontWeight: '600' } }}
-                  />
+                  {!!data.copyAccount && !!data.protocol && (
+                    <AccountInfo
+                      address={data.copyAccount}
+                      protocol={data.protocol}
+                      avatarSize={24}
+                      textSx={{ fontWeight: 600 }}
+                      hasQuickView={false}
+                    />
+                  )}
                 </Type.CaptionBold>
               </StatsItemWrapper>
               <StatsItemWrapper>

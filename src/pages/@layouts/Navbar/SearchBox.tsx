@@ -195,13 +195,11 @@ const SearchResultItems = ({
       >
         <Flex sx={{ gap: 3, alignItems: 'center', justifyContent: 'space-between' }}>
           <AccountInfo
-            isOpenPosition={data.isOpenPosition}
             keyword={keyword}
             address={data.account}
             smartAccount={data.smartAccount}
             protocol={data.protocol}
-            size={40}
-            sx={{
+            textSx={{
               width: 168,
             }}
           />

@@ -2,10 +2,10 @@ import { Pencil, X } from '@phosphor-icons/react'
 import React, { memo, useCallback, useState } from 'react'
 
 import { CloseOnchainPositionModal } from 'components/@position/CopyPositionDetails/CloseOnchainPosition'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import LabelEPnL from 'components/@ui/LabelEPnL'
-import TraderAddress from 'components/@ui/TraderAddress'
 import { renderEntry, renderOpeningPnL, renderOpeningRoi, renderSizeOpening } from 'components/@widgets/renderProps'
 import { CopyWalletData } from 'entities/copyWallet'
 import { PositionData } from 'entities/trader'
@@ -37,15 +37,7 @@ const sourceColumn: ColumnData<OnchainPositionData> = {
   style: { width: '160px' },
   render: (item) =>
     !!(item.source && item.sourceProtocol) ? (
-      <TraderAddress
-        address={item.source}
-        protocol={item.protocol}
-        options={{
-          wrapperSx: {
-            width: '160px',
-          },
-        }}
-      />
+      <AccountInfo address={item.source} protocol={item.protocol} wrapperSx={{ width: '160px' }} avatarSize={24} />
     ) : (
       <Type.Caption>--</Type.Caption>
     ),

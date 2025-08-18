@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 
-import { AccountWithProtocol } from 'components/@ui/AccountWithProtocol'
+import { AccountInfo } from 'components/@ui/AccountInfo'
 import { TraderAlertData } from 'entities/alert'
 import { Button } from 'theme/Buttons'
 import Modal from 'theme/Modal'
@@ -21,7 +21,14 @@ export default function UnsubscribeAlertModal({
   return (
     <Modal isOpen onDismiss={onDismiss} hasClose={false} maxWidth="480px" zIndex={Z_INDEX.MODAL}>
       <Flex width="100%" p={24} flexDirection="column" alignItems="center">
-        <AccountWithProtocol address={data.address} protocol={data.protocol} size={32} sx={{ gap: 2 }} />
+        <AccountInfo
+          address={data.address}
+          protocol={data.protocol}
+          avatarSize={32}
+          hasLink={false}
+          hasQuickView={false}
+          textSx={{ width: 'fit-content' }}
+        />
         <Type.LargeBold my={12} textAlign="center" width="100%">
           <Trans>Remove this trader from alert list?</Trans>
         </Type.LargeBold>
