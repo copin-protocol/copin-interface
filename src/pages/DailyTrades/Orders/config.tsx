@@ -6,7 +6,6 @@ import { OrderPairFilterIcon } from 'components/@dailyTrades/OrderPairFilterIcon
 import OrderRangeFilterIcon from 'components/@dailyTrades/OrderRangeFilterIcon'
 import { ORDER_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import {
-  renderOrderBlockTime,
   renderOrderCollateral,
   renderOrderFee,
   renderOrderLeverage,
@@ -14,41 +13,17 @@ import {
 } from 'components/@position/TraderPositionDetails/ListOrderTable'
 import { ORDER_TYPES } from 'components/@position/configs/order'
 import { AccountInfo } from 'components/@ui/AccountInfo'
-import { RelativeTimeText } from 'components/@ui/DecoratedText/TimeText'
-import ExplorerLogo from 'components/@ui/ExplorerLogo'
 import Market from 'components/@ui/MarketGroup/Market'
 import TimeColumnTitleWrapper from 'components/@widgets/TimeColumeTitleWrapper'
 import { OrderData } from 'entities/trader'
-import useGlobalStore from 'hooks/store/useGlobalStore'
 import { ColumnData } from 'theme/Table/types'
-import { Box, Flex, Type } from 'theme/base'
-import { COLLATERAL_TOKEN_PROTOCOLS, NO_TX_HASH_PROTOCOLS, TIME_FORMAT } from 'utils/config/constants'
+import { Flex, Type } from 'theme/base'
+import { COLLATERAL_TOKEN_PROTOCOLS } from 'utils/config/constants'
 import { OrderTypeEnum } from 'utils/config/enums'
-import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
-function OrderTime({ data }: { data: OrderData }) {
-  const [positionTimeType, currentTime] = useGlobalStore((state) => [state.positionTimeType, state.currentTime])
-  return positionTimeType === 'absolute' ? (
-    <Box>
-      <Box display={['none', 'none', 'none', 'block']}>{renderOrderBlockTime(data)}</Box>
-      <Box display={['block', 'block', 'block', 'none']}>{renderOrderBlockTime(data, TIME_FORMAT)}</Box>
-    </Box>
-  ) : (
-    <Flex color="neutral2" sx={{ alignItems: 'center', gap: 2 }}>
-      {/* // for update new time */}
-      <RelativeTimeText key={currentTime} date={data.blockTime} />
-      {!NO_TX_HASH_PROTOCOLS.includes(data.protocol) && !!data.txHash && (
-        <ExplorerLogo
-          protocol={data.protocol}
-          explorerUrl={`${PROTOCOL_PROVIDER[data.protocol]?.explorerUrl}/tx/${data.txHash}`}
-          size={18}
-        />
-      )}
-    </Flex>
-  )
-}
+import OrderTime from './OrderTime'
 
 export const orderColumns: ColumnData<OrderData>[] = [
   {

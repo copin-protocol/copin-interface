@@ -71,6 +71,7 @@ const WorkerConnection = memo(function WorkerConnectionMemo() {
       hlWorker.port.onmessage = (event) => {
         if (document.visibilityState !== 'visible') return
         const data = event.data as WorkerMessage
+
         // ex: kPEPE => check mapping => get all original => check if equal original symbol => push protocol symbol
         if (data?.type === 'hl_price') {
           // const { originalSymbol, multiple } = PROTOCOL_PRICE_MULTIPLE_MAPPING[symbol] ?? {}

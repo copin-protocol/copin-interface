@@ -233,11 +233,13 @@ msgstr "A message with a verification code has been sent to your email. Enter th
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "ACCOUNT"
 msgstr "ACCOUNT"
 
 #: src/pages/DailyTrades/Orders/config.tsx
 #: src/pages/Settings/AlertLogs/configs.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "ACTION"
 msgstr "ACTION"
 
@@ -1115,6 +1117,10 @@ msgstr "Close Position"
 msgid "Closed"
 msgstr "Closed"
 
+#: src/pages/TokenTerminal/DirectionalSection.tsx
+msgid "Closed Positions"
+msgstr "Closed Positions"
+
 #: src/components/@position/CopyPositionsListView/index.tsx
 #: src/utils/config/translations.tsx
 msgid "Closed Type"
@@ -1147,6 +1153,7 @@ msgid "Combine deeper insights to make good decisions"
 msgstr "Combine deeper insights to make good decisions"
 
 #: src/components/@wallet/CreateWalletAction/index.tsx
+#: src/pages/TokenTerminal/index.tsx
 msgid "Coming Soon"
 msgstr "Coming Soon"
 
@@ -1481,6 +1488,7 @@ msgid "DIRECT MESSAGE"
 msgstr "DIRECT MESSAGE"
 
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "DIRECTION"
 msgstr "DIRECTION"
 
@@ -1644,6 +1652,10 @@ msgstr "ENDED"
 #: src/pages/Subscription/EnterprisePlan.tsx
 msgid "ENTERPRISE"
 msgstr "ENTERPRISE"
+
+#: src/components/@position/configs/traderPositionRenderProps.tsx
+msgid "ENTRY"
+msgstr "ENTRY"
 
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
 #: src/pages/@layouts/Navbar/MoreDropdown.tsx
@@ -2395,6 +2407,7 @@ msgstr "LATEST ACTIVITIES"
 
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "LEVERAGE"
 msgstr "LEVERAGE"
 
@@ -2666,6 +2679,7 @@ msgid "MARKET"
 msgstr "MARKET"
 
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "MARKET PRICE"
 msgstr "MARKET PRICE"
 
@@ -3188,6 +3202,10 @@ msgstr "No Transaction Found"
 msgid "No Transactions Found"
 msgstr "No Transactions Found"
 
+#: src/pages/TokenTerminal/ClosedPositionsSection.tsx
+msgid "No closed positions found for {token}"
+msgstr "No closed positions found for {token}"
+
 #: src/components/@position/HLTraderOpeningPositions/HistoricalOrdersView.tsx
 msgid "No historical orders are matched this filter"
 msgstr "No historical orders are matched this filter"
@@ -3205,6 +3223,10 @@ msgstr "No link to the trader’s original position was found."
 msgid "No missed signals from copied traders or watchlist"
 msgstr "No missed signals from copied traders or watchlist"
 
+#: src/pages/TokenTerminal/OpenInterestSection.tsx
+msgid "No open interest found"
+msgstr "No open interest found"
+
 #: src/components/@position/HLTraderOpeningPositions/OpenOrdersView.tsx
 msgid "No opening orders are matched this filter"
 msgstr "No opening orders are matched this filter"
@@ -3220,6 +3242,10 @@ msgstr "No order was found"
 #: src/components/@position/HLTraderOpeningPositions/OrderFilledView.tsx
 msgid "No orders filled are matched this filter"
 msgstr "No orders filled are matched this filter"
+
+#: src/pages/TokenTerminal/OrdersSection.tsx
+msgid "No orders found for {token}"
+msgstr "No orders found for {token}"
 
 #: src/components/@dailyTrades/PositionListView.tsx
 msgid "No position found"
@@ -3959,6 +3985,10 @@ msgstr "Real-time data help you quickly stay ahead of the market"
 msgid "Realized PnL"
 msgstr "Realized PnL"
 
+#: src/pages/TokenTerminal/DirectionalSection.tsx
+msgid "Recent Orders"
+msgstr "Recent Orders"
+
 #: src/pages/PositionDetails/index.tsx
 msgid "Recommend Results"
 msgstr "Recommend Results"
@@ -4354,6 +4384,10 @@ msgstr "Size Lower Than"
 msgid "Size Token"
 msgstr "Size Token"
 
+#: src/pages/TokenTerminal/index.tsx
+msgid "Size Value:"
+msgstr "Size Value:"
+
 #: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 msgid "Size:"
 msgstr "Size:"
@@ -4672,6 +4706,11 @@ msgstr "TIME FRAME"
 #: src/components/@copinLite/OnboardingModal/TraderList.tsx
 msgid "TIP: Click to trader avatar to quick view the details"
 msgstr "TIP: Click to trader avatar to quick view the details"
+
+#: src/pages/TokenTerminal/index.tsx
+#: src/pages/TokenTerminal/index.tsx
+msgid "TOKEN TERMINAL"
+msgstr "TOKEN TERMINAL"
 
 #: src/pages/Home/Traders.tsx
 msgid "TOP"
@@ -4997,6 +5036,10 @@ msgstr "This custom alert has been updated successfully"
 #: src/pages/TraderDetails/Layouts/ProtocolPermissionContainer.tsx
 msgid "This exchange is available from {0} plans"
 msgstr "This exchange is available from {0} plans"
+
+#: src/pages/TokenTerminal/index.tsx
+msgid "This feature is not available yet — we will announce when it is ready."
+msgstr "This feature is not available yet — we will announce when it is ready."
 
 #: src/hooks/web3/useRequiredChain.tsx
 msgid "This feature only supports on {0}"
@@ -5574,6 +5617,7 @@ msgstr "Using {0} of {maxFilterFields} filters. Upgrade to add more"
 #: src/components/@position/configs/traderPositionRenderProps.tsx
 #: src/components/@widgets/ConditionFilterForm/index.tsx
 #: src/pages/DailyTrades/Orders/config.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 msgid "VALUE"
 msgstr "VALUE"
 
@@ -6305,6 +6349,12 @@ msgstr "year"
 #: src/pages/Subscription/v1/Plans.tsx
 #: src/pages/Subscription/v1/Plans.tsx
 #: src/pages/Subscription/v1/Plans.tsx
+#: src/pages/TokenTerminal/ClosedPositionsSection.tsx
+#: src/pages/TokenTerminal/ClosedPositionsSection.tsx
+#: src/pages/TokenTerminal/OpenInterestSection.tsx
+#: src/pages/TokenTerminal/OpenInterestSection.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
+#: src/pages/TokenTerminal/OrdersSection.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 #: src/pages/WalletManagement/WalletList/index.tsx
 msgid "{0}"

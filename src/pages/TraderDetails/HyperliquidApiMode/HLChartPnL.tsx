@@ -8,8 +8,8 @@ import { TimeFilterProps } from 'components/@ui/TimeFilter'
 import { HYPERLIQUID_API_FILTER_OPTIONS } from 'components/@ui/TimeFilter/constants'
 import useHyperliquidPortfolio from 'hooks/features/trader/useHyperliquidPortfolio'
 import { useHyperliquidTraderContext } from 'hooks/features/trader/useHyperliquidTraderContext'
-import { Button } from 'theme/Buttons'
 import Dropdown, { DropdownItem } from 'theme/Dropdown'
+import Picker from 'theme/Picker'
 import TabItem from 'theme/Tab/TabItem'
 import { Box, Flex, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
@@ -178,40 +178,6 @@ function PnLChart({ data, timeOption }: PnLChartProps) {
   )
 }
 
-type ToggleButtonValue = string | number | boolean
-interface ToggleButtonGroupProps<T extends ToggleButtonValue> {
-  options: { label: string; value: T }[]
-  value: T
-  onChange: (v: T) => void
-}
-
-function ToggleButtonGroup<T extends ToggleButtonValue>({ options, value, onChange }: ToggleButtonGroupProps<T>) {
-  return (
-    <Flex
-      alignItems="center"
-      sx={{ gap: '2px', p: '2px', border: 'small', borderColor: 'neutral5', borderRadius: '32px' }}
-    >
-      {options.map((opt) => (
-        <Button
-          key={String(opt.value)}
-          type="button"
-          variant="ghostActive"
-          onClick={() => onChange(opt.value)}
-          px={1}
-          py="1px"
-          sx={{
-            borderRadius: '16px',
-            color: value === opt.value ? 'neutral1' : 'neutral3',
-            backgroundColor: value === opt.value ? 'neutral4' : 'transparent',
-          }}
-        >
-          <Type.Small>{opt.label}</Type.Small>
-        </Button>
-      ))}
-    </Flex>
-  )
-}
-
 export default function HLChartPnL() {
   const {
     hlPortfolioData,
@@ -244,7 +210,7 @@ export default function HLChartPnL() {
         <Flex mt={[2, 1]} alignItems="center" justifyContent="space-between" px={2}>
           <TimeSelection timeOption={timeOption} onChange={changeTimeOption} />
           <Flex alignItems="center" sx={{ gap: 1 }}>
-            <ToggleButtonGroup<boolean>
+            <Picker<boolean>
               options={[
                 { label: 'COMBINED', value: true },
                 { label: 'PERP', value: false },
@@ -252,7 +218,7 @@ export default function HLChartPnL() {
               value={isCombined}
               onChange={setIsCombined}
             />
-            <ToggleButtonGroup<boolean>
+            <Picker<boolean>
               options={[
                 { label: 'PNL', value: false },
                 { label: 'VALUE', value: true },

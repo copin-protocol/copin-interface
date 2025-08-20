@@ -4,6 +4,7 @@ import CustomPageTitle from 'components/@ui/CustomPageTitle'
 import { HomeSwitchProtocols, RouteSwitchProtocol } from 'components/@widgets/SwitchProtocols'
 import PageTitle from 'theme/PageTitle'
 import { Box } from 'theme/base'
+import { SxProps } from 'theme/types'
 import { PAGE_TITLE_HEIGHT } from 'utils/config/constants'
 
 import { GlobalProtocolFilter } from './ProtocolFilter'
@@ -17,6 +18,7 @@ export default function PageHeader({
   keepSearchOnSwitchProtocol = true,
   showSelectProtocol = true,
   useNewCode = false,
+  sx = {},
 }: {
   pageTitle: string
   headerText: ReactNode
@@ -26,7 +28,7 @@ export default function PageHeader({
   routeSwitchProtocol?: boolean
   showSelectProtocol?: boolean
   useNewCode?: boolean
-}) {
+} & SxProps) {
   return (
     <>
       <CustomPageTitle title={pageTitle} />
@@ -43,6 +45,7 @@ export default function PageHeader({
           gap: 2,
           height: PAGE_TITLE_HEIGHT,
           flexShrink: 0,
+          ...sx,
         }}
       >
         <PageTitle icon={Icon} title={headerText} />

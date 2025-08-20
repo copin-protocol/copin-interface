@@ -26,6 +26,10 @@ const ROUTES = {
   ROOT_OPEN_INTEREST_POSITIONS: {
     path: '/open-interest',
   },
+  TOKEN_TERMINAL: {
+    path: '/token/:token',
+    path_prefix: '/token',
+  },
   LEADERBOARD: {
     path: '/:protocol/trader-board',
     path_prefix: '/trader-board',

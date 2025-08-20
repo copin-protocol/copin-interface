@@ -14,7 +14,7 @@
     "build:dev": "cp .env.development .env && tsc && vite build --mode development",
     "build:staging": "cp .env.staging .env && tsc && vite build --mode staging",
     "build:prod": "cp .env.production .env && tsc && vite build --mode production",
-    "preview": "vite preview --port 8080",
+    "preview": "vite preview --port 3000",
     "fix": "yarn fix:prettier && yarn fix:eslint",
     "fix:eslint": "eslint --fix \"src/**/*.*\"",
     "fix:prettier": "prettier --write \"src/**/*.*\"",

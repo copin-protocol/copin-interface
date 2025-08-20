@@ -54,6 +54,7 @@ const DailyTradesPage = lazy(() => import('./DailyTrades'))
 const PerpDEXDetailsPage = lazy(() => import('./PerpDEXsExplorer/PerpDexDetails'))
 const CopinLitePage = lazy(() => import('./CopinLite'))
 const Components = lazy(() => import('./Components'))
+const TokenTerminalPage = lazy(() => import('./TokenTerminal'))
 
 function App() {
   useEffect(() => {
@@ -113,6 +114,7 @@ function App() {
             <Route path={ROUTES.LIVE_TRADES.path} component={DailyTradesPage}></Route>
             <Route exact path={ROUTES.PERP_DEX_DETAILS.path} component={PerpDEXDetailsPage}></Route>
             <Route exact path={ROUTES.PERP_DEXS_EXPLORER.path} component={PerpDEXsExplorerPage}></Route>
+            <Route exact path={ROUTES.TOKEN_TERMINAL.path} component={TokenTerminalPage}></Route>
 
             {/* OLD ROUTE */}
             <Route exact path={ROUTES.TRADERS_EXPLORER.path} component={OldExplorerPage}></Route>

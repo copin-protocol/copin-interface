@@ -41,5 +41,5 @@ export default function useGetUsdPrices() {
     if (args?.protocol === ProtocolEnum.OSTIUM_ARB) return ostiumPrices
     return prices
   }
-  return { prices, gainsPrices, ostiumPrices, getPricesData }
+  return { prices, hlPrices, gainsPrices, ostiumPrices, getPricesData }
 }

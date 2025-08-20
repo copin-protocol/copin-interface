@@ -33,6 +33,7 @@ export default function PlanUpgradePrompt({
   cancelButtonVariant = 'outline',
   onCancel,
   showLearnMoreButton = false,
+  showConfirmButton = true,
   inline = false,
   buttonsWrapperSx = {},
   buttonSize = 'xs',
@@ -54,6 +55,7 @@ export default function PlanUpgradePrompt({
   confirmText?: ReactNode
   confirmButtonVariant?: Variant
   showLearnMoreButton?: boolean
+  showConfirmButton?: boolean
   cancelText?: ReactNode
   cancelButtonVariant?: Variant
   onCancel?: () => void
@@ -166,15 +168,17 @@ export default function PlanUpgradePrompt({
                   <Type.CaptionBold>{cancelText}</Type.CaptionBold>
                 </Button>
               )}
-              <Button
-                variant={confirmButtonVariant}
-                as={Link}
-                to={linkToSubscription}
-                target={target}
-                size={buttonSize}
-              >
-                <Type.CaptionBold>{confirmText}</Type.CaptionBold>
-              </Button>
+              {showConfirmButton && (
+                <Button
+                  variant={confirmButtonVariant}
+                  as={Link}
+                  to={linkToSubscription}
+                  target={target}
+                  size={buttonSize}
+                >
+                  <Type.CaptionBold>{confirmText}</Type.CaptionBold>
+                </Button>
+              )}
             </Box>
           </Box>
         </>

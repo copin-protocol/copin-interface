@@ -24,7 +24,7 @@ import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
-import { compactNumber, formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
+import { compactNumber, formatDuration, formatLeverage, formatNumber, formatPrice } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const orderCountColumn: ColumnData<PositionData> = {
@@ -97,9 +97,11 @@ const RenderPositionRoi = ({ item }: { item: PositionData }) => {
   const value = pnlWithFeeEnabled ? item.roi : item.realisedRoi
 
   return (
-    <Type.Caption color="neutral1">
-      <SignedText value={value} maxDigit={2} minDigit={2} suffix="%" />
-    </Type.Caption>
+    <Flex alignItems="center" justifyContent="end">
+      <Type.Caption color="neutral1">
+        <SignedText value={value} maxDigit={2} minDigit={2} suffix="%" />
+      </Type.Caption>
+    </Flex>
   )
 }
 
@@ -759,6 +761,49 @@ export const vaultHistoryColumns: ColumnData<PositionData>[] = [
   roiColumn,
   pnlColumn,
   actionColumn,
+]
+
+export const closedPositionsColumns: ColumnData<PositionData>[] = [
+  { ...closeTimeColumn, style: { minWidth: 150, flex: 1.5 } },
+  { ...accountColumn, style: { minWidth: 160, flex: 1.6 } },
+  {
+    dataIndex: 'averagePrice',
+    key: 'averagePrice',
+    title: <Trans>ENTRY</Trans>,
+    render: (item) => (
+      <Flex sx={{ gap: 1 }}>
+        {item.isLong ? <Type.Caption color="green1">L</Type.Caption> : <Type.Caption color="red2">S</Type.Caption>}
+        <Type.Caption>|</Type.Caption>
+        <Type.Caption color="neutral1">{formatPrice(item.averagePrice)}</Type.Caption>
+      </Flex>
+    ),
+    style: { flex: 1, minWidth: 100 },
+  },
+  {
+    ...sizeColumn,
+    style: { minWidth: 60, flex: 0.6, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => renderPositionSize({ item, isCompactNumber: true }),
+  },
+  { ...leverageColumn, style: { minWidth: 80, flex: 0.8, textAlign: 'right', justifyContent: 'end' } },
+  {
+    ...avgDurationColumn,
+    style: { minWidth: 80, flex: 0.8, textAlign: 'right', justifyContent: 'end' },
+  },
+  {
+    ...pnlColumn,
+    style: { minWidth: 90, flex: 0.9, textAlign: 'right', justifyContent: 'end' },
+    render: (item) => <PnlValueCell item={item} isCompactNumber={true} />,
+  },
+  {
+    ...roiColumn,
+    style: {
+      minWidth: 65,
+      flex: 0.65,
+      textAlign: 'right',
+      justifyContent: 'end',
+    },
+  },
+  { ...actionColumn, style: { minWidth: 16, pr: 1, textAlign: 'right', justifyContent: 'end', flex: '0 0 24px' } },
 ]
 
 export function ShortDuration({ durationInSecond }: { durationInSecond?: number }) {

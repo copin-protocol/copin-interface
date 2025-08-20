@@ -84,7 +84,6 @@ export default function TopOpenInterest() {
       })
     }
     if (currentGroupId && currentGroupId !== BOOKMARK_NO_GROUP_KEY && bookmarks) {
-      // console.log('bookmarks', bookmarks)
       query.push({
         field: 'account',
         in: Object.keys(bookmarks)
