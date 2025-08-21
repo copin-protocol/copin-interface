@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BellSimpleSlash, Check, PencilSimpleLine, X } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 
+import { TraderAlertData } from 'entities/alert'
 import { Button } from 'theme/Buttons'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import IconButton from 'theme/Buttons/IconButton'
@@ -18,7 +19,6 @@ interface AlertLabelFormProps {
   label: string
   setLabel: (label: string) => void
   isEditing: boolean
-  isAlertEnabled: boolean
   editModeShowed: boolean
   currentLabel: string
   inputRef: React.RefObject<HTMLInputElement>
@@ -30,13 +30,13 @@ interface AlertLabelFormProps {
   onEditClick: () => void
   onEditCancel: (e: React.MouseEvent) => void
   onUnotify: (e: React.MouseEvent) => void
+  currentAlert: TraderAlertData | undefined
 }
 
 export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
   label,
   setLabel,
   isEditing,
-  isAlertEnabled,
   editModeShowed,
   currentLabel,
   inputRef,
@@ -48,6 +48,7 @@ export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
   onEditClick,
   onEditCancel,
   onUnotify,
+  currentAlert,
 }: AlertLabelFormProps) => {
   const { md } = useResponsive()
   const hasGroupAlerts = groupAlerts.length > 0
@@ -55,7 +56,7 @@ export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
   return (
     <form onSubmit={onSave}>
       <Box mt={'10px'} textAlign="right" width="100%">
-        {!isEditing && isAlertEnabled && !editModeShowed && (
+        {!isEditing && currentAlert && !editModeShowed && (
           // Show "Add label" when a new alert is created without a label
           <Flex
             sx={{
@@ -101,12 +102,12 @@ export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
             <Flex alignItems="start" color={themeColors.red1} onClick={onUnotify} style={{ cursor: 'pointer' }}>
               <BellSimpleSlash size={16} />
               <Type.Caption ml={'2px'}>
-                <Trans>UNOTIFY</Trans>
+                <Trans>REMOVE</Trans>
               </Type.Caption>
             </Flex>
           </Flex>
         )}
-        {(isEditing || !isAlertEnabled) && (
+        {(isEditing || !currentAlert) && (
           <Box width={'100%'} mt="10px">
             <InputField
               autoFocus
@@ -129,7 +130,7 @@ export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
               }}
               suffix={
                 isEditing &&
-                isAlertEnabled && (
+                currentAlert && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <IconButton
                       size={24}
@@ -157,7 +158,7 @@ export const AlertLabelForm: React.FC<AlertLabelFormProps> = ({
             />
           </Box>
         )}
-        {!isAlertEnabled && (
+        {!currentAlert && (
           <Button
             type="submit"
             variant="ghostPrimary"

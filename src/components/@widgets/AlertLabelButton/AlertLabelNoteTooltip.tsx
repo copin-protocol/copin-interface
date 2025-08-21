@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import React from 'react'
 
 import KeyListener from 'components/@ui/KeyListener'
+import { TraderAlertData } from 'entities/alert'
 import Modal from 'theme/Modal'
 import { Box, Flex, Type } from 'theme/base'
 import { KeyNameEnum } from 'utils/config/enums'
@@ -38,7 +39,7 @@ interface AlertLabelTooltipProps {
   shouldShowGroupAlert?: boolean
   tooltipOpen?: boolean
   shouldShowCloseEdit?: boolean
-  isAlertEnabled?: boolean
+  currentAlert: TraderAlertData | undefined
 }
 
 const AlertLabelTooltip = ({
@@ -55,7 +56,7 @@ const AlertLabelTooltip = ({
   shouldShowGroupAlert = true,
   shouldShowCloseEdit = true,
   tooltipOpen,
-  isAlertEnabled,
+  currentAlert,
 }: AlertLabelTooltipProps) => {
   const [label, setLabel] = useState<string>('')
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -127,7 +128,6 @@ const AlertLabelTooltip = ({
       label={label}
       setLabel={setLabel}
       isEditing={isEditing}
-      isAlertEnabled={isAlertEnabled || false}
       editModeShowed={editModeShowed}
       currentLabel={currentLabel}
       inputRef={inputRef}
@@ -139,6 +139,7 @@ const AlertLabelTooltip = ({
       onEditClick={handleEditClick}
       onEditCancel={handleEditCancel}
       onUnotify={handleUnotify}
+      currentAlert={currentAlert}
     />
   )
 

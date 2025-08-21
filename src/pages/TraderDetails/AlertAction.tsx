@@ -233,12 +233,13 @@ const AlertAction = ({
         position={tooltipPosition || undefined}
         submitting={submittingCreate || submittingUpdate}
         currentLabel={currentAlert?.label}
-        isEditMode={!!currentAlert}
+        // isEditMode={!!currentAlert}
         onSave={handleSaveAlertLabel}
         onCancel={handleCancelAlertLabel}
         groupAlerts={shoulShowGroupAlerts ? groupAlerts : undefined}
         onRequestUnsubscribe={handleRequestUnsubscribe}
-        isAlertEnabled={currentAlert?.enableAlert}
+        // isAlertEnabled={currentAlert?.label}
+        currentAlert={currentAlert}
       />
 
       {isOpenUnsubscribeModal && currentAlert && (

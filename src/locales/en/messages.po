@@ -108,10 +108,6 @@ msgstr "30 days"
 msgid "30D"
 msgstr "30D"
 
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
-msgid "30D PnL"
-msgstr "30D PnL"
-
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
 msgid "30D Pnl"
@@ -151,10 +147,6 @@ msgstr "7 days"
 #: src/utils/config/translations.tsx
 msgid "7D"
 msgstr "7D"
-
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
-msgid "7D PnL"
-msgstr "7D PnL"
 
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
 #: src/components/@copyTrade/ListCopyTrade/View.tsx
@@ -2455,7 +2447,6 @@ msgid "Last 24H"
 msgstr "Last 24H"
 
 #: src/components/@trader/TraderExplorerTableView/configs.tsx
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/components/@widgets/SearchAllResults/index.tsx
 #: src/pages/TraderDetails/TraderRankingExpanded/Stats.tsx
 msgid "Last Trade"
@@ -3665,10 +3656,6 @@ msgstr "Pick the trader you want to copy"
 msgid "Plan"
 msgstr "Plan"
 
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
-msgid "Platform"
-msgstr "Platform"
-
 #: src/pages/Settings/AlertSettingDetails/SettingCustomAlert/TraderFilter/components.tsx
 msgid "Please adjust your filter criteria to match <0>less than {0} traders.</0>"
 msgstr "Please adjust your filter criteria to match <0>less than {0} traders.</0>"
@@ -3749,7 +3736,6 @@ msgstr "Please wait a few minutes before you try again"
 
 #: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
-#: src/components/@trader/TraderExplorerTableView/configs.tsx
 #: src/utils/config/options.tsx
 #: src/utils/config/translations.tsx
 msgid "PnL"
@@ -3938,6 +3924,10 @@ msgstr "REASON"
 #: src/pages/Settings/AlertSettingDetails/TraderLastViewed.tsx
 msgid "RECOMMEND TRADERS"
 msgstr "RECOMMEND TRADERS"
+
+#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
+msgid "REMOVE"
+msgstr "REMOVE"
 
 #: src/pages/Settings/AlertDashboard/config.tsx
 msgid "REMOVE ALERT"
@@ -5362,10 +5352,6 @@ msgstr "Type"
 #: src/pages/Stats/config.tsx
 msgid "UNIQUE TRADERS"
 msgstr "UNIQUE TRADERS"
-
-#: src/components/@widgets/AlertLabelButton/AlertLabelForm.tsx
-msgid "UNOTIFY"
-msgstr "UNOTIFY"
 
 #: src/theme/Tag/StatusTag.tsx
 msgid "UPCOMING"

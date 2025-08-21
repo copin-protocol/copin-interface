@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 
 import { putAlertLabelApi } from 'apis/alertApis'
 import ToastBody from 'components/@ui/ToastBody'
+import { TraderAlertData } from 'entities/alert'
 import ButtonWithIcon from 'theme/Buttons/ButtonWithIcon'
 import { Box, Flex, Type } from 'theme/base'
 import { ProtocolEnum } from 'utils/config/enums'
@@ -26,6 +27,7 @@ export default function AlertLabelButton({
   onLabelChange,
   positionTooltip,
   containerRef,
+  currentAlert,
 }: {
   address: string
   protocol: ProtocolEnum
@@ -40,6 +42,7 @@ export default function AlertLabelButton({
   onLabelChange?: (newLabel: string) => void
   positionTooltip?: { top: number; left: number }
   containerRef?: React.RefObject<HTMLElement>
+  currentAlert?: TraderAlertData
 }) {
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null)
@@ -136,7 +139,7 @@ export default function AlertLabelButton({
         parentScroll={containerRef}
         shouldShowGroupAlert={false}
         shouldShowCloseEdit={false}
-        isAlertEnabled={true}
+        currentAlert={currentAlert}
       />
     </>
   )

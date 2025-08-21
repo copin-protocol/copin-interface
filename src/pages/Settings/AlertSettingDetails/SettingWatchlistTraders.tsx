@@ -223,6 +223,7 @@ export default function SettingWatchlistTraders({
             protocol={item.protocol}
             initialLabel={item.label || ''}
             hasLabel={!!item.label}
+            currentAlert={item}
             positionTooltip={
               (index !== undefined && index >= 7) || isLastVisible ? { top: 25, left: 0 } : { top: -5, left: 10 }
             }
@@ -436,6 +437,7 @@ export default function SettingWatchlistTraders({
                                       positionTooltip={{ top: 70, left: 100 }}
                                       // containerRef={tableWrapperRef}
                                       text="EDIT LABEL"
+                                      currentAlert={data}
                                       onLabelChange={(newLabel) => {
                                         if (data.id) {
                                           handleLabelChange(data.id, newLabel)
