@@ -329,6 +329,7 @@ export const RELEASED_PROTOCOLS =
         ProtocolEnum.PINGU_ARB,
         ProtocolEnum.JUPITER,
         ProtocolEnum.OSTIUM_ARB,
+        ProtocolEnum.FULCROM_CRONOS,
       ]
     : Object.values(ProtocolEnum)
 

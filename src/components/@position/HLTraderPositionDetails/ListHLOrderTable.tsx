@@ -28,7 +28,7 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         title: 'Time',
         dataIndex: 'timestamp',
         key: 'timestamp',
-        style: { minWidth: '182px' },
+        style: { minWidth: '155px' },
         render: (item) => (
           <Type.Caption color="neutral1">
             <LocalTimeText date={item.timestamp} format={DAYJS_FULL_DATE_FORMAT} hasTooltip={false} />
@@ -39,14 +39,14 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         title: 'Type',
         dataIndex: 'orderType',
         key: 'orderType',
-        style: { minWidth: '150px', textAlign: 'left' },
+        style: { minWidth: '100px', textAlign: 'left' },
         render: (item) => <Type.Caption color="neutral1">{item.orderType ?? '--'}</Type.Caption>,
       },
       {
         title: 'Direction',
         dataIndex: 'isLong',
         key: 'isLong',
-        style: { minWidth: '120px', textAlign: 'left' },
+        style: { minWidth: '110px', textAlign: 'left' },
         render: (item) => (
           <Type.Caption
             color={item.isLong ? (item.reduceOnly ? 'red2' : 'green1') : item.reduceOnly ? 'green1' : 'red2'}
@@ -61,28 +61,28 @@ export default function ListHLOrderTable({ data }: { data: HlOrderData[] }) {
         dataIndex: 'triggerCondition',
         key: 'triggerCondition',
         sortBy: 'triggerCondition',
-        style: { minWidth: '150px', textAlign: 'left' },
+        style: { minWidth: '120px', textAlign: 'left' },
         render: (item) => renderOrderTriggerCondition(item),
       },
       {
         title: 'Value',
         dataIndex: 'sizeNumber',
         key: 'sizeNumber',
-        style: { minWidth: '105px', textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: (item) => renderOrderSize(item),
       },
       {
         title: 'Size',
         dataIndex: 'sizeInTokenNumber',
         key: 'sizeInTokenNumber',
-        style: { minWidth: '120px', textAlign: 'right' },
+        style: { minWidth: '100px', textAlign: 'right' },
         render: (item) => renderOrderSizeInToken(item),
       },
       {
         title: 'Market Price',
         dataIndex: 'priceNumber',
         key: 'priceNumber',
-        style: { minWidth: '130px', textAlign: 'right' },
+        style: { minWidth: '110px', textAlign: 'right' },
         render: renderOrderPrice,
       },
     ]

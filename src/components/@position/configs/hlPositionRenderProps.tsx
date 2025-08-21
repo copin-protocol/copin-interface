@@ -190,7 +190,7 @@ export function PairComponent({ data }: { data: PositionData }) {
         pr: 1,
       }}
     >
-      <Type.Caption width={4} color={data.isLong ? 'green1' : 'red2'} data-key="isLong">
+      <Type.Caption color={data.isLong ? 'green1' : 'red2'} data-key="isLong">
         {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
       </Type.Caption>
       <VerticalDivider />
@@ -270,7 +270,7 @@ export const renderValue = (item: PositionData, totalPositionValue?: number) => 
       ) : (
         <Type.Caption>${compactNumber(sizeNumber, 2)}</Type.Caption>
       )}
-      <Type.Small pl={1}>({formatNumber(weightPercent, 2, 2)}%)</Type.Small>
+      {!!totalPositionValue && <Type.Small pl={1}>({formatNumber(weightPercent, 2, 2)}%)</Type.Small>}
     </Type.Caption>
   )
 }

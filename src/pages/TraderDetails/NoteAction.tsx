@@ -100,15 +100,31 @@ const NoteItem = ({
 
                 return (
                   <Flex key={`${word}-${index}`} sx={{ alignItems: 'center' }}>
-                    <AccountInfo
-                      avatarSize={24}
-                      address={address}
-                      protocol={protocol.toUpperCase() as ProtocolEnum}
-                      hasQuickView={false}
-                      textSx={{
-                        backgroundColor: isHighlighted ? 'neutral4' : 'transparent',
-                      }}
-                    />
+                    {!!protocol ? (
+                      <AccountInfo
+                        avatarSize={24}
+                        address={address}
+                        protocol={protocol.toUpperCase() as ProtocolEnum}
+                        hasQuickView={false}
+                        textSx={{
+                          backgroundColor: isHighlighted ? 'neutral4' : 'transparent',
+                        }}
+                      />
+                    ) : (
+                      <a
+                        href={word}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: themeColors.neutral1,
+                          textDecoration: 'underline',
+                          backgroundColor: isHighlighted ? themeColors.neutral4 : 'transparent',
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {word}
+                      </a>
+                    )}
                     {index !== note.note.split(' ').length - 1 && ' '}
                   </Flex>
                 )

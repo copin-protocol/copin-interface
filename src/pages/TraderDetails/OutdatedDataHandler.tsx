@@ -42,7 +42,7 @@ const OutdatedDataHandler = memo(
           getTraderLastOrder({ account, protocol: ProtocolEnum.HYPERLIQUID }),
         ])
 
-        const perpFills = fills?.filter((fill) => !fill.coin.startsWith('@'))
+        const perpFills = fills?.filter((fill) => !['Buy', 'Sell'].includes(fill.dir) && !fill.coin.startsWith('@'))
 
         if (!perpFills?.length) return
         if (!order) {
@@ -59,7 +59,7 @@ const OutdatedDataHandler = memo(
     }, [account])
 
     return outdatedDate ? (
-      <Flex alignItems="center" sx={{ gap: 2 }}>
+      <Flex alignItems="center" sx={{ gap: 2, flexWrap: 'wrap' }}>
         <Type.Caption color="orange1">
           {outdatedDate === true ? (
             data?.reason === 'PROCESSING' ? (
@@ -75,7 +75,7 @@ const OutdatedDataHandler = memo(
           <Button
             variant="ghostPrimary"
             size="sm"
-            sx={{ px: 0 }}
+            sx={{ p: 0 }}
             disabled={refreshMutate.isLoading || isRefreshing || !data.canRefresh}
             onClick={() => {
               setIsRefreshing(true)

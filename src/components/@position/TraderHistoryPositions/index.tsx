@@ -595,7 +595,7 @@ export function TraderHistoryPositionsListView(props: HistoryTableProps) {
               alignItems: 'center',
               gap: 2,
               '.select__control': { border: 'none !important' },
-              '.currency_option': { width: 'auto !important' },
+              '.currency_option': { width: 'auto !important', minWidth: 88 },
               '.select__value-container': { p: '0 !important', '*': { p: '0 !important' } },
               '.select__menu': {
                 minWidth: 88,
