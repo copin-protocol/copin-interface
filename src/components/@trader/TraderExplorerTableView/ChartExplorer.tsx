@@ -5,7 +5,7 @@ import { parsePnLStatsData } from 'components/@charts/LineChartPnL/helpers'
 import ContentLoading from 'components/@ui/ContentLoading'
 import { TraderData } from 'entities/trader'
 import useGetTimeFilterOptions from 'hooks/helpers/useGetTimeFilterOptions'
-import { Box } from 'theme/base'
+import { Box, Flex } from 'theme/base'
 import { TimeFilterByEnum } from 'utils/config/enums'
 
 export function ChartExplorer({ traderData }: { traderData: TraderData }) {
@@ -55,9 +55,9 @@ export function LoadingChartExplorer({ traderData }: { traderData: TraderData })
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
 
   return (
-    <div ref={ref} style={{ minHeight: 30 }}>
+    <Flex ref={ref} style={{ minHeight: 30 }} width="100%" justifyContent={['start', 'end']}>
       {inView ? <ChartExplorer traderData={traderData} /> : <Loading />}
-    </div>
+    </Flex>
   )
 }
 

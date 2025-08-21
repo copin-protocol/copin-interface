@@ -179,9 +179,7 @@ export default function TraderExplorerListView({
                         <Fragment key={setting.id}>
                           <StatsItem
                             label={setting.text}
-                            value={setting.render?.(_data, dataIndex, {
-                              dataView,
-                            })}
+                            value={setting.render?.(_data, dataIndex, externalSource)}
                             isAvailable={isAvailable}
                             tooltipId={tooltipId}
                           />
