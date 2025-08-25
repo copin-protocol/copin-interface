@@ -8,6 +8,7 @@ import { POSITION_RANGE_KEYS } from 'components/@dailyTrades/configs'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { DualTimeText, LocalTimeText, RelativeShortTimeText } from 'components/@ui/DecoratedText/TimeText'
+import Entry from 'components/@ui/Entry'
 import Market from 'components/@ui/MarketGroup/Market'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { PairFilterIcon } from 'components/@widgets/PairFilterIcon'
@@ -24,7 +25,7 @@ import { themeColors } from 'theme/colors'
 import { DAYJS_FULL_DATE_FORMAT, TIME_FORMAT } from 'utils/config/constants'
 import { PositionStatusEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
-import { compactNumber, formatDuration, formatLeverage, formatNumber, formatPrice } from 'utils/helpers/format'
+import { compactNumber, formatDuration, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { getSymbolFromPair } from 'utils/helpers/transform'
 
 const orderCountColumn: ColumnData<PositionData> = {
@@ -771,11 +772,13 @@ export const closedPositionsColumns: ColumnData<PositionData>[] = [
     key: 'averagePrice',
     title: <Trans>ENTRY</Trans>,
     render: (item) => (
-      <Flex sx={{ gap: 1 }}>
-        {item.isLong ? <Type.Caption color="green1">L</Type.Caption> : <Type.Caption color="red2">S</Type.Caption>}
-        <Type.Caption>|</Type.Caption>
-        <Type.Caption color="neutral1">{formatPrice(item.averagePrice)}</Type.Caption>
-      </Flex>
+      <Entry
+        price={item.averagePrice}
+        isLong={item.isLong}
+        pair={item.pair}
+        indexToken={item.indexToken}
+        shouldShowSymbol={false}
+      />
     ),
     style: { flex: 1, minWidth: 100 },
   },

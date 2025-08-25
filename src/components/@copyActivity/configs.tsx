@@ -4,13 +4,12 @@ import { ApiMeta } from 'apis/api'
 import { LayoutType } from 'components/@copyActivity/types'
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import Entry from 'components/@ui/Entry'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
 import { CopyWalletData } from 'entities/copyWallet'
 import { UserActivityData } from 'entities/user'
-import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import { ColumnData } from 'theme/Table/types'
 import { Box, Flex, Image, Type } from 'theme/base'
 import { DAYJS_FULL_DATE_FORMAT } from 'utils/config/constants'
@@ -18,7 +17,7 @@ import { EXPLORER_PLATFORMS } from 'utils/config/platforms'
 import { PROTOCOL_PROVIDER } from 'utils/config/trades'
 import { ORDER_TYPE_TRANS } from 'utils/config/translations'
 import { formatNumber } from 'utils/helpers/format'
-import { getSymbolFromPair, parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
+import { parseExchangeImage, parseWalletName } from 'utils/helpers/transform'
 
 import LiteActivitiesFilterTrader from './LiteHistoryFilterTrader'
 
@@ -70,8 +69,6 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
     <Type.Caption color="neutral1">{item.type ? ORDER_TYPE_TRANS[item.type] : '--'}</Type.Caption>
   ),
   sourceDetails: (item) => {
-    const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
-    const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
     return (
       <Flex
         sx={{
@@ -80,15 +77,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           color: 'neutral1',
         }}
       >
-        <Type.Caption width={8} color={item.isLong ? 'green1' : 'red2'}>
-          {item.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-        </Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>
-          {item.sourcePrice ? PriceTokenText({ value: item.sourcePrice, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
-        </Type.Caption>
+        <Entry price={item.sourcePrice} isLong={item.isLong} pair={item.pair} />
         {item.sourceTxHash && (
           <>
             <Type.Caption color="neutral3">-</Type.Caption>
@@ -136,8 +125,6 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
         : item.errorMsg
 
     const isLong = (item.isLong ? 1 : -1) * (item.isReverse ? -1 : 1) === 1
-    const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
-    const hlDecimals = getHlSzDecimalsByPair?.(item.pair)
 
     return item.isSuccess || item.isProcessing ? (
       <Flex
@@ -147,15 +134,7 @@ export const renderProps: Record<string, ActivityColumnData['render']> = {
           color: 'neutral1',
         }}
       >
-        <Type.Caption width={8} color={isLong ? 'green1' : 'red2'}>
-          {isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-        </Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>{getSymbolFromPair(item.pair, true)}</Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>
-          {item.price ? PriceTokenText({ value: item.price, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
-        </Type.Caption>{' '}
+        <Entry price={item.price} isLong={isLong} pair={item.pair} />
         <Type.Caption color="neutral3">
           (<Trans>slippage</Trans>{' '}
           {item.sourcePrice && item.price

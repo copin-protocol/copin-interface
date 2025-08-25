@@ -1,12 +1,10 @@
-import { Trans } from '@lingui/macro'
 import { Square } from '@phosphor-icons/react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
-import Market from 'components/@ui/MarketGroup/Market'
+import Entry from 'components/@ui/Entry'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
-import { CopyPositionData } from 'entities/copyTrade'
 import { PositionData } from 'entities/trader'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
 import SkullIcon from 'theme/Icons/SkullIcon'
@@ -21,48 +19,14 @@ import { UsdPrices } from 'utils/types'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
   if (!data || !data.protocol) return <></>
-  const symbol = getSymbolFromPair(data.pair)
-
   return (
-    <Flex
-      sx={{
-        gap: 2,
-        alignItems: 'center',
-        color: 'neutral1',
-      }}
-    >
-      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'}>
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      {showMarketIcon && <Market symbol={symbol} size={24} />}
-      <Type.Caption {...textSx}>{getSymbolFromPair(data.pair, true)}</Type.Caption>
-      <VerticalDivider />
-      <Type.Caption {...textSx}>
-        {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2 }) : '--'}
-      </Type.Caption>
-    </Flex>
-  )
-}
-
-export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: TextProps) {
-  if (!data) return <></>
-  return (
-    <Flex
-      sx={{
-        gap: 2,
-        alignItems: 'center',
-        color: 'neutral1',
-      }}
-    >
-      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'}>
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>{getSymbolFromPair(data.pair, true)}</Type.Caption>
-      <VerticalDivider />
-      <Type.Caption {...textSx}>${PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2 })}</Type.Caption>
-    </Flex>
+    <Entry
+      price={data.averagePrice}
+      isLong={data.isLong}
+      pair={data.pair}
+      shouldShowMarketIcon={showMarketIcon}
+      textSx={textSx}
+    />
   )
 }
 

@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 
 import { renderCopyWalletLabel } from 'components/@copyTrade/renderProps/copyTradeColumns'
@@ -7,8 +6,8 @@ import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
 import Divider from 'components/@ui/Divider'
+import Entry from 'components/@ui/Entry'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
-import { SymbolComponent } from 'components/@widgets/renderProps'
 import { CopyPositionData, CopyTradeData } from 'entities/copyTrade.d'
 import { CopyWalletData } from 'entities/copyWallet'
 import useGetUsdPrices from 'hooks/helpers/useGetUsdPrices'
@@ -32,7 +31,7 @@ import {
 import { COPY_POSITION_CLOSE_TYPE_TRANS } from 'utils/config/translations'
 import { calcCopyLiquidatePrice, calcCopyOpeningPnL, calcRiskPercent } from 'utils/helpers/calculate'
 import { overflowEllipsis } from 'utils/helpers/css'
-import { addressShorten, compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
+import { addressShorten, compactNumber, formatNumber } from 'utils/helpers/format'
 import { SYMBOL_BY_PROTOCOL_MAPPING } from 'utils/helpers/price'
 import { getSymbolFromPair, normalizeExchangePrice, parseColorByValue, parseWalletName } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
@@ -69,22 +68,8 @@ export const renderCopyTitle = (data: CopyPositionData) => (
 )
 
 export function renderEntry(data: CopyPositionData) {
-  const getHlSzDecimalsByPair = useSystemConfigStore.getState().marketConfigs.getHlSzDecimalsByPair
-  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
-
-  return (
-    <Flex sx={{ gap: 2, alignItems: 'center', color: 'neutral1' }}>
-      <Type.Caption width={8} color={data.isLong ? 'green1' : 'red2'}>
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>
-        <SymbolComponent pair={data.pair} indexToken={data.indexToken} protocol={data.protocol} />
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>{formatPrice(data.entryPrice, 2, 2, { hlDecimals })}</Type.Caption>
-    </Flex>
-  )
+  if (data.isLong == null) return <></>
+  return <Entry price={data.entryPrice} isLong={data.isLong} pair={data.pair} indexToken={data.indexToken} />
 }
 
 export function renderOpeningSize(data: CopyPositionData) {

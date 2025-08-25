@@ -1,13 +1,12 @@
-import { Trans } from '@lingui/macro'
 import { CaretRight } from '@phosphor-icons/react'
 
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import Entry from 'components/@ui/Entry'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { renderEntry, renderSizeOpening } from 'components/@widgets/renderProps'
 import { PositionData } from 'entities/trader'
-import useMarketsConfig from 'hooks/helpers/useMarketsConfig'
 import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import { ColumnData } from 'theme/Table/types'
@@ -15,9 +14,8 @@ import { Box, Flex, IconBox, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { MarginModeEnum } from 'utils/config/enums'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
-import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatNumber, formatPrice } from 'utils/helpers/format'
-import { formatSymbol, getSymbolFromPair } from 'utils/helpers/transform'
+import { getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
 export type ExternalSourceHlPosition = {
@@ -175,32 +173,19 @@ export const pairColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
   render: (item) => <PairComponent data={item} />,
 }
 export function PairComponent({ data }: { data: PositionData }) {
-  const { getSymbolByIndexToken } = useMarketsConfig()
-  const symbol = data.pair
-    ? getSymbolFromPair(data.pair)
-    : data.indexToken
-    ? getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
-    : ''
   return (
-    <Flex
-      sx={{
-        gap: 2,
-        alignItems: 'center',
-        color: 'neutral1',
-        pr: 1,
-      }}
-    >
-      <Type.Caption color={data.isLong ? 'green1' : 'red2'} data-key="isLong">
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
+    <Flex alignItems="center" sx={{ gap: '6px' }}>
+      <Entry
+        price={data.averagePrice}
+        isLong={data.isLong}
+        pair={data.pair}
+        indexToken={data.indexToken}
+        shouldShowPrice={false}
+      />
       <VerticalDivider />
-      <Type.Caption data-key="pair">
-        <Box as="span" sx={{ display: 'block', width: '100%', ...overflowEllipsis() }}>
-          {formatSymbol(symbol)}
-        </Box>
+      <Type.Caption data-key="leverage" color="neutral1">
+        {formatNumber(data.leverage, 0, 0)}x
       </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption data-key="leverage">{formatNumber(data.leverage, 0, 0)}x</Type.Caption>
     </Flex>
   )
 }
@@ -365,7 +350,7 @@ const actionColumn: ColumnData<PositionData, ExternalSourceHlPosition> = {
 }
 
 export const fullOpeningColumns: ColumnData<PositionData, ExternalSourceHlPosition>[] = [
-  { ...pairColumn, style: { minWidth: 120 } },
+  { ...pairColumn },
   { ...sizeInTokenColumn, style: { minWidth: 100, textAlign: 'right' } },
   { ...valueColumn, style: { minWidth: 140, textAlign: 'right' } },
   { ...entryPriceColumn, style: { minWidth: 140, textAlign: 'right' } },

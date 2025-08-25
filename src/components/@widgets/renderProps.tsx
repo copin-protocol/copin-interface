@@ -1,10 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { Square } from '@phosphor-icons/react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { SignedText } from 'components/@ui/DecoratedText/SignedText'
 import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
-import Market from 'components/@ui/MarketGroup/Market'
+import Entry from 'components/@ui/Entry'
 import ValueOrToken from 'components/@ui/ValueOrToken'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
 import { CopyPositionData } from 'entities/copyTrade'
@@ -15,61 +14,28 @@ import { useSystemConfigStore } from 'hooks/store/useSystemConfigStore'
 import CopyButton from 'theme/Buttons/CopyButton'
 import SkullIcon from 'theme/Icons/SkullIcon'
 import ProgressBar from 'theme/ProgressBar'
-import { Box, Flex, TextProps, Type } from 'theme/base'
+import { Flex, TextProps, Type } from 'theme/base'
 import { themeColors } from 'theme/colors'
 import { ProtocolEnum } from 'utils/config/enums'
 import { PROTOCOLS_CROSS_MARGIN } from 'utils/config/protocols'
 import { PROTOCOLS_IN_TOKEN } from 'utils/config/protocols'
 import { calcClosedPrice, calcLiquidatePrice, calcRiskPercent, getOpeningPnl } from 'utils/helpers/calculate'
-import { overflowEllipsis } from 'utils/helpers/css'
 import { compactNumber, formatLeverage, formatNumber } from 'utils/helpers/format'
 import { formatSymbol, getSymbolFromPair } from 'utils/helpers/transform'
 import { UsdPrices } from 'utils/types'
 
 export function renderEntry(data: PositionData | undefined, textSx?: TextProps, showMarketIcon?: boolean) {
-  return <EntryComponent data={data} textSx={textSx} showMarketIcon={showMarketIcon} />
-}
-
-function EntryComponent({
-  data,
-  textSx,
-  showMarketIcon,
-}: {
-  data: PositionData | undefined
-  textSx?: TextProps
-  showMarketIcon?: boolean
-}) {
-  const { getSymbolByIndexToken, getHlSzDecimalsByPair } = useMarketsConfig()
   if (!data || !data.protocol) return <></>
-  const symbol = data.pair
-    ? getSymbolFromPair(data.pair)
-    : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
-  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
 
   return (
-    <Flex
-      sx={{
-        gap: 2,
-        alignItems: 'center',
-        color: 'neutral1',
-        pr: 1,
-      }}
-    >
-      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'} data-key="isLong">
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      {showMarketIcon && <Market symbol={symbol} size={20} />}
-      <Type.Caption sx={{ ...textSx } as any} data-key="pair">
-        <Box as="span" sx={{ display: 'block', width: '100%', ...overflowEllipsis() }}>
-          {formatSymbol(symbol)}
-        </Box>
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption sx={{ ...textSx, flexShrink: 0 } as any} data-key="averagePrice">
-        {data.averagePrice ? PriceTokenText({ value: data.averagePrice, maxDigit: 2, minDigit: 2, hlDecimals }) : '--'}
-      </Type.Caption>
-    </Flex>
+    <Entry
+      price={data.averagePrice}
+      isLong={data.isLong}
+      pair={data.pair}
+      indexToken={data.indexToken}
+      shouldShowMarketIcon={showMarketIcon}
+      textSx={textSx}
+    />
   )
 }
 
@@ -77,30 +43,9 @@ export function renderCopyEntry(data: CopyPositionData | undefined, textSx?: Tex
   return <CopyEntryComponent data={data} textSx={textSx} />
 }
 function CopyEntryComponent({ data, textSx }: { data: CopyPositionData | undefined; textSx?: TextProps }) {
-  const { getSymbolByIndexToken, getHlSzDecimalsByPair } = useMarketsConfig()
-  if (!data || !data.protocol) return <></>
-  const symbol = data.pair
-    ? getSymbolFromPair(data.pair)
-    : getSymbolByIndexToken?.({ indexToken: data.indexToken }) ?? ''
-  const hlDecimals = getHlSzDecimalsByPair?.(data.pair)
+  if (!data || !data.protocol || data.isLong == null) return <></>
   return (
-    <Flex
-      sx={{
-        gap: 2,
-        alignItems: 'center',
-        color: 'neutral1',
-      }}
-    >
-      <Type.Caption {...textSx} width={8} color={data.isLong ? 'green1' : 'red2'}>
-        {data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-      </Type.Caption>
-      <VerticalDivider />
-      <Type.Caption>{symbol}</Type.Caption>
-      <VerticalDivider />
-      <Type.Caption {...textSx}>
-        {PriceTokenText({ value: data.entryPrice, maxDigit: 2, minDigit: 2, hlDecimals })}
-      </Type.Caption>
-    </Flex>
+    <Entry price={data.entryPrice} isLong={data.isLong} pair={data.pair} indexToken={data.indexToken} textSx={textSx} />
   )
 }
 

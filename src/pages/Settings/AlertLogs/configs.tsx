@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 
 import { AccountInfo } from 'components/@ui/AccountInfo'
 import { LocalTimeText } from 'components/@ui/DecoratedText/TimeText'
-import { PriceTokenText } from 'components/@ui/DecoratedText/ValueText'
+import Entry from 'components/@ui/Entry'
 import LabelWithTooltip from 'components/@ui/LabelWithTooltip'
 import ReverseTag from 'components/@ui/ReverseTag'
 import { VerticalDivider } from 'components/@ui/VerticalDivider'
@@ -99,24 +99,12 @@ export const renderProps: Record<string, AlertLogColumnData['render']> = {
   sourceDetails: (item) => {
     const isQuotaReached = !!item.errorMsg && !!item.data?.isNeedUpgrade
     return (
-      <Flex
-        sx={{
-          gap: 1,
-          alignItems: 'center',
-          color: 'neutral1',
-          ...(isQuotaReached ? { filter: 'blur(4px)' } : {}),
-        }}
-      >
-        <Type.Caption width={8} color={item.data.isLong ? 'green1' : 'red2'}>
-          {item.data.isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-        </Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>{item.data.token}</Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>
-          {item.data.price ? PriceTokenText({ value: item.data.price, maxDigit: 2, minDigit: 2 }) : '--'}
-        </Type.Caption>
-      </Flex>
+      <Entry
+        sx={{ ...(isQuotaReached ? { filter: 'blur(4px)' } : {}) }}
+        price={item.data.price}
+        isLong={item.data.isLong}
+        pair={item.data.token}
+      />
     )
   },
   targetWallet: (item, _) => {
@@ -144,24 +132,12 @@ export const renderProps: Record<string, AlertLogColumnData['render']> = {
     const isQuotaReached = !!item.errorMsg && !!item.data?.isNeedUpgrade
 
     return item.data.isSuccess || item.data.isProcessing ? (
-      <Flex
-        sx={{
-          gap: 1,
-          alignItems: 'center',
-          color: 'neutral1',
-          ...(isQuotaReached ? { filter: 'blur(4px)' } : {}),
-        }}
-      >
-        <Type.Caption width={8} color={isLong ? 'green1' : 'red2'}>
-          {isLong ? <Trans>L</Trans> : <Trans>S</Trans>}
-        </Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>{item.data.token}</Type.Caption>
-        <VerticalDivider />
-        <Type.Caption>
-          {item.data.price ? PriceTokenText({ value: item.data.price, maxDigit: 2, minDigit: 2 }) : '--'}
-        </Type.Caption>
-      </Flex>
+      <Entry
+        sx={{ ...(isQuotaReached ? { filter: 'blur(4px)' } : {}) }}
+        price={item.data.price}
+        isLong={isLong}
+        pair={item.data.token}
+      />
     ) : (
       <Type.Caption
         color="neutral3"
