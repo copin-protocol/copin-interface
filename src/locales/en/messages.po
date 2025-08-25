@@ -1119,6 +1119,9 @@ msgid "Closed Type"
 msgstr "Closed Type"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Collateral"
 msgstr "Collateral"
@@ -1132,7 +1135,6 @@ msgid "Collateral Lower Than"
 msgstr "Collateral Lower Than"
 
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Collateral:"
@@ -1727,6 +1729,9 @@ msgstr "Enter invite code"
 msgid "Entry"
 msgstr "Entry"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 #: src/pages/MyProfile/DCPManagement/ModifyTPSLModal.tsx
 #: src/pages/MyProfile/VaultManagement/ModifyTPSLModal.tsx
@@ -1947,7 +1952,6 @@ msgstr "Fee Schedule"
 msgid "Fees"
 msgstr "Fees"
 
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/TraderPositionDetails/PositionStats.tsx
 msgid "Fees & Funding:"
 msgstr "Fees & Funding:"
@@ -2048,6 +2052,9 @@ msgid "Fund:"
 msgstr "Fund:"
 
 #: src/components/@position/CopyPositionsListView/index.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Funding"
 msgstr "Funding"
@@ -2520,6 +2527,9 @@ msgstr "Link Account"
 msgid "Link with your {0} account through API key."
 msgstr "Link with your {0} account through API key."
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Liq. Price"
 msgstr "Liq. Price"
@@ -2766,13 +2776,12 @@ msgstr "Margin Protection"
 msgid "Margin Transferred"
 msgstr "Margin Transferred"
 
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Mark Price"
 msgstr "Mark Price"
-
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-msgid "Mark Price:"
-msgstr "Mark Price:"
 
 #: src/components/@charts/ChartCopyPositionProfit/CopyOrderTooltip.tsx
 #: src/components/@charts/ChartTraderPositionProfit/OrderTooltip.tsx
@@ -3569,6 +3578,9 @@ msgstr "Paid Fees:"
 #: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Pair"
 msgstr "Pair"
@@ -4362,6 +4374,9 @@ msgstr "Sign Message Error"
 #: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/components/@position/HLTraderPositionsListView/index.tsx
 msgid "Size"
 msgstr "Size"
@@ -4377,10 +4392,6 @@ msgstr "Size Token"
 #: src/pages/TokenTerminal/index.tsx
 msgid "Size Value:"
 msgstr "Size Value:"
-
-#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
-msgid "Size:"
-msgstr "Size:"
 
 #: src/components/@copinLite/OnboardingModal/TraderFilter.tsx
 #: src/components/@copinLite/OnboardingModal/index.tsx
@@ -5636,6 +5647,9 @@ msgstr "VOLUME"
 #: src/components/@position/HLTraderOpeningPositions/HLOpenOrderListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderFilledListView.tsx
 #: src/components/@position/HLTraderOpeningPositions/HLOrderTwapListView.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
+#: src/components/@position/HLTraderPositionDetails/HLPositionStats.tsx
 #: src/pages/OpenInterest/OpeningPositionList.tsx
 msgid "Value"
 msgstr "Value"

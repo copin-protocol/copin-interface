@@ -190,13 +190,15 @@ const useTraderFavorites = () => {
     try {
       if (isEdit) {
         await putFavoritesApi({ protocol, account: address, note, customAlertIds })
+        toast.success(<ToastBody title="Success" message="Updated bookmark successfully" />)
       } else {
         await postFavoritesApi({ protocol, account: address, note, customAlertIds })
+        toast.success(<ToastBody title="Success" message="Added bookmark successfully" />)
       }
     } catch (err) {
       setTraderFavorites(oldData)
       setBookmarks(oldDataNotes)
-      toast.error(<ToastBody title="Error" message={err?.message || 'Favorite Failed'} />)
+      toast.error(<ToastBody title="Error" message={err?.message || 'Bookmark Failed'} />)
     }
     setSubmitting(false)
   }
@@ -215,10 +217,11 @@ const useTraderFavorites = () => {
     }
     try {
       await deleteFavoritesApi({ protocol, account: address })
+      toast.success(<ToastBody title="Success" message="Deleted bookmark successfully" />)
     } catch (err) {
       setTraderFavorites(oldData)
       setBookmarks(oldDataNotes)
-      toast.error(<ToastBody title="Error" message="Unfavorite Failed" />)
+      toast.error(<ToastBody title="Error" message="Unbookmark Failed" />)
     }
     setSubmitting(false)
   }

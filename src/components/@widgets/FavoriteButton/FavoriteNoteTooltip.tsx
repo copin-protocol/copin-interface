@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Plus, Trash } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Plus, Trash } from '@phosphor-icons/react'
 import { useResponsive } from 'ahooks'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler'
@@ -352,7 +352,16 @@ const FavoriteNoteTooltip = () => {
                   }}
                   placeholder="Select groups"
                   components={{
-                    DropdownIndicator: () => <div></div>,
+                    DropdownIndicator: ({ selectProps }: any) => {
+                      if (groupOptions.length === selectedGroups?.length) {
+                        return null
+                      }
+                      return (
+                        <Flex alignItems="center" justifyContent="center" pr={2} mt={'2px'}>
+                          {selectProps.menuIsOpen ? <CaretUp size={14} /> : <CaretDown size={14} />}
+                        </Flex>
+                      )
+                    },
                   }}
                   isSearchable
                   menuPosition="fixed"
