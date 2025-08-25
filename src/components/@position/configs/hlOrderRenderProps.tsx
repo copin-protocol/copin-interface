@@ -94,6 +94,18 @@ export const renderSizeInToken = (item: HlOrderData, externalSource?: any) => (
   </Type.Caption>
 )
 
+export const renderOriginalSizeInToken = (item: HlOrderData, externalSource?: any) => (
+  <Type.Caption color="neutral1">
+    {!!item.originalSizeInTokenNumber
+      ? `${
+          externalSource?.isExpanded
+            ? formatNumber(item.originalSizeInTokenNumber, 2, 2)
+            : compactNumber(item.originalSizeInTokenNumber, 2)
+        }`
+      : '--'}
+  </Type.Caption>
+)
+
 const symbolColumn: ColumnData<HlOrderData> = {
   title: 'Pair',
   dataIndex: 'pair',
@@ -154,6 +166,8 @@ const reduceOnlyColumn: ColumnData<HlOrderData> = {
 export const renderReduceOnly = (item: HlOrderData) => (
   <Type.Caption color="neutral1">{item.reduceOnly ? 'Yes' : 'No'}</Type.Caption>
 )
+
+export const renderTif = (item: HlOrderData) => <Type.Caption color="neutral1">{item.tif ?? '--'}</Type.Caption>
 
 export const fullOrderColumns: ColumnData<HlOrderData>[] = [
   openTimeColumn,

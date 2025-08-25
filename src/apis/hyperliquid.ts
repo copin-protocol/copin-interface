@@ -77,6 +77,16 @@ export async function getHlOrderFilled({ user }: { user: string }) {
     .then((res: any) => res.data as HlOrderFillRawData[])
 }
 
+export async function getHlOrderDetailsByOid({ user, oid }: { user: string; oid: number }) {
+  return axios
+    .post(`${HYPERLIQUID_API}/info`, {
+      type: 'orderStatus',
+      user,
+      oid,
+    })
+    .then((res: any) => res.data?.order?.order as HlOrderRawData)
+}
+
 export async function getHlHistoricalOrders({ user }: { user: string }) {
   return axios
     .post(`${HYPERLIQUID_API}/info`, {

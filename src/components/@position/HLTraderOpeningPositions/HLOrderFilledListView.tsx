@@ -24,9 +24,10 @@ type Props = {
   data?: GroupedFillsData[]
   scrollDep: any
   sx?: any
+  onClickItem?: (data: GroupedFillsData) => void
 }
 
-export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Props) {
+export default function HLOrderFilledListView({ data, isLoading, scrollDep, onClickItem }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     wrapperRef.current?.scrollTo(0, 0)
@@ -65,7 +66,12 @@ export default function HLOrderFilledListView({ data, isLoading, scrollDep }: Pr
       )}
       {data?.map((item, index) => {
         return (
-          <Box sx={{ p: [2, 3] }} key={index + item.pair + item.orderId + item.txHash + item.timestamp}>
+          <Box
+            role="button"
+            sx={{ p: [2, 3] }}
+            key={index + item.pair + item.orderId + item.txHash + item.timestamp}
+            onClick={() => onClickItem?.(item)}
+          >
             <RowWrapper>
               <RowItem label={<Trans>Pair</Trans>} value={renderPair(item)} />
               <RowItem label={<Trans>Direction</Trans>} value={renderDirection(item)} />

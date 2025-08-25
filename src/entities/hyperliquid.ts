@@ -107,6 +107,7 @@ export interface HlOrderData {
   type: OrderTypeEnum
   protocol: ProtocolEnum
   timestamp: number
+  tif?: string
 }
 
 export interface HlOrderFillRawData {
@@ -151,6 +152,7 @@ export interface HlOrderFillData {
 
 // Types for grouped fills
 export interface GroupedFillsData {
+  account: string
   fills: HlOrderFillData[]
   totalSize: number
   totalSizeInToken: number

@@ -68,8 +68,14 @@ export default function HLPositionStats({ data }: { data: PositionData }) {
                 <ItemInfo label={<Trans>Liq. Price</Trans>} value={renderLiquidPrice(data)} />
               </MobileRowWrapper>
               <MobileRowWrapper>
-                <ItemInfo label={<Trans>Collateral</Trans>} value={renderPositionCollateral({ item: data })} />
-                <ItemInfo label={<Trans>Funding</Trans>} value={renderPositionFunding({ item: data })} />
+                <ItemInfo
+                  label={<Trans>Collateral</Trans>}
+                  value={renderPositionCollateral({ item: data, isCompactNumber: true })}
+                />
+                <ItemInfo
+                  label={<Trans>Funding</Trans>}
+                  value={renderPositionFunding({ item: data, isCompactNumber: true })}
+                />
               </MobileRowWrapper>
             </Box>
           )}
@@ -88,7 +94,7 @@ const ItemInfo = ({ label, value, sx }: { label: ReactNode; value: ReactNode } &
     <Type.Caption color="neutral3" display="block">
       {label}
     </Type.Caption>
-    <Type.Caption textAlign="right">{value}</Type.Caption>
+    <Type.Caption>{value}</Type.Caption>
   </Box>
 )
 

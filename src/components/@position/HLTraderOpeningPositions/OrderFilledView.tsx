@@ -16,6 +16,7 @@ import { DEFAULT_LIMIT } from 'utils/config/constants'
 import { getPaginationDataFromList, getPairFromSymbol } from 'utils/helpers/transform'
 
 import HLOrderFilledListView from './HLOrderFilledListView'
+import ModalHLOrderDetails from './ModalHLOrderDetails'
 import NoOrderWrapper from './NoOrderWrapper'
 import { OrderFilledProvider, useOrderFilledContext } from './useOrderFilledContext'
 
@@ -125,6 +126,18 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
     tableSettings = fillColumns
   }
 
+  const [openModal, setOpenModal] = useState(false)
+  const [currentOrder, setCurrentOrder] = useState<GroupedFillsData | undefined>()
+
+  const handleSelectItem = (data: GroupedFillsData) => {
+    setCurrentOrder(data)
+    setOpenModal(true)
+  }
+
+  const handleDismiss = () => {
+    setOpenModal(false)
+  }
+
   return (
     <>
       {isLoading && <Loading />}
@@ -153,6 +166,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
                   data={paginatedData.data}
                   columns={tableSettings}
                   isLoading={isLoading}
+                  onClickRow={handleSelectItem}
                   // renderRowBackground={() => (isDrawer ? 'transparent' : 'rgb(31, 34, 50)')}
                   scrollToTopDependencies={scrollDeps}
                   externalSource={{ isExpanded }}
@@ -197,7 +211,12 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
           ) : (
             <Flex flexDirection="column" height="100%" flex="1 0 0" overflow="hidden">
               {!!paginatedData?.data?.length && (
-                <HLOrderFilledListView data={paginatedData.data} isLoading={isLoading} scrollDep={scrollDeps} />
+                <HLOrderFilledListView
+                  data={paginatedData.data}
+                  isLoading={isLoading}
+                  scrollDep={scrollDeps}
+                  onClickItem={handleSelectItem}
+                />
               )}
               <PaginationWithLimit
                 currentPage={currentPage}
@@ -210,6 +229,7 @@ const OrderFilledWrapper = ({ isLoading, toggleExpand, data, isExpanded, isDrawe
           )}
         </>
       )}
+      {openModal && currentOrder && <ModalHLOrderDetails order={currentOrder} onDismiss={handleDismiss} />}
     </>
   )
 }

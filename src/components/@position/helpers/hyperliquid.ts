@@ -131,6 +131,7 @@ export function parseHLOrderData({ account, data }: { account: string; data: HlO
         orderType: e.orderType,
         type: e.orderType,
         timestamp: e.timestamp,
+        tif: e.tif,
       } as HlOrderData
     })
     .filter((d) => !d.pair.startsWith('@'))
@@ -187,6 +188,7 @@ export function groupHLOrderFillsByOid(fills: HlOrderFillData[]) {
     // 3. Direction changed since last group
     if (!currentGroup || currentGroup.fills[0].orderId !== fill.orderId || currentGroup.direction !== fill.direction) {
       currentGroup = {
+        account: fill.account,
         fills: [],
         totalSize: 0,
         totalSizeInToken: 0,
